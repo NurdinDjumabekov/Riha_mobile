@@ -1,14 +1,24 @@
-import { SafeAreaView, FlatList, RefreshControl, Text } from "react-native";
+import {
+  SafeAreaView,
+  FlatList,
+  RefreshControl,
+  View,
+  Modal,
+  TouchableWithoutFeedback,
+} from "react-native";
 import styled from "styled-components/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
-import { dataCategory } from "../helpers/Data";
-import { EveryCategory } from "../components/EveryCategory";
 import { useDispatch, useSelector } from "react-redux";
-import { changePreloader } from "../store/reducers/requestSlice";
-import { API } from "../env";
+import { getMyApplication } from "../store/reducers/requestSlice";
+import { useEffect, useState } from "react";
+import { EveryMyApplication } from "../components/EveryMyApplication";
+import { ViewButton } from "../customsTags/ViewButton";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 export const MyApplicationScreen = ({ navigation, route }) => {
-  const { preloader } = useSelector((state) => state.requestSlice);
+  const { preloader, listMyApplication } = useSelector(
+    (state) => state.requestSlice
+  );
   const dispatch = useDispatch();
   const { id, name } = route?.params;
 
@@ -20,47 +30,100 @@ export const MyApplicationScreen = ({ navigation, route }) => {
     flex-wrap: wrap;
   `;
 
-  const chnagePreloader = () => {
-    dispatch(changePreloader(true));
-    setTimeout(() => {
-      dispatch(changePreloader(false));
-    }, 1000);
+  const ViewAction = styled.View`
+    min-width: 70%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  `;
+
+  const ConfirmText = styled.Text`
+    font-size: 25px;
+    font-weight: 500;
+  `;
+
+  const BackgroundOverlay = styled.View`
+    flex: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+  `;
+
+  const btns = {
+    color: "#fff",
+    elevation: 2,
+    width: 100,
+    paddingBottom: 8,
+    paddingTop: 8,
   };
+
+  useEffect(() => {
+    dispatch(getMyApplication({ obj: route?.params }));
+  }, []);
+
   // console.log(dataCategory, "dataCategory");
-  console.log(route?.params, "route");
-  console.log(id, "id");
-  console.log(API);
+  // console.log(route?.params, "route");
+  // console.log(id, "id");
+  // console.log(API);
+  console.log(listMyApplication, "listMyApplication");
+  const [modalVisibleOk, setModalVisibleOk] = useState(false);
+  const [modalVisibleNo, setModalVisibleNo] = useState(false);
+
+  const changeApplication = () => {};
+
+  const closeModalOk = () => {
+    setModalVisibleOk(false);
+  };
+
+  const closeModalNo = () => {
+    setModalVisibleNo(false);
+  };
 
   return (
-    <ViewContainer>
-      <SafeAreaView>
-        <ParentDiv>
-          <Text></Text>
-          {/* <FlatList
-            contentContainerStyle={{
-              minWidth: "100%",
-              width: "100%",
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-              gap: 10,
-            }}
-            data={dataCategory}
-            renderItem={({ item }) => (
-              <EveryCategory obj={item} navigation={navigation} />
-            )}
-            // keyExtractor={(item) => item.codeid}
-            //  numColumns={2}
-            refreshControl={
-              <RefreshControl
-                refreshing={preloader}
-                onRefresh={() => chnagePreloader()}
-              />
-            }
-          /> */}
-        </ParentDiv>
-      </SafeAreaView>
-    </ViewContainer>
+    <>
+      <ViewContainer>
+        <SafeAreaView>
+          <ParentDiv>
+            <FlatList
+              data={listMyApplication}
+              renderItem={({ item }) => (
+                <EveryMyApplication
+                  obj={item}
+                  setModalVisibleOk={setModalVisibleOk}
+                  setModalVisibleNo={setModalVisibleNo}
+                />
+              )}
+              keyExtractor={(item) => item.codeid}
+              refreshControl={
+                <RefreshControl
+                  refreshing={preloader}
+                  onRefresh={() =>
+                    dispatch(getMyApplication({ obj: route?.params }))
+                  }
+                />
+              }
+            />
+          </ParentDiv>
+        </SafeAreaView>
+      </ViewContainer>
+
+      <ConfirmationModal
+        visible={modalVisibleOk}
+        message="Принять накладную ?"
+        onYes={changeApplication}
+        onNo={closeModalOk}
+        onClose={closeModalOk}
+      />
+      <ConfirmationModal
+        visible={modalVisibleNo}
+        message="Отклонить накладную ?"
+        onYes={changeApplication}
+        onNo={closeModalNo}
+        onClose={closeModalNo}
+      />
+    </>
   );
 };

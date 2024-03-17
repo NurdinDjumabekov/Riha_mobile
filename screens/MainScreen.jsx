@@ -1,4 +1,4 @@
-import { SafeAreaView, FlatList, RefreshControl } from "react-native";
+import { SafeAreaView, FlatList, RefreshControl, Text } from "react-native";
 import styled from "styled-components/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { dataCategory } from "../helpers/Data";
@@ -29,10 +29,14 @@ export const MainScreen = ({ navigation }) => {
   return (
     <ViewContainer>
       <SafeAreaView>
+        <Text></Text>
+        <Text></Text>
+        <Text></Text>
+        <Text></Text>
         <ParentDiv>
           <FlatList
             contentContainerStyle={{
-              minWidth: "100%",
+              // minWidth: "100%",
               width: "100%",
               display: "flex",
               flexDirection: "row",

@@ -10,10 +10,11 @@ import styled from "styled-components/native";
 const ParentDiv = styled.TouchableOpacity`
   min-width: 100%;
   height: 180px;
-  padding: 5px 10px;
   border-radius: 8px;
-  position: realative;
+  position: relative;
+  background-color: #fff;
 `;
+//   padding: 5px 10px;
 
 // shadow-color: #000;
 // shadow-offset: {width: 0, height: 4};
@@ -26,16 +27,16 @@ const TextTitle = styled.Text`
   padding: 0;
   font-size: 25px;
   font-weight: 600;
+  padding: 5px 10px;
 `;
 
 const BackgroundImage = styled.Image`
-  min-width: 100%;
-  height: 100%;
+  display: block;
+  width: 100%;
+  height: 180px;
   position: absolute;
-  top: 0;
   left: 0;
-  rigth: 0;
-  bottom: 0;
+  top: 0;
   border-radius: 8px;
 `;
 
@@ -53,6 +54,7 @@ export const EveryCategory = ({ obj, navigation }) => {
     navigation.navigate(`${obj.link}`, {
       id: obj?.codeid,
       name: obj?.name,
+      pathApi: obj?.pathApi,
     });
   };
 
