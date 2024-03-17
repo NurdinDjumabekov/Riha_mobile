@@ -1,19 +1,29 @@
-import { StyleSheet, Text } from "react-native";
+import { Text } from "react-native";
 
-export const ViewButton = ({ children, color, onclick }) => {
-  return <Text style={styles.bbb}>{children}</Text>;
+export const ViewButton = ({ children, styles, onclick }) => {
+  // console.log(styles, "styles");
+  return (
+    <Text
+      style={[
+        {
+          textAlign: "center",
+          paddingBottom: 12,
+          paddingTop: 12,
+          margin: "auto",
+          marginTop: 10,
+          borderRadius: 10,
+          fontSize: 20,
+          backgroundColor: styles?.backgroundColor || "#f5f5f5",
+          fontWeight: 700,
+          // marginHorizontal: 80,
+          // minWidth: "100%",
+          // width: 250,
+        },
+        styles,
+      ]}
+      onPress={onclick}
+    >
+      {children}
+    </Text>
+  );
 };
-
-const styles = StyleSheet.create({
-  bbb: {
-    display: "block",
-    margin: 80,
-    borderRadius: 10,
-    fontSize: 20,
-    width: 100,
-    height: 50,
-    background: "blue",
-  },
-});
-// color={color || "green"}
-// title={children || ""}

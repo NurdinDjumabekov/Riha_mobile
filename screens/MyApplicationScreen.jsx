@@ -1,15 +1,16 @@
-import { SafeAreaView, FlatList, RefreshControl } from "react-native";
+import { SafeAreaView, FlatList, RefreshControl, Text } from "react-native";
 import styled from "styled-components/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { dataCategory } from "../helpers/Data";
 import { EveryCategory } from "../components/EveryCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { changePreloader } from "../store/reducers/requestSlice";
+import { API } from "../env";
 
-export const MainScreen = ({ navigation }) => {
-  //   const { start } = useSelector((state) => state.stateSlice);
+export const MyApplicationScreen = ({ navigation, route }) => {
   const { preloader } = useSelector((state) => state.requestSlice);
   const dispatch = useDispatch();
+  const { id, name } = route?.params;
 
   const ParentDiv = styled.View`
     min-width: 100%;
@@ -24,13 +25,18 @@ export const MainScreen = ({ navigation }) => {
     setTimeout(() => {
       dispatch(changePreloader(false));
     }, 1000);
-  }; // console.log(dataCategory, "dataCategory");
+  };
+  // console.log(dataCategory, "dataCategory");
+  console.log(route?.params, "route");
+  console.log(id, "id");
+  console.log(API);
 
   return (
     <ViewContainer>
       <SafeAreaView>
         <ParentDiv>
-          <FlatList
+          <Text></Text>
+          {/* <FlatList
             contentContainerStyle={{
               minWidth: "100%",
               width: "100%",
@@ -52,7 +58,7 @@ export const MainScreen = ({ navigation }) => {
                 onRefresh={() => chnagePreloader()}
               />
             }
-          />
+          /> */}
         </ParentDiv>
       </SafeAreaView>
     </ViewContainer>

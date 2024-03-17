@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  preloader: true,
+  preloader: false,
   chech: "",
 };
 
@@ -9,7 +9,12 @@ const initialState = {
 export const logInAccount = createAsyncThunk(
   "logInAccount",
   async function (info, { dispatch, rejectWithValue }) {
-    const { login, password } = info;
+    const { login, password, navigation } = info;
+    dispatch(changePreloader(true));
+    setTimeout(() => {
+      navigation.navigate("Main");
+      dispatch(changePreloader(false));
+    }, 1800);
     try {
       const response = await axios({
         method: "POST",
@@ -38,17 +43,17 @@ const requestSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     /// logInAccount
-    builder.addCase(logInAccount.fulfilled, (state, action) => {
-      state.preloader = false;
-      state.chech = action.payload;
-    });
-    builder.addCase(logInAccount.rejected, (state, action) => {
-      state.error = action.payload;
-      state.preloader = false;
-    });
-    builder.addCase(logInAccount.pending, (state, action) => {
-      state.preloader = true;
-    });
+    // builder.addCase(logInAccount.fulfilled, (state, action) => {
+    //   state.preloader = false;
+    //   state.chech = action.payload;
+    // });
+    // builder.addCase(logInAccount.rejected, (state, action) => {
+    //   state.error = action.payload;
+    //   state.preloader = false;
+    // });
+    // builder.addCase(logInAccount.pending, (state, action) => {
+    //   state.preloader = true;
+    // });
   },
   reducers: {
     changePreloader: (state, action) => {

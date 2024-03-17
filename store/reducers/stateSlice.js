@@ -39,8 +39,14 @@ const stateSlice = createSlice({
     changeDataLogin: (state, action) => {
       state.dataLogin = action.payload;
     },
+    clearLogin: (state, action) => {
+      state.dataLogin = {
+        login: "",
+        password: "",
+      };
+    },
   },
 });
-export const { changeDataLogin } = stateSlice.actions;
+export const { changeDataLogin, clearLogin } = stateSlice.actions;
 
 export default stateSlice.reducer;

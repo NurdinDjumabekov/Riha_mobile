@@ -6,7 +6,7 @@ import { EveryCategory } from "../components/EveryCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { changePreloader } from "../store/reducers/requestSlice";
 
-export const MainScreen = ({ navigation }) => {
+export const MyCommingScreen = ({ navigation }) => {
   //   const { start } = useSelector((state) => state.stateSlice);
   const { preloader } = useSelector((state) => state.requestSlice);
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export const MainScreen = ({ navigation }) => {
     <ViewContainer>
       <SafeAreaView>
         <ParentDiv>
-          <FlatList
+          {/* <FlatList
             contentContainerStyle={{
               minWidth: "100%",
               width: "100%",
@@ -52,7 +52,7 @@ export const MainScreen = ({ navigation }) => {
                 onRefresh={() => chnagePreloader()}
               />
             }
-          />
+          /> */}
         </ParentDiv>
       </SafeAreaView>
     </ViewContainer>
