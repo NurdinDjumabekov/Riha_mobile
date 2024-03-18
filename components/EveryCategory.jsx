@@ -1,31 +1,21 @@
-import {
-  Text,
-  View,
-  Image,
-  SafeAreaView,
-  TouchableOpacity,
-} from "react-native";
 import styled from "styled-components/native";
 
 const ParentDiv = styled.TouchableOpacity`
-  min-width: 100%;
+  min-width: 47%;
   height: 180px;
   border-radius: 8px;
   position: relative;
   background-color: #fff;
+  shadow-color: #000;
+  shadow-opacity: 0.3;
+  shadow-radius: 4px;
+  elevation: 2;
 `;
-//   padding: 5px 10px;
-
-// shadow-color: #000;
-// shadow-offset: {width: 0, height: 4};
-// shadow-opacity: 0.1;
-// shadow-radius: 6px;
-// elevation: 2;
 
 const TextTitle = styled.Text`
   margin: 0;
   padding: 0;
-  font-size: 25px;
+  font-size: 22px;
   font-weight: 600;
   padding: 5px 10px;
 `;

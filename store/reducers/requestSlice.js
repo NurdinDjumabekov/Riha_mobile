@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API } from "../../env";
-import { listMyApplicationData } from "../../helpers/Data";
+import { listMyApplicationData, listPrihod } from "../../helpers/Data";
 
 const initialState = {
   preloader: false,
   chech: "",
   listMyApplication: [],
+  listComming: [],
 };
 
 /// logInAccount
@@ -73,6 +74,36 @@ export const getMyApplication = createAsyncThunk(
   }
 );
 
+/// getMyComming
+export const getMyComming = createAsyncThunk(
+  "getMyComming",
+  async function ({ obj }, { dispatch, rejectWithValue }) {
+    // console.log(obj, "obj");
+    // console.log(`${API}/${obj?.pathApi}`);
+    dispatch(changePreloader(true));
+    setTimeout(() => {
+      dispatch(changeComming(listPrihod));
+      dispatch(changePreloader(false));
+    }, 500);
+
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}`,
+        // headers: {
+        //   Authorization: `Bearer ${tokenA}`,
+        // },
+      });
+      if (response.status >= 200 && response.status < 300) {
+        // return response?.data?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 /// changeStatus
 export const changeStatus = createAsyncThunk(
@@ -141,8 +172,12 @@ const requestSlice = createSlice({
     changeApplication: (state, action) => {
       state.listMyApplication = action.payload;
     },
+    changeComming: (state, action) => {
+      state.listComming = action.payload;
+    },
   },
 });
-export const { changePreloader, changeApplication } = requestSlice.actions;
+export const { changePreloader, changeApplication, changeComming } =
+  requestSlice.actions;
 
 export default requestSlice.reducer;

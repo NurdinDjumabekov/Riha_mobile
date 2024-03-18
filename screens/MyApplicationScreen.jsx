@@ -9,7 +9,10 @@ import {
 import styled from "styled-components/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyApplication } from "../store/reducers/requestSlice";
+import {
+  changeApplication,
+  getMyApplication,
+} from "../store/reducers/requestSlice";
 import { useEffect, useState } from "react";
 import { EveryMyApplication } from "../components/EveryMyApplication";
 import { ViewButton } from "../customsTags/ViewButton";
@@ -62,17 +65,19 @@ export const MyApplicationScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     dispatch(getMyApplication({ obj: route?.params }));
+    return () => dispatch(changeApplication([]));
   }, []);
 
   // console.log(dataCategory, "dataCategory");
   // console.log(route?.params, "route");
   // console.log(id, "id");
   // console.log(API);
-  console.log(listMyApplication, "listMyApplication");
+  // console.log(listMyApplication, "listMyApplication");
+
   const [modalVisibleOk, setModalVisibleOk] = useState(false);
   const [modalVisibleNo, setModalVisibleNo] = useState(false);
 
-  const changeApplication = () => {};
+  const changeModalApplication = () => {};
 
   const closeModalOk = () => {
     setModalVisibleOk(false);
@@ -113,14 +118,14 @@ export const MyApplicationScreen = ({ navigation, route }) => {
       <ConfirmationModal
         visible={modalVisibleOk}
         message="Принять накладную ?"
-        onYes={changeApplication}
+        onYes={changeModalApplication}
         onNo={closeModalOk}
         onClose={closeModalOk}
       />
       <ConfirmationModal
         visible={modalVisibleNo}
         message="Отклонить накладную ?"
-        onYes={changeApplication}
+        onYes={changeModalApplication}
         onNo={closeModalNo}
         onClose={closeModalNo}
       />

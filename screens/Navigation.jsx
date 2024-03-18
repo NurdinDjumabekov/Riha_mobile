@@ -3,12 +3,15 @@ import { NavigationContainer } from "@react-navigation/native";
 import { LoginScreen } from "./LoginScreen";
 import { MainScreen } from "./MainScreen";
 
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import { store } from "../store/index";
 import { StatusBar } from "expo-status-bar";
 import { Preloader } from "../components/Preloader";
 import { MyApplicationScreen } from "./MyApplicationScreen";
 import { MyCommingScreen } from "./MyCommingScreen";
+import { TouchableOpacity } from "react-native";
+import { ViewImg } from "../customsTags/ViewImg";
+import { LogOut } from "../components/LogOut";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +20,13 @@ export const Navigation = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Preloader />
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: "#fff", /// f2f2f2
+            },
+          }}
+        >
           <Stack.Screen
             name="Login"
             component={LoginScreen}
@@ -28,8 +37,11 @@ export const Navigation = () => {
             <Stack.Screen
               name="Main"
               component={MainScreen}
-              // options={{ title: "Main" }}
-              options={{ headerShown: false }}
+              options={({ navigation }) => ({
+                title: "Главная страница",
+                headerLeft: () => <></>,
+                headerRight: () => <LogOut />,
+              })}
             />
             {/* //////// */}
             <Stack.Screen

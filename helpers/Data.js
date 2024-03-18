@@ -99,3 +99,64 @@ export const listMyApplicationData = [
     ],
   },
 ];
+
+export const listPrihod = [
+  {
+    codeid: 1,
+    who: "Нурдин Джумабеков",
+    whom: "Садирдинов Руслан",
+    date: "17.03.2024",
+    status: 0,
+    list: [
+      {
+        codeid: 1,
+        name: "Сырная колбаса",
+        kol: 4.4,
+        ves: 10,
+        type: "кг",
+      },
+      { codeid: 2, name: "Эстонская колбаса ", kol: 10.5, ves: 20, type: "кг" },
+      { codeid: 3, name: "Докторская колбаса", kol: 6.1, ves: 5, type: "кг" },
+      { codeid: 4, name: "Докторская колбаса", kol: 6.1, ves: 5, type: "кг" },
+      { codeid: 5, name: "Докторская колбаса", kol: 6.1, ves: 5, type: "кг" },
+      { codeid: 6, name: "Докторская колбаса", kol: 6.1, ves: 5, type: "кг" },
+      { codeid: 7, name: "Докторская колбаса", kol: 6.1, ves: 5, type: "кг" },
+    ],
+  },
+  {
+    codeid: 2,
+    who: "Садирдинов Руслан",
+    whom: "Нурдин Джумабеков",
+    date: "18.03.2024",
+    status: 1,
+    list: [
+      { codeid: 1, name: "Сырная колбаса", kol: 4.4, ves: 10, type: "кг" },
+      { codeid: 2, name: "Эстонская колбаса ", kol: 10.5, ves: 10, type: "кг" },
+      { codeid: 3, name: "Докторская колбаса", kol: 6.1, ves: 10, type: "кг" },
+    ],
+  },
+  {
+    codeid: 3,
+    who: "Дубанаева Элнура",
+    whom: "Садирдинов Руслан",
+    date: "19.03.2024",
+    status: 0,
+    list: [
+      { codeid: 1, name: "Сырная колбаса", kol: 4.4, ves: 10, type: "кг" },
+      { codeid: 2, name: "Эстонская колбаса ", kol: 10.5, ves: 10, type: "кг" },
+      { codeid: 3, name: "Докторская колбаса", kol: 6.1, ves: 10, type: "кг" },
+    ],
+  },
+  {
+    codeid: 4,
+    who: "Алиев Баатыр",
+    whom: "Садирдинов Руслан",
+    date: "20.03.2024",
+    status: 1,
+    list: [
+      { codeid: 1, name: "Сырная колбаса", kol: 4.4, ves: 10, type: "кг" },
+      { codeid: 2, name: "Эстонская колбаса ", kol: 10.5, ves: 10, type: "кг" },
+      { codeid: 3, name: "Докторская колбаса", kol: 6.1, ves: 10, type: "кг" },
+    ],
+  },
+];

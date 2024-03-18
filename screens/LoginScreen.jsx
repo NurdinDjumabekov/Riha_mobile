@@ -1,21 +1,14 @@
-import {
-  View,
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  Image,
-} from "react-native";
+import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { changeDataLogin, clearLogin } from "../store/reducers/stateSlice";
 import { ViewInput } from "../customsTags/ViewInput";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { ViewButton } from "../customsTags/ViewButton";
-import { changePreloader, logInAccount } from "../store/reducers/requestSlice";
+import { logInAccount } from "../store/reducers/requestSlice";
 import { useEffect, useState } from "react";
 import { ViewImg } from "../customsTags/ViewImg";
 
 export const LoginScreen = ({ navigation }) => {
-  const [isLodaing, setIsLodaing] = useState(false);
   const dispatch = useDispatch();
   const { dataLogin } = useSelector((state) => state.stateSlice);
   const { preloader } = useSelector((state) => state.requestSlice);
@@ -40,6 +33,7 @@ export const LoginScreen = ({ navigation }) => {
     dispatch(clearLogin());
   }, []);
   const link = "https://riha.kg/wp-content/themes/h/redesign/images/logo.png";
+
   return (
     <ViewContainer>
       <View style={{ paddingBottom: 50 }}>

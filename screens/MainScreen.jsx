@@ -1,10 +1,17 @@
-import { SafeAreaView, FlatList, RefreshControl, Text } from "react-native";
+import {
+  SafeAreaView,
+  FlatList,
+  RefreshControl,
+  Text,
+  View,
+} from "react-native";
 import styled from "styled-components/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { dataCategory } from "../helpers/Data";
 import { EveryCategory } from "../components/EveryCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { changePreloader } from "../store/reducers/requestSlice";
+import { ViewImg } from "../customsTags/ViewImg";
 
 export const MainScreen = ({ navigation }) => {
   //   const { start } = useSelector((state) => state.stateSlice);
@@ -27,38 +34,35 @@ export const MainScreen = ({ navigation }) => {
   }; // console.log(dataCategory, "dataCategory");
 
   return (
-    <ViewContainer>
-      <SafeAreaView>
-        <Text></Text>
-        <Text></Text>
-        <Text></Text>
-        <Text></Text>
-        <ParentDiv>
-          <FlatList
-            contentContainerStyle={{
-              // minWidth: "100%",
-              width: "100%",
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-              gap: 10,
-            }}
-            data={dataCategory}
-            renderItem={({ item }) => (
-              <EveryCategory obj={item} navigation={navigation} />
-            )}
-            // keyExtractor={(item) => item.codeid}
-            //  numColumns={2}
-            refreshControl={
-              <RefreshControl
-                refreshing={preloader}
-                onRefresh={() => chnagePreloader()}
-              />
-            }
-          />
-        </ParentDiv>
-      </SafeAreaView>
-    </ViewContainer>
+    <View style={{ paddingTop: 20, backgroundColor: "#ebeef2" }}>
+      <ViewContainer>
+        <SafeAreaView>
+          <ParentDiv>
+            <FlatList
+              contentContainerStyle={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+                gap: 10,
+              }}
+              data={dataCategory}
+              renderItem={({ item }) => (
+                <EveryCategory obj={item} navigation={navigation} />
+              )}
+              // keyExtractor={(item) => item.codeid}
+              //  numColumns={2}
+              refreshControl={
+                <RefreshControl
+                  refreshing={preloader}
+                  onRefresh={() => chnagePreloader()}
+                />
+              }
+            />
+          </ParentDiv>
+        </SafeAreaView>
+      </ViewContainer>
+    </View>
   );
 };

@@ -4,11 +4,18 @@ import { ViewContainer } from "../customsTags/ViewContainer";
 import { dataCategory } from "../helpers/Data";
 import { EveryCategory } from "../components/EveryCategory";
 import { useDispatch, useSelector } from "react-redux";
-import { changePreloader } from "../store/reducers/requestSlice";
+import {
+  changeComming,
+  changePreloader,
+  getMyComming,
+} from "../store/reducers/requestSlice";
+import { EveryMyApplication } from "../components/EveryMyApplication";
+import { useEffect, useState } from "react";
+import { EveryMyComming } from "../components/EveryMyComming";
 
-export const MyCommingScreen = ({ navigation }) => {
+export const MyCommingScreen = ({ navigation, route }) => {
   //   const { start } = useSelector((state) => state.stateSlice);
-  const { preloader } = useSelector((state) => state.requestSlice);
+  const { preloader, listComming } = useSelector((state) => state.requestSlice);
   const dispatch = useDispatch();
 
   const ParentDiv = styled.View`
@@ -19,40 +26,33 @@ export const MyCommingScreen = ({ navigation }) => {
     flex-wrap: wrap;
   `;
 
-  const chnagePreloader = () => {
-    dispatch(changePreloader(true));
-    setTimeout(() => {
-      dispatch(changePreloader(false));
-    }, 1000);
-  }; // console.log(dataCategory, "dataCategory");
+  useEffect(() => {
+    dispatch(getMyComming({ obj: route?.params }));
+    return () => dispatch(changeComming([]));
+  }, []);
 
+  const changeApplication = () => {};
+
+  const closeModalOk = () => {};
+
+  const closeModalNo = () => {};
+
+  console.log(route, "route");
   return (
     <ViewContainer>
       <SafeAreaView>
         <ParentDiv>
-          {/* <FlatList
-            contentContainerStyle={{
-              minWidth: "100%",
-              width: "100%",
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-              gap: 10,
-            }}
-            data={dataCategory}
-            renderItem={({ item }) => (
-              <EveryCategory obj={item} navigation={navigation} />
-            )}
-            // keyExtractor={(item) => item.codeid}
-            //  numColumns={2}
+          <FlatList
+            data={listComming}
+            renderItem={({ item }) => <EveryMyComming obj={item} />}
+            keyExtractor={(item) => item.codeid}
             refreshControl={
               <RefreshControl
                 refreshing={preloader}
-                onRefresh={() => chnagePreloader()}
+                onRefresh={() => dispatch(getMyComming({ obj: route?.params }))}
               />
             }
-          /> */}
+          />
         </ParentDiv>
       </SafeAreaView>
     </ViewContainer>
