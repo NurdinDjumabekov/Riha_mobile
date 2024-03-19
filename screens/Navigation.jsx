@@ -12,6 +12,7 @@ import { MyCommingScreen } from "./MyCommingScreen";
 import { TouchableOpacity } from "react-native";
 import { ViewImg } from "../customsTags/ViewImg";
 import { LogOut } from "../components/LogOut";
+import { LeftoversScreen } from "./LeftoversScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,7 +41,7 @@ export const Navigation = () => {
               options={({ navigation }) => ({
                 title: "Главная страница",
                 headerLeft: () => <></>,
-                headerRight: () => <LogOut />,
+                headerRight: () => <LogOut navigation={navigation} />,
               })}
             />
             {/* //////// */}
@@ -53,6 +54,11 @@ export const Navigation = () => {
               name="Comming"
               component={MyCommingScreen}
               options={{ title: "Приходы" }}
+            />
+            <Stack.Screen
+              name="Leftovers"
+              component={LeftoversScreen}
+              options={{ title: "Остатки" }}
             />
           </>
         </Stack.Navigator>

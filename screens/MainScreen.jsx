@@ -1,20 +1,13 @@
-import {
-  SafeAreaView,
-  FlatList,
-  RefreshControl,
-  Text,
-  View,
-} from "react-native";
+import { SafeAreaView, FlatList, RefreshControl, View } from "react-native";
 import styled from "styled-components/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { dataCategory } from "../helpers/Data";
 import { EveryCategory } from "../components/EveryCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { changePreloader } from "../store/reducers/requestSlice";
-import { ViewImg } from "../customsTags/ViewImg";
 
 export const MainScreen = ({ navigation }) => {
-  //   const { start } = useSelector((state) => state.stateSlice);
+  const { token } = useSelector((state) => state.saveDataSlice);
   const { preloader } = useSelector((state) => state.requestSlice);
   const dispatch = useDispatch();
 
@@ -31,7 +24,9 @@ export const MainScreen = ({ navigation }) => {
     setTimeout(() => {
       dispatch(changePreloader(false));
     }, 1000);
-  }; // console.log(dataCategory, "dataCategory");
+  };
+
+  console.log(token, "tokenm");
 
   return (
     <View style={{ paddingTop: 20, backgroundColor: "#ebeef2" }}>

@@ -1,17 +1,20 @@
 import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { changeDataLogin, clearLogin } from "../store/reducers/stateSlice";
+import { changeToken } from "../store/reducers/saveDataSlice";
 import { ViewInput } from "../customsTags/ViewInput";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { ViewButton } from "../customsTags/ViewButton";
 import { logInAccount } from "../store/reducers/requestSlice";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ViewImg } from "../customsTags/ViewImg";
 
 export const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { dataLogin } = useSelector((state) => state.stateSlice);
   const { preloader } = useSelector((state) => state.requestSlice);
+  const { token } = useSelector((state) => state.saveDataSlice);
+  // console.log(token, "tokenl");
 
   const onChangeLogin = (text) => {
     dispatch(changeDataLogin({ ...dataLogin, login: text }));
@@ -21,17 +24,21 @@ export const LoginScreen = ({ navigation }) => {
     dispatch(changeDataLogin({ ...dataLogin, password: text }));
   };
 
-  const sendLogin = () => {
-    dispatch(logInAccount({ dataLogin, navigation }));
+  const sendLogin = async () => {
     if (dataLogin?.login && dataLogin?.password) {
+      dispatch(logInAccount({ dataLogin, navigation }));
+      // dispatch(changeToken(dataLogin?.login));
+      // navigation.navigate("Main");
     } else {
       alert("Введите логин и пароль!");
     }
   };
 
   useEffect(() => {
-    dispatch(clearLogin());
+    // dispatch(clearLogin());
+    //     dispatch(changeToken(""));
   }, []);
+
   const link = "https://riha.kg/wp-content/themes/h/redesign/images/logo.png";
 
   return (

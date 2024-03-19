@@ -1,13 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API } from "../../env";
-import { listMyApplicationData, listPrihod } from "../../helpers/Data";
+import {
+  listLeftovers,
+  listMyApplicationData,
+  listPrihod,
+} from "../../helpers/Data";
+import { clearLogin } from "./stateSlice";
+import { changeToken } from "./saveDataSlice";
 
 const initialState = {
   preloader: false,
   chech: "",
   listMyApplication: [],
   listComming: [],
+  listLeftovers: [],
 };
 
 /// logInAccount
@@ -17,8 +24,10 @@ export const logInAccount = createAsyncThunk(
     const { login, password, navigation } = info;
     dispatch(changePreloader(true));
     setTimeout(() => {
+      dispatch(changeToken(login));
       navigation.navigate("Main");
       dispatch(changePreloader(false));
+      dispatch(clearLogin());
     }, 500);
     try {
       const response = await axios({
@@ -86,6 +95,36 @@ export const getMyComming = createAsyncThunk(
       dispatch(changePreloader(false));
     }, 500);
 
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}`,
+        // headers: {
+        //   Authorization: `Bearer ${tokenA}`,
+        // },
+      });
+      if (response.status >= 200 && response.status < 300) {
+        // return response?.data?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getMyLeftovers
+export const getMyLeftovers = createAsyncThunk(
+  "getMyLeftovers",
+  async function ({ obj }, { dispatch, rejectWithValue }) {
+    // console.log(obj, "obj");
+    // console.log(`${API}/${obj?.pathApi}`);
+    dispatch(changePreloader(true));
+    setTimeout(() => {
+      dispatch(changeLeftovers(listLeftovers));
+      dispatch(changePreloader(false));
+    }, 500);
     try {
       const response = await axios({
         method: "GET",
@@ -175,9 +214,16 @@ const requestSlice = createSlice({
     changeComming: (state, action) => {
       state.listComming = action.payload;
     },
+    changeLeftovers: (state, action) => {
+      state.listLeftovers = action.payload;
+    },
   },
 });
-export const { changePreloader, changeApplication, changeComming } =
-  requestSlice.actions;
+export const {
+  changePreloader,
+  changeApplication,
+  changeComming,
+  changeLeftovers,
+} = requestSlice.actions;
 
 export default requestSlice.reducer;

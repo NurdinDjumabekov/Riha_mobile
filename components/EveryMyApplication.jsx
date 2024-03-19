@@ -13,14 +13,13 @@ const ParentDiv = styled.View`
 `;
 
 const TextTitleMore = styled.Text`
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 500;
-  display: inline;
 `;
 
 // font-family: "Inter", sans-serif;
 const TextTitle = styled.Text`
-  font-size: 21px;
+  font-size: 17px;
   font-weight: 500;
   display: inline;
 `;
@@ -43,10 +42,16 @@ const DivInner = styled.View`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  border-bottom-color: #989393;
+  border-bottom-width: 1px;
+  width: 100%;
+  margin-bottom: 5px;
+  padding-bottom: 4px;
 `;
+
 const TextInner = styled.Text`
   display: inline;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 400;
 `;
 
@@ -90,8 +95,8 @@ export const EveryMyApplication = ({
           <TextTitle>{obj?.who}</TextTitle>
         </Div>
         <Div>
-          <TextTitleMore>Дата: </TextTitleMore>
-          <TextTitle>{obj?.date}</TextTitle>
+          <TextTitleMore style={{fontSize:15,color:"gray"}}>Дата: </TextTitleMore>
+          <TextTitle style={{fontSize:15,color:"gray"}}>{obj?.date}</TextTitle>
         </Div>
         <DivProd>
           {obj?.list?.map((item, index) => (
@@ -100,8 +105,6 @@ export const EveryMyApplication = ({
               <TextInner>
                 {item?.name}, {item?.ves} {item?.type}
               </TextInner>
-              {/* <Text>
-            </Text> */}
             </DivInner>
           ))}
           <DivActions>

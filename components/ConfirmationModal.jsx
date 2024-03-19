@@ -25,12 +25,18 @@ const ButtonContainer = styled.View`
   margin-top: 20px;
 `;
 
+const Title = styled.Text`
+  font-size: 20px;
+  font-weight: 500;
+`;
+
 const btns = {
   color: "#fff",
   elevation: 2,
-  width: 100,
+  fontSize: 20,
+  width: 90,
   paddingBottom: 8,
-  paddingTop: 8,
+  paddingTop: 6,
 };
 
 const ConfirmationModal = ({ visible, message, onYes, onNo, onClose }) => {
@@ -44,7 +50,7 @@ const ConfirmationModal = ({ visible, message, onYes, onNo, onClose }) => {
       <TouchableWithoutFeedback onPress={onClose}>
         <BackgroundOverlay>
           <Container>
-            <Text style={{ fontSize: 25, fontWeight: 500 }}>{message}</Text>
+            <Title>{message}</Title>
             <ButtonContainer>
               <ViewButton
                 onclick={onYes}

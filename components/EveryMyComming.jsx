@@ -12,7 +12,6 @@ const ParentDiv = styled.View`
 const TextTitleMore = styled.Text`
   font-size: 18px;
   font-weight: 500;
-  display: inline;
 `;
 
 // font-family: "Inter", sans-serif;
@@ -40,7 +39,13 @@ const DivInner = styled.View`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  border-bottom-color: #989393;
+  border-bottom-width: 1px;
+  width: 100%;
+  margin-bottom: 5px;
+  padding-bottom: 4px;
 `;
+
 const TextInner = styled.Text`
   display: inline;
   font-size: 17px;
