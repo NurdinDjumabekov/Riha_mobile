@@ -1,108 +1,123 @@
+import { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { Table, Row, Rows } from "react-native-table-component";
+import { ViewCheckBox } from "../customsTags/ViewCheckBox";
 import styled from "styled-components/native";
-
-const ParentDiv = styled.View`
-  min-width: 100%;
-  padding: 10px 10px 20px;
-  border-radius: 8px;
-  position: realative;
-  background-color: #fff;
-  margin-bottom: 10px;
-`;
-
-const TextTitleMore = styled.Text`
-  font-size: 18px;
-  font-weight: 500;
-`;
-
-// font-family: "Inter", sans-serif;
-const TextTitle = styled.Text`
-  font-size: 17px;
-  font-weight: 500;
-  display: inline;
-`;
 
 const Div = styled.View`
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
-`;
-
-const DivProd = styled.View`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  margin-top: 8px;
-`;
-
-const DivInner = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  border-bottom-color: #989393;
-  border-bottom-width: 1px;
-  width: 100%;
-  margin-bottom: 5px;
-  padding-bottom: 4px;
-`;
-
-const TextInner = styled.Text`
-  display: inline;
-  font-size: 17px;
-  font-weight: 400;
-`;
-
-const TextTitleMoreDate = styled.Text`
-  display: inline;
-  font-size: 15px;
-  font-weight: 400;
-  color: gray;
-`;
-
-const TextTitleDate = styled.Text`
-  display: inline;
-  font-size: 15px;
-  font-weight: 400;
-  color: gray;
+  align-items: center;
+  gap: 4px;
+  padding: 0px 10px;
 `;
 
 export const EveryMyComming = ({ obj }) => {
+  const [listData, setListData] = useState([]);
+
+  const [ok, setOk] = useState(false);
+  const [no, setNo] = useState(false);
   const clickApp = () => {
     console.log(obj);
   };
 
+  const clickOkay = () => {
+    setOk(true);
+    setModalVisibleOk(true);
+  };
+
+  const clickNo = () => {
+    setModalVisibleNo(true);
+  };
+
+  useEffect(() => {
+    const tableDataList = obj?.list?.map((item, index) => {
+      return [
+        `   ${index + 1}`,
+        `${item?.name}`,
+        `${item?.ves?.toString()} ${item?.type?.toString()}`,
+      ];
+    });
+    setListData(tableDataList);
+  }, []);
+
+  const arrWidth = [0.4, 2.2, 0.7];
+
+  // const user = "https://iconape.com/wp-content/png_logo_vector/user-circle.png";
+
+  // console.log(listData, "listData");
   return (
     <>
-      <ParentDiv onPress={clickApp}>
+      <View style={styles.container}>
         <Div style={{ justifyContent: "space-between", marginBottom: 5 }}>
-          <TextTitleMore>№: {obj.codeid} </TextTitleMore>
-          <Div>
-            <TextTitleMoreDate>Дата: </TextTitleMoreDate>
-            <TextTitleDate>{obj?.date}</TextTitleDate>
+          <Text style={styles.titleDate}>№: {obj.codeid} </Text>
+          <Div style={{ paddingTop: 5 }}>
+            <Text style={styles.titleMoreDate}>Дата: </Text>
+            <Text style={styles.titleDate}>{obj?.date}</Text>
           </Div>
         </Div>
         <Div>
-          <TextTitleMore>Кто: </TextTitleMore>
-          <TextTitle>{obj?.who}</TextTitle>
+          {/* <Image style={styles.backgroundImage} source={{ uri: user }} /> */}
+          <Text style={[styles.textTitle, { fontSize: 18, marginLeft: -3 }]}>
+            Кто: {obj?.who}
+          </Text>
         </Div>
-        <Div>
-          <TextTitleMore>Кому: </TextTitleMore>
-          <TextTitle>{obj?.who}</TextTitle>
-        </Div>
-
-        <DivProd>
-          {obj?.list?.map((item, index) => (
-            <DivInner key={item?.codeid}>
-              <TextInner>{index + 1}. </TextInner>
-              <TextInner>
-                {item?.name}, {item?.ves} {item?.type}
-              </TextInner>
-              {/* <Text>
-            </Text> */}
-            </DivInner>
-          ))}
-        </DivProd>
-      </ParentDiv>
+        <Table>
+          <Row
+            data={["  № ", "Товар", "Вес (кол-во)"]}
+            style={styles.head}
+            textStyle={styles.textTitle}
+            flexArr={arrWidth}
+          />
+          <Rows
+            data={listData}
+            textStyle={styles.text}
+            flexArr={arrWidth}
+            style={{
+              borderBottomWidth: 1,
+              borderBottomColor: "rgba(199, 210, 254, 0.718)",
+            }}
+          />
+        </Table>
+      </View>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    minWidth: "100%",
+    marginBottom: 20,
+    marginTop: 10,
+    borderRadius: 8,
+    paddingBottom: 12,
+    paddingTop: 5,
+  },
+  head: { height: 60, backgroundColor: "rgba(199, 210, 254, 0.250)" },
+  text: { margin: 6, marginBottom: 8, marginTop: 8 },
+  // textTitle: { margin: 6, fontSize: 16, fontWeight: 500 },
+
+  titleMoreDate: {
+    display: "inline",
+    fontSize: 15,
+    color: "gray",
+  },
+  titleDate: {
+    display: "inline",
+    fontSize: 15,
+    // font-weight: 400;
+    color: "gray",
+  },
+  textTitle: {
+    fontSize: 15,
+    // fontWeight: 500,
+    display: "inline",
+    paddingTop: 10,
+    paddingRight: 0,
+    paddingBottom: 15,
+    paddingLeft: 5,
+    color: "#383838",
+  },
+});

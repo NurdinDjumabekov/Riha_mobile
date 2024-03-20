@@ -1,11 +1,4 @@
-import {
-  SafeAreaView,
-  FlatList,
-  RefreshControl,
-  View,
-  Modal,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { SafeAreaView, FlatList, RefreshControl } from "react-native";
 import styled from "styled-components/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +8,6 @@ import {
 } from "../store/reducers/requestSlice";
 import { useEffect, useState } from "react";
 import { EveryMyApplication } from "../components/EveryMyApplication";
-import { ViewButton } from "../customsTags/ViewButton";
 import ConfirmationModal from "../components/ConfirmationModal";
 
 export const MyApplicationScreen = ({ navigation, route }) => {
@@ -32,36 +24,6 @@ export const MyApplicationScreen = ({ navigation, route }) => {
     justify-content: space-between;
     flex-wrap: wrap;
   `;
-
-  const ViewAction = styled.View`
-    min-width: 70%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-  `;
-
-  const ConfirmText = styled.Text`
-    font-size: 25px;
-    font-weight: 500;
-  `;
-
-  const BackgroundOverlay = styled.View`
-    flex: 1;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-  `;
-
-  const btns = {
-    color: "#fff",
-    elevation: 2,
-    width: 100,
-    paddingBottom: 8,
-    paddingTop: 8,
-  };
 
   useEffect(() => {
     dispatch(getMyApplication({ obj: route?.params }));

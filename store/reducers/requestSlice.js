@@ -15,6 +15,7 @@ const initialState = {
   listMyApplication: [],
   listComming: [],
   listLeftovers: [],
+  listSelectCategory: [],
 };
 
 /// logInAccount

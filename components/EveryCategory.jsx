@@ -1,3 +1,4 @@
+import { StyleSheet, View } from "react-native";
 import styled from "styled-components/native";
 
 const ParentDiv = styled.TouchableOpacity`
@@ -15,27 +16,25 @@ const ParentDiv = styled.TouchableOpacity`
 const TextTitle = styled.Text`
   margin: 0;
   padding: 0;
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 600;
   padding: 5px 10px;
+  background-color: rgba(199, 210, 254, 0.25);
+  color: #222;
+  width: 100%;
+  text-align: center;
+  border-radius: 0 0 8px 8px;
 `;
 
 const BackgroundImage = styled.Image`
   display: block;
   width: 100%;
-  height: 180px;
+  height: 140px;
   position: absolute;
   left: 0;
   top: 0;
   border-radius: 8px;
 `;
-
-// font-size: 20px;
-//   width: 100%;
-//   height: 350px;
-//   background-color: red;
-//   border-radius: 10px;
-//   margin: 80px auto;
 
 export const EveryCategory = ({ obj, navigation }) => {
   const clickCateg = () => {
@@ -50,8 +49,37 @@ export const EveryCategory = ({ obj, navigation }) => {
 
   return (
     <ParentDiv onPress={clickCateg}>
+      <View style={styles.shadow}></View>
       <BackgroundImage source={{ uri: obj.img }} />
-      <TextTitle>{obj?.name}</TextTitle>
+      <View style={styles.main}>
+        <TextTitle>{obj?.name}</TextTitle>
+      </View>
     </ParentDiv>
   );
 };
+
+const styles = StyleSheet.create({
+  shadow: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(15, 15, 16, 0.064)",
+    zIndex: 10,
+    borderRadius: 8,
+  },
+  main: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    width: "100%",
+    height: "100%",
+    // backgroundColor: "red",
+    zIndex: 11,
+    borderRadius: 8,
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+});

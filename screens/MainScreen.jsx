@@ -15,8 +15,8 @@ export const MainScreen = ({ navigation }) => {
     min-width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    justify-content: center;
+    padding-bottom: 10px;
   `;
 
   const chnagePreloader = () => {
@@ -26,7 +26,7 @@ export const MainScreen = ({ navigation }) => {
     }, 1000);
   };
 
-  console.log(token, "tokenm");
+  // console.log(token, "tokenm");
 
   return (
     <View style={{ paddingTop: 20, backgroundColor: "#ebeef2" }}>
@@ -35,19 +35,22 @@ export const MainScreen = ({ navigation }) => {
           <ParentDiv>
             <FlatList
               contentContainerStyle={{
-                width: "100%",
-                display: "flex",
+                minWidth: "100%",
                 flexDirection: "row",
-                flexWrap: "wrap",
+                display: "flex",
                 justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
                 gap: 10,
+                paddingBottom: 10,
+                // backgroundColor: "red",
               }}
               data={dataCategory}
               renderItem={({ item }) => (
                 <EveryCategory obj={item} navigation={navigation} />
               )}
               // keyExtractor={(item) => item.codeid}
-              //  numColumns={2}
+              // numColumns={2}
               refreshControl={
                 <RefreshControl
                   refreshing={preloader}

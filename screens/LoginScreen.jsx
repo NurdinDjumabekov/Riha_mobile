@@ -74,13 +74,14 @@ export const LoginScreen = ({ navigation }) => {
       <ViewButton
         onclick={sendLogin}
         styles={{
-          backgroundColor: "#fff",
+          backgroundColor: "rgba(184, 196, 246, 0.99)",
           position: "absolute",
           bottom: 30,
           left: 10,
           right: 10,
           minWidth: "100%",
           elevation: 2,
+          color:"#fff"
         }}
       >
         Войти

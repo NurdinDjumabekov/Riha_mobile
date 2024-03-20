@@ -3,7 +3,7 @@ a {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  background-color: rgba(139, 138, 138, 0.719);
+  background-color: rgba(139, 138, 138, 0.516);
   position: relative;
 
   font-size: 25px;
@@ -11,5 +11,8 @@ a {
   padding: 5px;
   border-radius: 8px;
   justify-content: flex-start;
-  background-color: #383838;
+  background-color: rgba(184, 196, 246, 0.99);
+  text-decoration: underline;
 }
+
+

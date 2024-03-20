@@ -43,7 +43,7 @@ export const EveryLeftovers = ({ obj }) => {
           <Table
             borderStyle={{
               borderWidth: 1,
-              borderColor: "#c8e1ff",
+              borderColor: "rgba(199, 210, 254, 0.718)",
               // borderRadius: 5,
             }}
           >
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 3,
   },
-  head: { height: 75, backgroundColor: "#f1f8ff" },
+  head: { height: 60, backgroundColor: "rgba(199, 210, 254, 0.250)" },
   text: { margin: 6 },
   textTitle: { margin: 6, fontSize: 14, fontWeight: 500 },
   noneData: {

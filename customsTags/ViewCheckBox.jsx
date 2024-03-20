@@ -23,7 +23,7 @@ export const ViewCheckBox = ({ children, styles, onclick, type }) => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
-          borderColor: "rgba(139, 138, 138, 0.719)",
+          borderColor: "rgba(199, 210, 254, 0.718)",
           borderWidth: 1,
         },
         styles,

@@ -12,7 +12,7 @@ const BackgroundOverlay = styled.View`
 
 const Container = styled.View`
   background-color: #fff;
-  padding: 20px;
+  padding: 20px 50px;
   border-radius: 10px;
 `;
 

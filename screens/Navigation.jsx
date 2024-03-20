@@ -9,10 +9,9 @@ import { StatusBar } from "expo-status-bar";
 import { Preloader } from "../components/Preloader";
 import { MyApplicationScreen } from "./MyApplicationScreen";
 import { MyCommingScreen } from "./MyCommingScreen";
-import { TouchableOpacity } from "react-native";
-import { ViewImg } from "../customsTags/ViewImg";
 import { LogOut } from "../components/LogOut";
 import { LeftoversScreen } from "./LeftoversScreen";
+import { Realization } from "./Realization";
 
 const Stack = createNativeStackNavigator();
 
@@ -59,6 +58,11 @@ export const Navigation = () => {
               name="Leftovers"
               component={LeftoversScreen}
               options={{ title: "Остатки" }}
+            />
+            <Stack.Screen
+              name="Realiz"
+              component={Realization}
+              options={{ title: "Реализация" }}
             />
           </>
         </Stack.Navigator>

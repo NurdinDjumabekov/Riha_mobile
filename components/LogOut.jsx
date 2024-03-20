@@ -35,7 +35,7 @@ export const LogOut = ({ navigation }) => {
           minWidth: 40,
           width: 42,
           height: 40,
-          backgroundColor: "#f2f2f2",
+          backgroundColor: "rgba(199, 210, 254, 0.250)",
           borderRadius: 20,
         }}
       />
