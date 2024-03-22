@@ -10,13 +10,10 @@ import styled from "styled-components/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  changeApplication,
   changeLeftovers,
-  getMyApplication,
   getMyLeftovers,
 } from "../store/reducers/requestSlice";
 import { useEffect, useState } from "react";
-import { EveryMyApplication } from "../components/EveryMyApplication";
 import { ViewButton } from "../customsTags/ViewButton";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { EveryLeftovers } from "../components/EveryLeftovers";
@@ -72,7 +69,7 @@ export const LeftoversScreen = ({ route }) => {
     return () => dispatch(changeLeftovers([]));
   }, []);
 
-//   console.log(listLeftovers, "listLeftovers");
+  //   console.log(listLeftovers, "listLeftovers");
 
   return (
     <>

@@ -12,6 +12,7 @@ import { MyCommingScreen } from "./MyCommingScreen";
 import { LogOut } from "../components/LogOut";
 import { LeftoversScreen } from "./LeftoversScreen";
 import { Realization } from "./Realization";
+import { DetailedInvoice } from "./DetailedInvoice";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,12 +28,12 @@ export const Navigation = () => {
             },
           }}
         >
-          <Stack.Screen
+          {/* <Stack.Screen
             name="Login"
             component={LoginScreen}
             // options={{ title: "Вход" }}
             options={{ headerShown: false }}
-          />
+          /> */}
           <>
             <Stack.Screen
               name="Main"
@@ -47,7 +48,12 @@ export const Navigation = () => {
             <Stack.Screen
               name="Application"
               component={MyApplicationScreen}
-              options={{ title: "Мои заявки" }}
+              options={{ title: "Список накладных" }}
+            />
+            <Stack.Screen
+              name="detailedInvoice"
+              component={DetailedInvoice}
+              // options={{ title: "Список накладных" }}
             />
             <Stack.Screen
               name="Comming"

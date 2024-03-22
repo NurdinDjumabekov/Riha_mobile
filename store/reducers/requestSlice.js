@@ -12,7 +12,8 @@ import { changeToken } from "./saveDataSlice";
 const initialState = {
   preloader: false,
   chech: "",
-  listMyApplication: [],
+  listMyInvoice: [],
+  everyInvoice: {},
   listComming: [],
   listLeftovers: [],
   listSelectCategory: [],
@@ -53,28 +54,46 @@ export const logInAccount = createAsyncThunk(
   }
 );
 
-/// getMyApplication
-export const getMyApplication = createAsyncThunk(
-  "getMyApplication",
+/// getMyInvoice
+export const getMyInvoice = createAsyncThunk(
+  "getMyInvoice",
+  /// для получения всех накладных
   async function ({ obj }, { dispatch, rejectWithValue }) {
-    // console.log(obj, "obj");
-    // console.log(`${API}/${obj?.pathApi}`);
-    dispatch(changePreloader(true));
-    setTimeout(() => {
-      dispatch(changeApplication(listMyApplicationData));
-      dispatch(changePreloader(false));
-    }, 500);
-
     try {
       const response = await axios({
-        method: "GET",
-        url: `${API}`,
-        // headers: {
-        //   Authorization: `Bearer ${tokenA}`,
-        // },
+        method: "POST",
+        url: `${API}/ta/get_invoices`,
+        data: {
+          agent_guid: "B3120F36-3FCD-4CA0-8346-484881974846",
+        },
       });
       if (response.status >= 200 && response.status < 300) {
-        // return response?.data?.data;
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getMyEveryInvoice
+export const getMyEveryInvoice = createAsyncThunk(
+  "getMyEveryInvoice",
+  /// для получения каждой накладной
+  async function (guid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/ta/get_invoice`,
+        data: {
+          invoice_guid: guid,
+        },
+      });
+      if (response.status >= 200 && response.status < 300) {
+        // console.log(response?.data?.[0],"444");
+        return response?.data?.[0];
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -153,7 +172,7 @@ export const changeStatus = createAsyncThunk(
     // console.log(`${API}/${obj?.pathApi}`);
     dispatch(changePreloader(true));
     setTimeout(() => {
-      dispatch(changeApplication(listMyApplicationData));
+      dispatch(changeListInvoices(listMyApplicationData));
       dispatch(changePreloader(false));
     }, 500);
 
@@ -192,25 +211,49 @@ const requestSlice = createSlice({
     // builder.addCase(logInAccount.pending, (state, action) => {
     //   state.preloader = true;
     // });
-    /// getMyApplication
-    // builder.addCase(getMyApplication.fulfilled, (state, action) => {
-    //   state.preloader = false;
-    //   state.listMyApplication = action.payload;
-    // });
-    // builder.addCase(getMyApplication.rejected, (state, action) => {
-    //   state.error = action.payload;
-    //   state.preloader = false;
-    // });
-    // builder.addCase(getMyApplication.pending, (state, action) => {
-    //   state.preloader = true;
-    // });
+    /// getMyInvoice
+    builder.addCase(getMyInvoice.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listMyInvoice = [
+        ...action.payload,
+        ...action.payload,
+        ...action.payload,
+        ...action.payload,
+        ...action.payload,
+        ...action.payload,
+        ...action.payload,
+        ...action.payload,
+        ...action.payload,
+        ...action.payload,
+      ];
+      // state.listMyInvoice = action.payload;
+    });
+    builder.addCase(getMyInvoice.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getMyInvoice.pending, (state, action) => {
+      state.preloader = true;
+    });
+    //// getMyEveryInvoice
+    builder.addCase(getMyEveryInvoice.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.everyInvoice = action.payload;
+    });
+    builder.addCase(getMyEveryInvoice.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getMyEveryInvoice.pending, (state, action) => {
+      state.preloader = true;
+    });
   },
   reducers: {
     changePreloader: (state, action) => {
       state.preloader = action.payload;
     },
-    changeApplication: (state, action) => {
-      state.listMyApplication = action.payload;
+    changeListInvoices: (state, action) => {
+      state.listMyInvoice = action.payload;
     },
     changeComming: (state, action) => {
       state.listComming = action.payload;
@@ -222,7 +265,7 @@ const requestSlice = createSlice({
 });
 export const {
   changePreloader,
-  changeApplication,
+  changeListInvoices,
   changeComming,
   changeLeftovers,
 } = requestSlice.actions;

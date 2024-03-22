@@ -5,6 +5,7 @@ const initialState = {
     login: "",
     password: "",
   },
+  acceptConfirmInvoice: [], // для подтверждения и принятия товаров ТА
 };
 
 const stateSlice = createSlice({
@@ -20,8 +21,12 @@ const stateSlice = createSlice({
         password: "",
       };
     },
+    changeAcceptInvoiceTA: (state, action) => {
+      state.acceptConfirmInvoice = action.payload;
+    },
   },
 });
-export const { changeDataLogin, clearLogin } = stateSlice.actions;
+export const { changeDataLogin, clearLogin, changeAcceptInvoiceTA } =
+  stateSlice.actions;
 
 export default stateSlice.reducer;

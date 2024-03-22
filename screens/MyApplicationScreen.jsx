@@ -3,15 +3,16 @@ import styled from "styled-components/native";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  changeApplication,
-  getMyApplication,
+  getMyInvoice,
+  changeListInvoices,
 } from "../store/reducers/requestSlice";
 import { useEffect, useState } from "react";
-import { EveryMyApplication } from "../components/EveryMyApplication";
 import ConfirmationModal from "../components/ConfirmationModal";
+import { EveryMyInvoice } from "../components/EveryMyInvoice";
 
 export const MyApplicationScreen = ({ navigation, route }) => {
-  const { preloader, listMyApplication } = useSelector(
+  /// загрузки
+  const { preloader, listMyInvoice } = useSelector(
     (state) => state.requestSlice
   );
   const dispatch = useDispatch();
@@ -21,20 +22,15 @@ export const MyApplicationScreen = ({ navigation, route }) => {
     min-width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
+    width: 100%;
   `;
 
   useEffect(() => {
-    dispatch(getMyApplication({ obj: route?.params }));
-    return () => dispatch(changeApplication([]));
+    dispatch(getMyInvoice({ obj: route?.params }));
+    return () => dispatch(changeListInvoices([]));
   }, []);
-
-  // console.log(dataCategory, "dataCategory");
-  // console.log(route?.params, "route");
-  // console.log(id, "id");
-  // console.log(API);
-  // console.log(listMyApplication, "listMyApplication");
 
   const [modalVisibleOk, setModalVisibleOk] = useState(false);
   const [modalVisibleNo, setModalVisibleNo] = useState(false);
@@ -49,26 +45,28 @@ export const MyApplicationScreen = ({ navigation, route }) => {
     setModalVisibleNo(false);
   };
 
+  // console.log(listMyInvoice, "listMyInvoice");
+
   return (
     <>
       <ViewContainer>
         <SafeAreaView>
           <ParentDiv>
             <FlatList
-              data={listMyApplication}
+              contentContainerStyle={{
+                minWidth: "100%",
+                width: "100%",
+              }}
+              data={listMyInvoice}
               renderItem={({ item }) => (
-                <EveryMyApplication
-                  obj={item}
-                  setModalVisibleOk={setModalVisibleOk}
-                  setModalVisibleNo={setModalVisibleNo}
-                />
+                <EveryMyInvoice obj={item} navigation={navigation} />
               )}
-              keyExtractor={(item) => item.codeid}
+              // keyExtractor={(item) => item.codeid}
               refreshControl={
                 <RefreshControl
                   refreshing={preloader}
                   onRefresh={() =>
-                    dispatch(getMyApplication({ obj: route?.params }))
+                    dispatch(getMyInvoice({ obj: route?.params }))
                   }
                 />
               }
@@ -84,6 +82,7 @@ export const MyApplicationScreen = ({ navigation, route }) => {
         onNo={closeModalOk}
         onClose={closeModalOk}
       />
+
       <ConfirmationModal
         visible={modalVisibleNo}
         message="Отклонить накладную ?"

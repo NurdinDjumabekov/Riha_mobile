@@ -45,7 +45,7 @@ export const EveryMyComming = ({ obj }) => {
 
   // const user = "https://iconape.com/wp-content/png_logo_vector/user-circle.png";
 
-  // console.log(listData, "listData");
+  console.log(listData, "listData");
   return (
     <>
       <View style={styles.container}>

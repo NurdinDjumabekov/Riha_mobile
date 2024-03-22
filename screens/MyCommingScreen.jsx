@@ -9,7 +9,6 @@ import {
   changePreloader,
   getMyComming,
 } from "../store/reducers/requestSlice";
-import { EveryMyApplication } from "../components/EveryMyApplication";
 import { useEffect, useState } from "react";
 import { EveryMyComming } from "../components/EveryMyComming";
 

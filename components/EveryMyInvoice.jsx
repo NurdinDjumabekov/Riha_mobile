@@ -1,98 +1,47 @@
-import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { Table, Row, Rows } from "react-native-table-component";
-import { ViewCheckBox } from "../customsTags/ViewCheckBox";
 import styled from "styled-components/native";
+import { transformDate } from "../helpers/transformDate";
+import { ViewButton } from "../customsTags/ViewButton";
+import { ViewImg } from "../customsTags/ViewImg";
+import calendar from "../assets/icons/calendar.jpg";
+import money from "../assets/icons/money.jpg";
 
 const Div = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 4px;
-  padding: 0px 10px;
+  gap: 8px;
+  justify-content: flex-start;
+  margin-bottom: 5;
 `;
 
-export const EveryMyApplication = ({
-  obj,
-  setModalVisibleOk,
-  setModalVisibleNo,
-}) => {
-  const [listData, setListData] = useState([]);
+export const EveryMyInvoice = ({ obj, navigation }) => {
+  //// каждая загрузка(накладная)
 
-  const [ok, setOk] = useState(false);
-  const [no, setNo] = useState(false);
-  const clickApp = () => {
-    console.log(obj);
+  // console.log(obj, "obj");
+  const lookInvoice = () => {
+    navigation.navigate("detailedInvoice", { date: obj.date, guid: obj.guid });
   };
 
-  const clickOkay = () => {
-    setOk(true);
-    setModalVisibleOk(true);
-  };
-
-  const clickNo = () => {
-    setModalVisibleNo(true);
-  };
-
-  useEffect(() => {
-    const tableDataList = obj?.list?.map((item, index) => {
-      return [
-        `   ${index + 1}`,
-        `${item?.name}`,
-        `${item?.ves?.toString()} ${item?.type?.toString()}`,
-      ];
-    });
-    setListData(tableDataList);
-  }, []);
-
-  const arrWidth = [0.4, 2.2, 0.7];
-
-  const user = "https://iconape.com/wp-content/png_logo_vector/user-circle.png";
-
-  // console.log(listData, "listData");
   return (
-    <>
-      <View style={styles.container}>
-        <Div style={{ justifyContent: "space-between", marginBottom: 5 }}>
-          <Text style={styles.titleDate}>№: {obj.codeid} </Text>
-          <Div style={{ paddingTop: 5 }}>
-            <Text style={styles.titleMoreDate}>Дата: </Text>
-            <Text style={styles.titleDate}>{obj?.date}</Text>
-          </Div>
+    <View style={styles.container}>
+      {/* <Text style={styles.titleDate}>№: {obj.codeid} </Text> */}
+      <View>
+        <Div>
+          <Image style={styles.imgIcon} source={calendar} />
+          <Text style={styles.titleDate}>{transformDate(obj?.date)}</Text>
         </Div>
         <Div>
-          <Image style={styles.backgroundImage} source={{ uri: user }} />
-          <Text style={styles.textTitle}>{obj?.who}</Text>
+          <Image style={styles.imgIcon} source={money} />
+          <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
         </Div>
-        <Table>
-          <Row
-            data={["  № ", "Товар", "Вес (кол-во)"]}
-            style={styles.head}
-            textStyle={styles.textTitle}
-            flexArr={arrWidth}
-          />
-          <Rows
-            data={listData}
-            textStyle={styles.text}
-            flexArr={arrWidth}
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: "rgba(199, 210, 254, 0.718)",
-            }}
-          />
-        </Table>
-        <View style={styles.divActions}>
-          {+obj?.status === 0 ? (
-            <>
-              <ViewCheckBox onclick={clickOkay} type={1} />
-              <ViewCheckBox onclick={clickNo} type={2} />
-            </>
-          ) : (
-            <></>
-          )}
-        </View>
+        <Div>
+          <ViewButton styles={styles.btn} onclick={lookInvoice}>
+            Посмотреть ...
+          </ViewButton>
+        </Div>
       </View>
-    </>
+    </View>
   );
 };
 
@@ -103,51 +52,42 @@ const styles = StyleSheet.create({
     minWidth: "100%",
     marginBottom: 20,
     marginTop: 10,
-    borderRadius: 8,
+    borderRadius: 5,
     paddingBottom: 12,
     paddingTop: 5,
-  },
-  head: { height: 60, backgroundColor: "rgba(199, 210, 254, 0.250)" },
-  text: { margin: 6, marginBottom: 8, marginTop: 8 },
-  textTitle: { margin: 6, fontSize: 16, fontWeight: 500 },
-  divActions: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-end",
-    justifyContent: "flex-end",
-    gap: 15,
-    width: "100%",
-    paddingRight: 20,
-    marginTop: 10,
+    paddingLeft: 12,
+    paddingRight: 12,
   },
 
-  backgroundImage: {
-    display: "block",
-    width: 30,
-    height: 30,
-    borderRadius: 8,
-    marginLeft: -3,
-  },
   titleMoreDate: {
     display: "inline",
-    fontSize: 1,
-    color: "gray",
+    fontSize: 20,
+    color: "#475569",
   },
   titleDate: {
     display: "inline",
-    fontSize: 15,
-    // font-weight: 400;
-    color: "gray",
+    fontSize: 22,
+    // fontWeight: "400",
+    color: "#475569",
   },
-  textTitle: {
-    fonSsize: 17,
-    // fontWeight: 500,
-    display: "inline",
-    paddingTop: 10,
-    paddingRight: 0,
-    paddingBottom: 15,
-    paddingLeft: 5,
-    color: "#383838",
+  imgIcon: {
+    width: 45,
+    height: 45,
+  },
+  totalPrice: {
+    fontSize: 25,
+    // color: "rgba(5, 146, 102,0.73)",
+    // backgroundColor: "rgba(202, 243 ,222 , 0.96)",
+    paddingBottom: 3,
+    paddingRight: 8,
+    paddingLeft: 8,
+    borderRadius: 8,
+  },
+  btn: {
+    backgroundColor: "rgba(97 ,100, 239,0.7)",
+    color: "#fff",
+    width: "100%",
+    paddingTop: 9,
   },
 });
 
