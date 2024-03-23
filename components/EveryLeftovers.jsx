@@ -6,7 +6,6 @@ import styled from "styled-components/native";
 const TextTitle = styled.Text`
   font-size: 17px;
   font-weight: 500;
-  display: inline;
   padding: 10px 0 15px 5px;
   color: #383838;
 `;

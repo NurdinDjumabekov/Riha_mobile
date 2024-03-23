@@ -5,7 +5,10 @@ const initialState = {
     login: "",
     password: "",
   },
-  acceptConfirmInvoice: [], // для подтверждения и принятия товаров ТА
+  acceptConfirmInvoice: {
+    invoice_guid: "",
+    products: [],
+  }, // для подтверждения и принятия товаров ТА
 };
 
 const stateSlice = createSlice({
@@ -24,9 +27,16 @@ const stateSlice = createSlice({
     changeAcceptInvoiceTA: (state, action) => {
       state.acceptConfirmInvoice = action.payload;
     },
+    clearAcceptInvoiceTA: (state, action) => {
+      state.acceptConfirmInvoice = { invoice_guid: "", products: [] };
+    },
   },
 });
-export const { changeDataLogin, clearLogin, changeAcceptInvoiceTA } =
-  stateSlice.actions;
+export const {
+  changeDataLogin,
+  clearLogin,
+  changeAcceptInvoiceTA,
+  clearAcceptInvoiceTA,
+} = stateSlice.actions;
 
 export default stateSlice.reducer;

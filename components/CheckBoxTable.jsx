@@ -2,32 +2,49 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
 
-export const CheckBoxTable = ({ guid }) => {
+export const CheckBoxTable = ({ guidProduct, guidInvoice }) => {
   const { acceptConfirmInvoice } = useSelector((state) => state.stateSlice);
-  // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
+  console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
   const dispatch = useDispatch();
 
-  const isCheck = acceptConfirmInvoice.some((item) => item?.guid === guid);
+  const isCheck = acceptConfirmInvoice?.products?.some(
+    (item) => item?.guid === guidProduct && item?.check === true
+  );
   const checkGuid = () => {
     if (isCheck) {
       // удаляем guid из массива
       dispatch(
-        changeAcceptInvoiceTA(
-          acceptConfirmInvoice.filter((item) => item.guid !== guid)
-        )
+        changeAcceptInvoiceTA({
+          ...acceptConfirmInvoice,
+          products: acceptConfirmInvoice?.products?.filter(
+            (item) => item.guid !== guidProduct
+          ),
+        })
       );
     } else {
       // добавляем guid в массив
-      dispatch(changeAcceptInvoiceTA([...acceptConfirmInvoice, { guid }]));
+      dispatch(
+        changeAcceptInvoiceTA({
+          ...acceptConfirmInvoice,
+          invoice_guid: guidInvoice,
+          products: [
+            ...acceptConfirmInvoice.products.filter(
+              (item) => item.guid !== guidProduct
+            ),
+            { guid: guidProduct, check: true, count: "" },
+          ],
+        })
+      );
     }
   };
 
-  console.log(isCheck);
+  // console.log(isCheck);
+  // console.log(guidProduct, "guidProduct");
 
   return (
     <TouchableOpacity onPress={checkGuid}>
-      <View style={[styles.standartBox, !isCheck && styles.checkedBox]}>
-        {!isCheck && (
+      <View style={[styles.standartBox, isCheck && styles.checkedBox]}>
+        {isCheck && (
           <View style={styles.standartBox__inner}>
             <View style={styles.checkmark}></View>
           </View>

@@ -31,7 +31,6 @@ export const LeftoversScreen = ({ route }) => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
   `;
 
   const ViewAction = styled.View`

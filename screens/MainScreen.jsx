@@ -36,21 +36,16 @@ export const MainScreen = ({ navigation }) => {
             <FlatList
               contentContainerStyle={{
                 minWidth: "100%",
-                flexDirection: "row",
-                display: "flex",
-                justifyContent: "space-between",
                 alignItems: "center",
-                flexWrap: "wrap",
-                gap: 10,
+                gap: 20,
                 paddingBottom: 10,
-                // backgroundColor: "red",
               }}
               data={dataCategory}
               renderItem={({ item }) => (
                 <EveryCategory obj={item} navigation={navigation} />
               )}
               // keyExtractor={(item) => item.codeid}
-              // numColumns={2}
+              numColumns={2}
               refreshControl={
                 <RefreshControl
                   refreshing={preloader}

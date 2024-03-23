@@ -1,12 +1,27 @@
 import { useEffect, useState } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import styled from "styled-components/native";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyEveryInvoice } from "../store/reducers/requestSlice";
+import {
+  acceptInvoiceTA,
+  getMyEveryInvoice,
+} from "../store/reducers/requestSlice";
 import { Row, Rows, Table } from "react-native-table-component";
 import { transformDate } from "../helpers/transformDate";
-import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
 import { CheckBoxTable } from "../components/CheckBoxTable";
+import ConfirmationModal from "../components/ConfirmationModal";
+import { ViewCheckBox } from "../customsTags/ViewCheckBox";
+import { ViewButton } from "../customsTags/ViewButton";
+import { ViewContainer } from "../customsTags/ViewContainer";
+import { InputDifference } from "../components/InputDifference";
 
 const Div = styled.View`
   display: flex;
@@ -16,51 +31,46 @@ const Div = styled.View`
   padding: 0px 10px;
 `;
 
-export const DetailedInvoice = ({ route }) => {
+export const DetailedInvoice = ({ route, navigation }) => {
   const { date, guid } = route.params;
   const [listData, setListData] = useState([]);
-  const [checkboxStates, setCheckboxStates] = useState(false);
+  const [modalVisibleOk, setModalVisibleOk] = useState(false);
 
   const dispatch = useDispatch();
-  const { preloader, everyInvoice } = useSelector(
-    (state) => state.requestSlice
-  );
-
-  const [ok, setOk] = useState(false);
-  const [no, setNo] = useState(false);
-  const clickApp = () => {
-    console.log(obj);
-  };
+  const { everyInvoice } = useSelector((state) => state.requestSlice);
+  const { acceptConfirmInvoice } = useSelector((state) => state.stateSlice);
 
   const clickOkay = () => {
-    setOk(true);
     setModalVisibleOk(true);
   };
 
-  const clickNo = () => {
-    setModalVisibleNo(true);
+  const changeModalApplication = () => {
+    dispatch(acceptInvoiceTA({ data: acceptConfirmInvoice, navigation }));
+    setModalVisibleOk(false);
   };
-
-  console.log(everyInvoice?.list, "everyInvoice");
-
-  // const checkCheckBox = (guid) => {
-  //   setCheckboxStates(!checkboxStates);
-  //   // dispatch(changeAcceptInvoiceTA())
-  //   console.log(guid, "guid");
-  // };
 
   useEffect(() => {
     dispatch(getMyEveryInvoice(guid));
   }, []);
 
   useEffect(() => {
+    navigation.setOptions({
+      title: `Накладная №${everyInvoice?.codeid}`,
+    });
     if (everyInvoice && everyInvoice.list) {
       const tableDataList = everyInvoice?.list?.map((item, index) => {
         return [
-          `  ${index + 1}`,
+          // `  ${index + 1}`,
           `${item?.product_name}`,
           `${item?.count}`,
-          <CheckBoxTable guid={item?.guid} />,
+          <CheckBoxTable
+            guidProduct={item?.guid}
+            guidInvoice={everyInvoice?.guid}
+          />,
+          <InputDifference
+            guidProduct={item?.guid}
+            guidInvoice={everyInvoice?.guid}
+          />,
         ];
       });
       setListData(tableDataList);
@@ -68,23 +78,27 @@ export const DetailedInvoice = ({ route }) => {
   }, [everyInvoice]);
 
   const windowWidth = Dimensions.get("window").width;
-  const arrWidth = [10, 47, 18, 25]; //  проценты %
+  const arrWidth = [47, 18, 15, 20]; //  проценты %
 
   // Преобразуем проценты в абсолютные значения ширины
   const resultWidths = arrWidth.map(
     (percentage) => (percentage / 100) * windowWidth
   );
 
-  console.log(listData, "listDataыыы");
+  // console.log(listData, "listDataыыы");
+  // console.log(everyInvoice, "everyInvoice");
+  // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
+
+  const isTrue = acceptConfirmInvoice?.products?.length == listData?.length;
+
   return (
-    <>
+    <ScrollView>
       <View style={styles.container}>
         <Div style={{ justifyContent: "space-between", marginBottom: 5 }}>
-          <Text style={styles.titleDate}>№: {everyInvoice.codeid} </Text>
-          <Div style={{ paddingTop: 5 }}>
-            <Text style={styles.titleMoreDate}>Дата: </Text>
+          {/* <Text style={styles.titleDate}>№: {everyInvoice.codeid} </Text> */}
+          <Div style={{ paddingTop: 10, paddingBottom: 10 }}>
             <Text style={styles.titleDate}>
-              {transformDate(everyInvoice?.date)}
+              Дата: {transformDate(everyInvoice?.date)}
             </Text>
           </Div>
         </Div>
@@ -94,7 +108,7 @@ export const DetailedInvoice = ({ route }) => {
         </Div>
         <Table>
           <Row
-            data={["  № ", "Товар", "Вес (кол-во)", "........"]}
+            data={[" Товар", "Вес (кол-во)", "....", "разница"]}
             style={styles.head}
             textStyle={styles.textTitle}
             widthArr={resultWidths}
@@ -106,11 +120,46 @@ export const DetailedInvoice = ({ route }) => {
             style={{
               borderBottomWidth: 1,
               borderBottomColor: "rgba(199, 210, 254, 0.718)",
+              paddingRight: 3,
+              paddingLeft: 4,
             }}
           />
         </Table>
+        <View style={styles.divAction}>
+          {true ? (
+            <TouchableOpacity
+              style={styles.divAction__inner}
+              onPress={clickOkay}
+            >
+              {isTrue ? (
+                <ViewCheckBox type={1} onclick={clickOkay} />
+              ) : (
+                <ViewCheckBox
+                  type={1}
+                  onclick={() => Alert.alert("Проверьте все товары!")}
+                />
+              )}
+              {isTrue && <ViewCheckBox onclick={clickOkay} type={1} />}
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
+        </View>
+        {isTrue && (
+          <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
+            Принять накладную
+          </ViewButton>
+        )}
       </View>
-    </>
+
+      <ConfirmationModal
+        visible={modalVisibleOk}
+        message="Принять накладную ?"
+        onYes={changeModalApplication}
+        onNo={() => setModalVisibleOk(false)}
+        onClose={() => setModalVisibleOk(false)}
+      />
+    </ScrollView>
   );
 };
 
@@ -122,51 +171,53 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 10,
     borderRadius: 8,
-    paddingBottom: 12,
+    paddingBottom: 102,
     paddingTop: 5,
   },
   head: { height: 60, backgroundColor: "rgba(199, 210, 254, 0.250)" },
   text: { margin: 6, marginBottom: 8, marginTop: 8 },
   textTitle: { margin: 6, fontSize: 16, fontWeight: 500 },
 
-  titleMoreDate: {
-    display: "inline",
-    fontSize: 15,
-    color: "gray",
-  },
   titleDate: {
-    display: "inline",
-    fontSize: 15,
+    fontSize: 20,
     // font-weight: 400;
     color: "gray",
   },
   textTitle: {
     fontSize: 15,
     // fontWeight: 500,
-    display: "inline",
     paddingTop: 10,
     paddingRight: 0,
     paddingBottom: 15,
     paddingLeft: 5,
     color: "#383838",
   },
+  divAction: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
+    gap: 2,
+    width: "100%",
+    paddingRight: 20,
+    marginTop: 10,
+  },
+  divAction__inner: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 0,
+    borderColor: "rgba(199, 210, 254, 0.718)",
+    borderWidth: 1,
+    borderRadius: 9,
+    paddingBottom: 5,
+  },
+  sendBtn: {
+    backgroundColor: "#c2f8e2",
+    color: "#1ab782",
+    width: "95%",
+    alignSelf: "center",
+    position: "absolute",
+    bottom: 10,
+  },
 });
-
-// divActions: {
-//   display: "flex",
-//   flexDirection: "row",
-//   alignItems: "flex-end",
-//   justifyContent: "flex-end",
-//   gap: 15,
-//   width: "100%",
-//   paddingRight: 20,
-//   marginTop: 10,
-// },
-
-// backgroundImage: {
-//   display: "block",
-//   width: 30,
-//   height: 30,
-//   borderRadius: 8,
-//   marginLeft: -3,
-// },

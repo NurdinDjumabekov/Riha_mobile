@@ -53,7 +53,6 @@ export const Navigation = () => {
             <Stack.Screen
               name="detailedInvoice"
               component={DetailedInvoice}
-              // options={{ title: "Список накладных" }}
             />
             <Stack.Screen
               name="Comming"

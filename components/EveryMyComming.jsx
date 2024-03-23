@@ -100,12 +100,10 @@ const styles = StyleSheet.create({
   // textTitle: { margin: 6, fontSize: 16, fontWeight: 500 },
 
   titleMoreDate: {
-    display: "inline",
     fontSize: 15,
     color: "gray",
   },
   titleDate: {
-    display: "inline",
     fontSize: 15,
     // font-weight: 400;
     color: "gray",
@@ -113,7 +111,6 @@ const styles = StyleSheet.create({
   textTitle: {
     fontSize: 15,
     // fontWeight: 500,
-    display: "inline",
     paddingTop: 10,
     paddingRight: 0,
     paddingBottom: 15,

@@ -13,18 +13,16 @@ export const ViewCheckBox = ({ children, styles, onclick, type }) => {
     <TouchableOpacity
       style={[
         {
-          width: 45,
-          height: 40,
-          borderRadius: 2,
+          width: 50,
+          height: 45,
+          borderRadius: 10,
           textAlign: "center",
-          padding: 3,
+          padding: 1,
           backgroundColor: styles?.backgroundColor || "#fff",
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "center",
-          borderColor: "rgba(199, 210, 254, 0.718)",
-          borderWidth: 1,
         },
         styles,
       ]}

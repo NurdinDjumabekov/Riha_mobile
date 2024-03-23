@@ -2,7 +2,6 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
   background-color: rgba(139, 138, 138, 0.516);
   position: relative;
 
@@ -11,10 +10,13 @@ a {
   padding: 5px;
   border-radius: 8px;
   justify-content: flex-start;
+  background-color: rgba(115, 220, 169, 0.99);
   background-color: rgba(184, 196, 246, 0.99);
   text-decoration: underline;
   color: rgba(205, 70, 92, 0.756);
-  color: rgba(97, 99, 239, 0.524);
+  color: rgba(47, 71, 190, 0.672);
+  color: #c2f8e2;
+  color: #1ab782;
 }
 
 

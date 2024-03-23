@@ -8,6 +8,7 @@ import {
 } from "../../helpers/Data";
 import { clearLogin } from "./stateSlice";
 import { changeToken } from "./saveDataSlice";
+import { Alert } from "react-native";
 
 const initialState = {
   preloader: false,
@@ -61,11 +62,8 @@ export const getMyInvoice = createAsyncThunk(
   async function ({ obj }, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
-        method: "POST",
-        url: `${API}/ta/get_invoices`,
-        data: {
-          agent_guid: "B3120F36-3FCD-4CA0-8346-484881974846",
-        },
+        method: "GET",
+        url: `${API}/ta/get_invoices?agent_guid=${"B3120F36-3FCD-4CA0-8346-484881974846"}`,
       });
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
@@ -85,15 +83,36 @@ export const getMyEveryInvoice = createAsyncThunk(
   async function (guid, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
-        method: "POST",
-        url: `${API}/ta/get_invoice`,
-        data: {
-          invoice_guid: guid,
-        },
+        method: "GET",
+        url: `${API}/ta/get_invoice?invoice_guid=${guid}`,
       });
       if (response.status >= 200 && response.status < 300) {
         // console.log(response?.data?.[0],"444");
         return response?.data?.[0];
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// acceptInvoiceTA
+export const acceptInvoiceTA = createAsyncThunk(
+  "acceptInvoiceTA",
+  /// для принятия накладной торговым агентом
+  async function ({ data, navigation }, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/ta/agent_conf_inv`,
+        data,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        return {
+          navigation,
+        };
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -199,34 +218,22 @@ const requestSlice = createSlice({
   name: "requestSlice",
   initialState,
   extraReducers: (builder) => {
-    /// logInAccount
-    // builder.addCase(logInAccount.fulfilled, (state, action) => {
-    //   state.preloader = false;
-    //   state.chech = action.payload;
-    // });
-    // builder.addCase(logInAccount.rejected, (state, action) => {
-    //   state.error = action.payload;
-    //   state.preloader = false;
-    // });
-    // builder.addCase(logInAccount.pending, (state, action) => {
-    //   state.preloader = true;
-    // });
-    /// getMyInvoice
+    //// logInAccount
+    builder.addCase(logInAccount.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.chech = action.payload;
+    });
+    builder.addCase(logInAccount.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(logInAccount.pending, (state, action) => {
+      state.preloader = true;
+    });
+    //// getMyInvoice
     builder.addCase(getMyInvoice.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listMyInvoice = [
-        ...action.payload,
-        ...action.payload,
-        ...action.payload,
-        ...action.payload,
-        ...action.payload,
-        ...action.payload,
-        ...action.payload,
-        ...action.payload,
-        ...action.payload,
-        ...action.payload,
-      ];
-      // state.listMyInvoice = action.payload;
+      state.listMyInvoice = action.payload;
     });
     builder.addCase(getMyInvoice.rejected, (state, action) => {
       state.error = action.payload;
@@ -245,6 +252,20 @@ const requestSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(getMyEveryInvoice.pending, (state, action) => {
+      state.preloader = true;
+    });
+    ///// acceptInvoiceTA
+    builder.addCase(acceptInvoiceTA.fulfilled, (state, action) => {
+      state.preloader = false;
+      Alert.alert("Накладная была успешно принята!");
+      action?.payload?.navigation.navigate("Main");
+    });
+    builder.addCase(acceptInvoiceTA.rejected, (state, action) => {
+      state.error = action.payload;
+      Alert.alert("Упс, что-то пошло не так!");
+      state.preloader = false;
+    });
+    builder.addCase(acceptInvoiceTA.pending, (state, action) => {
       state.preloader = true;
     });
   },

@@ -11,6 +11,7 @@ const ParentDiv = styled.TouchableOpacity`
   shadow-opacity: 0.3;
   shadow-radius: 4px;
   elevation: 2;
+  margin: 5px;
 `;
 
 const TextTitle = styled.Text`
@@ -27,7 +28,6 @@ const TextTitle = styled.Text`
 `;
 
 const BackgroundImage = styled.Image`
-  display: block;
   width: 100%;
   height: 140px;
   position: absolute;
