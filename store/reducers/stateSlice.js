@@ -9,6 +9,8 @@ const initialState = {
     invoice_guid: "",
     products: [],
   }, // для подтверждения и принятия товаров ТА
+
+  createEveryAppTA: {}, // для создания каждой накладной ТА
 };
 
 const stateSlice = createSlice({
@@ -30,6 +32,9 @@ const stateSlice = createSlice({
     clearAcceptInvoiceTA: (state, action) => {
       state.acceptConfirmInvoice = { invoice_guid: "", products: [] };
     },
+    changeCreateEveryAppTA: (state, action) => {
+      state.createEveryAppTA = action.payload;
+    },
   },
 });
 export const {
@@ -37,6 +42,7 @@ export const {
   clearLogin,
   changeAcceptInvoiceTA,
   clearAcceptInvoiceTA,
+  changeCreateEveryAppTA,
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

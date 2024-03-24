@@ -27,7 +27,7 @@ export const InputDifference = ({ guidProduct, guidInvoice }) => {
             ...acceptConfirmInvoice.products.filter(
               (item) => item.guid !== guidProduct
             ),
-            { guid: guidProduct, check: false, count: text },
+            { guid: guidProduct, is_checked: false, count: text },
           ],
         })
       );
@@ -54,7 +54,7 @@ export const InputDifference = ({ guidProduct, guidInvoice }) => {
 const styles = StyleSheet.create({
   standartBox: {
     position: "relative",
-    width: 50,
+    width: 60,
     height: 30,
     borderWidth: 1,
     borderColor: "rgb(206 217 230)",

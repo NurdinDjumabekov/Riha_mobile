@@ -44,30 +44,30 @@ export const Navigation = () => {
                 headerRight: () => <LogOut navigation={navigation} />,
               })}
             />
-            {/* //////// */}
+            {/* ///////////////// Main /////////////////*/}
             <Stack.Screen
               name="Application"
               component={MyApplicationScreen}
               options={{ title: "Список накладных" }}
             />
-            <Stack.Screen
-              name="detailedInvoice"
-              component={DetailedInvoice}
-            />
-            <Stack.Screen
-              name="Comming"
-              component={MyCommingScreen}
-              options={{ title: "Приходы" }}
-            />
+            <Stack.Screen name="detailedInvoice" component={DetailedInvoice} />
+            {/* //////// */}
             <Stack.Screen
               name="Leftovers"
               component={LeftoversScreen}
               options={{ title: "Остатки" }}
             />
+            {/* //////// */}
+            <Stack.Screen
+              name="Comming"
+              component={MyCommingScreen}
+              options={{ title: "Отгрузки" }}
+            />
+            {/* //////// */}
             <Stack.Screen
               name="Realiz"
               component={Realization}
-              options={{ title: "Реализация" }}
+              options={{ title: "Отгрузки" }}
             />
           </>
         </Stack.Navigator>

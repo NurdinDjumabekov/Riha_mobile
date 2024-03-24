@@ -22,6 +22,7 @@ import { ViewCheckBox } from "../customsTags/ViewCheckBox";
 import { ViewButton } from "../customsTags/ViewButton";
 import { ViewContainer } from "../customsTags/ViewContainer";
 import { InputDifference } from "../components/InputDifference";
+import { tranformDateDay } from "../helpers/tranformDateDay";
 
 const Div = styled.View`
   display: flex;
@@ -78,7 +79,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
   }, [everyInvoice]);
 
   const windowWidth = Dimensions.get("window").width;
-  const arrWidth = [47, 18, 15, 20]; //  проценты %
+  const arrWidth = [50, 18, 12, 20]; //  проценты %
 
   // Преобразуем проценты в абсолютные значения ширины
   const resultWidths = arrWidth.map(
@@ -95,10 +96,9 @@ export const DetailedInvoice = ({ route, navigation }) => {
     <ScrollView>
       <View style={styles.container}>
         <Div style={{ justifyContent: "space-between", marginBottom: 5 }}>
-          {/* <Text style={styles.titleDate}>№: {everyInvoice.codeid} </Text> */}
-          <Div style={{ paddingTop: 10, paddingBottom: 10 }}>
+          <Div style={{ paddingTop: 10, paddingBottom: 15, paddingLeft: 0 }}>
             <Text style={styles.titleDate}>
-              Дата: {transformDate(everyInvoice?.date)}
+              {tranformDateDay(everyInvoice?.date)}
             </Text>
           </Div>
         </Div>
@@ -108,7 +108,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
         </Div>
         <Table>
           <Row
-            data={[" Товар", "Вес (кол-во)", "....", "разница"]}
+            data={[" Продукт", "Вес (кол-во)", "  ....", "разница"]}
             style={styles.head}
             textStyle={styles.textTitle}
             widthArr={resultWidths}
@@ -120,8 +120,8 @@ export const DetailedInvoice = ({ route, navigation }) => {
             style={{
               borderBottomWidth: 1,
               borderBottomColor: "rgba(199, 210, 254, 0.718)",
-              paddingRight: 3,
-              paddingLeft: 4,
+              // paddingRight: 3,
+              paddingLeft: 2,
             }}
           />
         </Table>
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   titleDate: {
     fontSize: 20,
     // font-weight: 400;
-    color: "gray",
+    color: "#222",
   },
   textTitle: {
     fontSize: 15,
@@ -218,6 +218,6 @@ const styles = StyleSheet.create({
     width: "95%",
     alignSelf: "center",
     position: "absolute",
-    bottom: 10,
+    bottom: -80,
   },
 });

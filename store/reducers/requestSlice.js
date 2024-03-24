@@ -15,6 +15,7 @@ const initialState = {
   chech: "",
   listMyInvoice: [],
   everyInvoice: {},
+  listSellersPoints: [],
   listComming: [],
   listLeftovers: [],
   listSelectCategory: [],
@@ -110,9 +111,7 @@ export const acceptInvoiceTA = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
-        return {
-          navigation,
-        };
+        navigation.navigate("Main");
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -121,6 +120,30 @@ export const acceptInvoiceTA = createAsyncThunk(
     }
   }
 );
+
+/// getAllSellersPoint
+export const getAllSellersPoint = createAsyncThunk(
+  "getAllSellersPoint",
+  /// для получения списка точек (магазинов)
+  async function (guid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/ta/get_points?agent_guid=${guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response?.data, "444");
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+////////////////////////////////////////
 
 /// getMyComming
 export const getMyComming = createAsyncThunk(
@@ -258,7 +281,6 @@ const requestSlice = createSlice({
     builder.addCase(acceptInvoiceTA.fulfilled, (state, action) => {
       state.preloader = false;
       Alert.alert("Накладная была успешно принята!");
-      action?.payload?.navigation.navigate("Main");
     });
     builder.addCase(acceptInvoiceTA.rejected, (state, action) => {
       state.error = action.payload;
@@ -266,6 +288,25 @@ const requestSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(acceptInvoiceTA.pending, (state, action) => {
+      state.preloader = true;
+    });
+    ///// getAllSellersPoint
+    builder.addCase(getAllSellersPoint.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listSellersPoints = action.payload?.map(
+        ({ address, name, guid }) => ({
+          label: `${name},${address}`,
+          value: guid,
+        })
+      );
+    });
+    /// [ { label: "Колбаса ", value: "********************************" },]
+    builder.addCase(getAllSellersPoint.rejected, (state, action) => {
+      state.error = action.payload;
+      Alert.alert("Упс, что-то пошло не так!");
+      state.preloader = false;
+    });
+    builder.addCase(getAllSellersPoint.pending, (state, action) => {
       state.preloader = true;
     });
   },
@@ -282,6 +323,9 @@ const requestSlice = createSlice({
     changeLeftovers: (state, action) => {
       state.listLeftovers = action.payload;
     },
+    changeListSellersPoints: (state, action) => {
+      state.listSellersPoints = action.payload;
+    },
   },
 });
 export const {
@@ -289,6 +333,7 @@ export const {
   changeListInvoices,
   changeComming,
   changeLeftovers,
+  changeListSellersPoints,
 } = requestSlice.actions;
 
 export default requestSlice.reducer;

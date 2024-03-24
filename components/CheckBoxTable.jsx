@@ -8,7 +8,7 @@ export const CheckBoxTable = ({ guidProduct, guidInvoice }) => {
   const dispatch = useDispatch();
 
   const isCheck = acceptConfirmInvoice?.products?.some(
-    (item) => item?.guid === guidProduct && item?.check === true
+    (item) => item?.guid === guidProduct && item?.is_checked === true
   );
   const checkGuid = () => {
     if (isCheck) {
@@ -31,7 +31,7 @@ export const CheckBoxTable = ({ guidProduct, guidInvoice }) => {
             ...acceptConfirmInvoice.products.filter(
               (item) => item.guid !== guidProduct
             ),
-            { guid: guidProduct, check: true, count: "" },
+            { guid: guidProduct, is_checked: true, count: "" },
           ],
         })
       );
