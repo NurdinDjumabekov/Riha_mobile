@@ -6,30 +6,65 @@ import {
   Modal,
   Text,
   View,
+  TextInput,
+  Alert,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllSellersPoint } from "../store/reducers/requestSlice";
+import {
+  createInvoiceTA,
+  getAllSellersPoint,
+} from "../store/reducers/requestSlice";
 import { useEffect, useState } from "react";
 import { ViewButton } from "../customsTags/ViewButton";
 import message from "../assets/icons/sendMessage.jpg";
 import RNPickerSelect from "react-native-picker-select";
 import { TouchableOpacity } from "react-native";
-import ConfirmationModal from "../components/ConfirmationModal";
+import {
+  changeEveryInvoiceTA,
+  clearEveryInvoiceTA,
+} from "../store/reducers/stateSlice";
 
-export const MyCommingScreen = ({ navigation, route }) => {
+export const MyCommingScreen = ({ navigation }) => {
   const { listSellersPoints } = useSelector((state) => state.requestSlice);
+  const { createEveryInvoiceTA } = useSelector((state) => state.stateSlice);
   const dispatch = useDispatch();
   const [modalState, setModalState] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllSellersPoint("a8908e83-2ee6-4627-a7f2-9a46e2de08cf")); /// guid агента
+    dispatch(getAllSellersPoint("b3120f36-3fcd-4ca0-8346-484881974846")); /// guid агента
   }, []);
 
-  const createApplication = () => {
-    console.log("asdasdas");
+  const changeSelect = (guid) => {
+    dispatch(
+      changeEveryInvoiceTA({
+        ...createEveryInvoiceTA,
+        seller_guid: guid,
+      })
+    );
   };
 
-  console.log(listSellersPoints, "listSellersPoints");
+  const changeComm = (text) => {
+    dispatch(
+      changeEveryInvoiceTA({
+        ...createEveryInvoiceTA,
+        comment: text,
+      })
+    );
+  };
+
+  const closeModal = () => {
+    setModalState(false);
+    dispatch(clearEveryInvoiceTA());
+  };
+
+  const createAppInvoiceTA = () => {
+    if (createEveryInvoiceTA?.seller_guid === "") {
+      Alert.alert("Выберите торговую точку!");
+    } else {
+      dispatch(createInvoiceTA({ data: createEveryInvoiceTA, navigation }));
+    }
+  };
+
   return (
     <>
       <ScrollView style={styles.parentBlock}>
@@ -51,29 +86,36 @@ export const MyCommingScreen = ({ navigation, route }) => {
         animationType="fade"
         transparent={true}
         visible={modalState}
-        onRequestClose={() => setModalState(false)}
+        onRequestClose={closeModal}
       >
         <TouchableOpacity
           style={styles.modalOuter}
           activeOpacity={1}
-          onPress={() => setModalState(false)} // Закрыть модальное окно
+          onPress={closeModal} // Закрыть модальное окно
         >
           <View style={styles.modalInner} onPress={() => setModalState(true)}>
-            <Text style={styles.titleSelect}>Выберите филиал</Text>
-            <RNPickerSelect
-              onValueChange={(guid) => console.log(guid)}
-              items={listSellersPoints}
-              placeholder={{ label: "Выбрать филиал", value: null }}
-              style={{
-                inputIOS: styles.selectBlock,
-                inputAndroid: styles.selectBlock,
-                iconContainer: styles.selectBlock,
-              }}
+            <Text style={styles.titleSelect}>Выберите торговую точку</Text>
+            <View style={styles.selectBlock}>
+              <RNPickerSelect
+                onValueChange={changeSelect}
+                items={listSellersPoints}
+                placeholder={{ label: "Выбрать торговую точку", value: null }}
+              />
+            </View>
+            <TextInput
+              style={styles.inputComm}
+              value={createEveryInvoiceTA.comment}
+              onChangeText={changeComm}
+              placeholder="Ваш комментарий"
+              multiline={true} // Многострочное поле для комментариев
+              numberOfLines={4} // Опционально: количество отображаемых строк
             />
-            {/* <View>
-              <Text style={styles.titleSelect}>Выберите товар</Text>
-              <Text>Выберите категорию</Text>
-            </View> */}
+            <ViewButton
+              styles={{ ...styles.sendBtn, ...styles.actionSendBtn }}
+              onclick={createAppInvoiceTA}
+            >
+              Создать накладную
+            </ViewButton>
           </View>
         </TouchableOpacity>
       </Modal>
@@ -81,23 +123,6 @@ export const MyCommingScreen = ({ navigation, route }) => {
   );
 };
 const styles = StyleSheet.create({
-  modalOuter: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalInner: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    width: "80%",
-  },
-  parentBlock: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: "#ebeef2",
-  },
   parentBlock: {
     flex: 1,
     paddingLeft: 10,
@@ -105,6 +130,26 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#ebeef2",
   },
+
+  modalOuter: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+
+  modalInner: {
+    backgroundColor: "#ebeef2",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+  },
+
+  titleSelect: {
+    fontSize: 17,
+    fontWeight: "500",
+  },
+
   sendBtn: {
     backgroundColor: "#fff",
     color: "rgba(97 ,100, 239,0.7)",
@@ -116,14 +161,36 @@ const styles = StyleSheet.create({
     borderColor: "rgb(217 223 232)",
     marginTop: 10,
   },
+  actionSendBtn: {
+    paddingTop: 12,
+    fontSize: 18,
+    // backgroundColor: "rgba(95, 230, 165, 0.99)",
+    backgroundColor: "rgba(97 ,100, 239,0.7)",
+    color: "#fff",
+  },
   imgIcon: {
     width: 35,
     height: 35,
   },
   selectBlock: {
+    marginTop: 15,
+    borderStyle: "solid",
     borderWidth: 1,
     borderColor: "rgb(217 223 232)",
-    backgroundColor: "#ebeef2",
-    marginTop: 15,
+    borderRadius: 6,
+    backgroundColor: "#fff",
+  },
+  inputComm: {
+    borderWidth: 1,
+    borderColor: "rgb(217 223 232)",
+    height: 60,
+    borderRadius: 8,
+    padding: 10,
+    paddingLeft: 15,
+    marginTop: 10,
+    height: 120,
+    fontSize: 16,
+    textAlignVertical: "top",
+    backgroundColor: "#fff",
   },
 });

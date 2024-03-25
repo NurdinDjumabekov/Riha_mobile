@@ -10,7 +10,11 @@ const initialState = {
     products: [],
   }, // для подтверждения и принятия товаров ТА
 
-  createEveryAppTA: {}, // для создания каждой накладной ТА
+  createEveryInvoiceTA: {
+    seller_guid: "",
+    agent_guid: "b3120f36-3fcd-4ca0-8346-484881974846",
+    comment: "",
+  }, // для создания каждой накладной ТА
 };
 
 const stateSlice = createSlice({
@@ -20,7 +24,7 @@ const stateSlice = createSlice({
     changeDataLogin: (state, action) => {
       state.dataLogin = action.payload;
     },
-    clearLogin: (state, action) => {
+    clearLogin: (state) => {
       state.dataLogin = {
         login: "",
         password: "",
@@ -29,11 +33,18 @@ const stateSlice = createSlice({
     changeAcceptInvoiceTA: (state, action) => {
       state.acceptConfirmInvoice = action.payload;
     },
-    clearAcceptInvoiceTA: (state, action) => {
+    clearAcceptInvoiceTA: (state) => {
       state.acceptConfirmInvoice = { invoice_guid: "", products: [] };
     },
-    changeCreateEveryAppTA: (state, action) => {
-      state.createEveryAppTA = action.payload;
+    changeEveryInvoiceTA: (state, action) => {
+      state.createEveryInvoiceTA = action.payload;
+    },
+    clearEveryInvoiceTA: (state, action) => {
+      state.createEveryInvoiceTA = {
+        seller_guid: "",
+        agent_guid: "b3120f36-3fcd-4ca0-8346-484881974846",
+        comment: "",
+      };
     },
   },
 });
@@ -42,7 +53,8 @@ export const {
   clearLogin,
   changeAcceptInvoiceTA,
   clearAcceptInvoiceTA,
-  changeCreateEveryAppTA,
+  changeEveryInvoiceTA,
+  clearEveryInvoiceTA,
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

@@ -13,6 +13,7 @@ import { LogOut } from "../components/LogOut";
 import { LeftoversScreen } from "./LeftoversScreen";
 import { Realization } from "./Realization";
 import { DetailedInvoice } from "./DetailedInvoice";
+import { EveryInvoice } from "./EveryInvoice";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,26 +45,27 @@ export const Navigation = () => {
                 headerRight: () => <LogOut navigation={navigation} />,
               })}
             />
-            {/* ///////////////// Main /////////////////*/}
+            {/* /////////////////////// Main ///////////////////////*/}
             <Stack.Screen
               name="Application"
               component={MyApplicationScreen}
               options={{ title: "Список накладных" }}
             />
             <Stack.Screen name="detailedInvoice" component={DetailedInvoice} />
-            {/* //////// */}
+            {/* /////////////////////// Остатки ///////////////////////*/}
             <Stack.Screen
               name="Leftovers"
               component={LeftoversScreen}
               options={{ title: "Остатки" }}
             />
-            {/* //////// */}
+            {/* /////////////////////// Отгрузки ///////////////////////*/}
             <Stack.Screen
               name="Comming"
               component={MyCommingScreen}
               options={{ title: "Отгрузки" }}
             />
-            {/* //////// */}
+            <Stack.Screen name="everyInvoice" component={EveryInvoice} />
+            {/* /////////////////////// Отгрузки /////////////////////// */}
             <Stack.Screen
               name="Realiz"
               component={Realization}

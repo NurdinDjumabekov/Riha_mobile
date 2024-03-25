@@ -4,7 +4,7 @@ import { Text } from "react-native";
 export const ViewButton = ({ children, styles, onclick }) => {
   // console.log(styles, "styles");
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onclick} activeOpacity={0.7}>
       <Text
         style={[
           {
@@ -23,7 +23,6 @@ export const ViewButton = ({ children, styles, onclick }) => {
           },
           styles,
         ]}
-        onPress={onclick}
       >
         {children}
       </Text>

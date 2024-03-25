@@ -16,6 +16,9 @@ const initialState = {
   listMyInvoice: [],
   everyInvoice: {},
   listSellersPoints: [],
+  listCategoryTA: [], //  список категорий ТА
+  listProductTA: [], //  список продуктов ТА (cписок прод-тов отсортированные селектами)
+
   listComming: [],
   listLeftovers: [],
   listSelectCategory: [],
@@ -121,6 +124,36 @@ export const acceptInvoiceTA = createAsyncThunk(
   }
 );
 
+/// createInvoiceTA
+export const createInvoiceTA = createAsyncThunk(
+  "createInvoiceTA",
+  /// создание накладной Торговым агентом
+  async function ({ data, navigation }, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/ta/create_invoice`,
+        data,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        // console.log(response?.data?.codeid, "444");
+        // console.log(response?.data?.guid, "guid");
+        setTimeout(() => {
+          navigation.navigate("everyInvoice", {
+            codeid: response?.data?.codeid,
+            guid: response?.data?.guid,
+          });
+        }, 800);
+        // return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 /// getAllSellersPoint
 export const getAllSellersPoint = createAsyncThunk(
   "getAllSellersPoint",
@@ -134,6 +167,72 @@ export const getAllSellersPoint = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         console.log(response?.data, "444");
         return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getCategoryTA
+export const getCategoryTA = createAsyncThunk(
+  "getCategoryTA",
+  /// для получения списка точек (магазинов)
+  async function (agent_guid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/ta/get_category?agent_guid=${agent_guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getProductTA
+export const getProductTA = createAsyncThunk(
+  "getProductTA",
+  /// для получения списка точек (магазинов)
+  async function ({ guid, agent_guid }, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/ta/get_product?categ_guid=${guid}&agent_guid=${agent_guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response?.data, "444");
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// addProdInvoiceTT
+export const addProdInvoiceTT = createAsyncThunk(
+  "addProdInvoiceTT",
+  /// Добавление в накладную товаров для ТТ от ТА
+  async function (data, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/ta/create_invoice_products`,
+        data,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        console.log(response?.data, "444");
+        console.log(response?.data, "guid");
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -295,7 +394,7 @@ const requestSlice = createSlice({
       state.preloader = false;
       state.listSellersPoints = action.payload?.map(
         ({ address, name, guid }) => ({
-          label: `${name},${address}`,
+          label: `${name}, ${address}`,
           value: guid,
         })
       );
@@ -307,6 +406,48 @@ const requestSlice = createSlice({
       state.preloader = false;
     });
     builder.addCase(getAllSellersPoint.pending, (state, action) => {
+      state.preloader = true;
+    });
+    //// createInvoiceTA
+    builder.addCase(createInvoiceTA.fulfilled, (state, action) => {
+      state.preloader = false;
+      Alert.alert("Накладная была успешно создана!");
+    });
+    builder.addCase(createInvoiceTA.rejected, (state, action) => {
+      state.error = action.payload;
+      Alert.alert("Упс, что-то пошло не так! Не удалось создать накладную");
+      state.preloader = false;
+    });
+    builder.addCase(createInvoiceTA.pending, (state, action) => {
+      state.preloader = true;
+    });
+    /////// getCategoryTA
+    builder.addCase(getCategoryTA.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listCategoryTA = action?.payload?.map(
+        ({ codeid, category_name, guid }, ind) => ({
+          label: `${ind + 1}. ${category_name}`,
+          value: guid,
+        })
+      );
+    });
+    builder.addCase(getCategoryTA.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getCategoryTA.pending, (state, action) => {
+      state.preloader = true;
+    });
+    ////// getProductTA
+    builder.addCase(getProductTA.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listProductTA = action.payload;
+    });
+    builder.addCase(getProductTA.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+    });
+    builder.addCase(getProductTA.pending, (state, action) => {
       state.preloader = true;
     });
   },

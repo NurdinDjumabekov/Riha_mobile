@@ -52,8 +52,6 @@ const styles = StyleSheet.create({
     // backgroundColor: "rgba(199, 210, 254, 0.918)",
     borderColor: "rgba(199, 210, 254, 0.718)",
     borderWidth: 1,
-
-    borderColor: "rgba(199, 210, 254, 0.718)",
   },
   inputAndroid: {
     // backgroundColor: "rgba(199, 210, 254, 0.918)",
