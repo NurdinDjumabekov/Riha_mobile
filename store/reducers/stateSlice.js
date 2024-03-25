@@ -15,6 +15,9 @@ const initialState = {
     agent_guid: "b3120f36-3fcd-4ca0-8346-484881974846",
     comment: "",
   }, // для создания каждой накладной ТА
+
+  temporaryData: {}, ///// временные данные(после добавления сюда, они добавляются в список(listProductForTT))
+  listProductForTT: [],
 };
 
 const stateSlice = createSlice({
@@ -46,6 +49,17 @@ const stateSlice = createSlice({
         comment: "",
       };
     },
+    changeTemporaryData: (state, action) => {
+      state.temporaryData = action.payload;
+    },
+    addListProductForTT: (state, action) => {
+      state.listProductForTT = [...state.listProductForTT, action.payload];
+    },
+    removeListProductForTT: (state, action) => {
+      state.listProductForTT = state.listProductForTT?.filter(
+        (i) => i.guid !== action.payload
+      );
+    },
   },
 });
 export const {
@@ -55,6 +69,9 @@ export const {
   clearAcceptInvoiceTA,
   changeEveryInvoiceTA,
   clearEveryInvoiceTA,
+  changeTemporaryData,
+  addListProductForTT,
+  removeListProductForTT,
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

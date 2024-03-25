@@ -4,6 +4,7 @@ import {
   RefreshControl,
   SafeAreaView,
   StyleSheet,
+  TextInput,
   View,
 } from "react-native";
 import { ViewContainer } from "../customsTags/ViewContainer";
@@ -11,11 +12,15 @@ import { useDispatch, useSelector } from "react-redux";
 import RNPickerSelect from "react-native-picker-select";
 import { getCategoryTA, getProductTA } from "../store/reducers/requestSlice";
 import { EveryProduct } from "../components/EveryProduct";
+import { ViewButton } from "../customsTags/ViewButton";
+import { AddProductsTA } from "../components/TAComponents/AddProductsTA";
+import { changeTemporaryData } from "../store/reducers/stateSlice";
 
 export const EveryInvoice = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { codeid, guid } = route.params;
   const [review, setReview] = useState(false);
+  const { temporaryData } = useSelector((state) => state.stateSlice);
   const { preloader, listCategoryTA, listProductTA } = useSelector(
     (state) => state.requestSlice
   );
@@ -24,6 +29,7 @@ export const EveryInvoice = ({ navigation, route }) => {
 
   useEffect(() => {
     getData();
+    return () => dispatch(changeTemporaryData({})); /// очищаю временный state
   }, [codeid]);
 
   const getData = async () => {
@@ -42,7 +48,21 @@ export const EveryInvoice = ({ navigation, route }) => {
 
   return (
     <ViewContainer>
-      <SafeAreaView>
+      <SafeAreaView style={styles.parentBlock}>
+        <View style={styles.actionBlock}>
+          <ViewButton
+            styles={[styles.btnChoice, !review && styles.btnChoiceActive]}
+            onclick={() => setReview(false)}
+          >
+            Выбор категорий
+          </ViewButton>
+          <ViewButton
+            styles={[styles.btnChoice, review && styles.btnChoiceActive]}
+            onclick={() => setReview(true)}
+          >
+            Посмотреть список
+          </ViewButton>
+        </View>
         {review ? (
           <></>
         ) : (
@@ -69,6 +89,7 @@ export const EveryInvoice = ({ navigation, route }) => {
                 <RefreshControl refreshing={preloader} onRefresh={getData} />
               }
             />
+            {Object.keys(temporaryData).length !== 0 && <AddProductsTA />}
           </>
         )}
       </SafeAreaView>
@@ -77,6 +98,30 @@ export const EveryInvoice = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
+  parentBlock: { flex: 1, position: "relative" },
+  actionBlock: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    marginBottom: 10,
+  },
+  btnChoice: {
+    backgroundColor: "#fff",
+    color: "rgba(97 ,100, 239,0.7)",
+    minWidth: "49%",
+    paddingTop: 12,
+    borderRadius: 10,
+    fontWeight: 600,
+    borderWidth: 1,
+    borderColor: "rgb(217 223 232)",
+    fontSize: 18,
+  },
+  btnChoiceActive: {
+    backgroundColor: "rgba(47, 71, 190, 0.672)",
+    color: "#fff",
+  },
   selectBlock: {
     backgroundColor: "#fff",
     marginTop: 15,

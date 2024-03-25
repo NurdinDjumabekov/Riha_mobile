@@ -208,7 +208,6 @@ export const getProductTA = createAsyncThunk(
         url: `${API}/ta/get_product?categ_guid=${guid}&agent_guid=${agent_guid}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log(response?.data, "444");
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -231,8 +230,8 @@ export const addProdInvoiceTT = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log(response?.data, "444");
-        console.log(response?.data, "guid");
+        // console.log(response?.data, "444");
+        // console.log(response?.data, "guid");
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -442,6 +441,11 @@ const requestSlice = createSlice({
     builder.addCase(getProductTA.fulfilled, (state, action) => {
       state.preloader = false;
       state.listProductTA = action.payload;
+      // state.listProductTA = [
+      //   ...action.payload,
+      //   ...action.payload,
+      //   ...action.payload,
+      // ];
     });
     builder.addCase(getProductTA.rejected, (state, action) => {
       state.error = action.payload;
