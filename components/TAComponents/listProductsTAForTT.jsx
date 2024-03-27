@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
+  Alert,
   Dimensions,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,10 +17,10 @@ import {
 import { Row, Rows, Table } from "react-native-table-component";
 import { CheckBoxTable } from "../components/CheckBoxTable";
 import ConfirmationModal from "../components/ConfirmationModal";
+import { ViewCheckBox } from "../customsTags/ViewCheckBox";
 import { ViewButton } from "../customsTags/ViewButton";
 import { InputDifference } from "../components/InputDifference";
-import gal from "../assets/images/checkGal2.png";
-import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
+import { tranformDateDay } from "../helpers/tranformDateDay";
 
 const Div = styled.View`
   display: flex;
@@ -30,41 +30,12 @@ const Div = styled.View`
   padding: 0px 10px;
 `;
 
-export const DetailedInvoice = ({ route, navigation }) => {
-  const { date, guid } = route.params;
+export const DetailedInvoice = () => {
   const [listData, setListData] = useState([]);
-  const [modalVisibleOk, setModalVisibleOk] = useState(false);
 
   const dispatch = useDispatch();
   const { everyInvoice } = useSelector((state) => state.requestSlice);
   const { acceptConfirmInvoice } = useSelector((state) => state.stateSlice);
-
-  const clickOkay = () => {
-    setModalVisibleOk(true);
-  };
-
-  const changeModalApplication = () => {
-    dispatch(acceptInvoiceTA({ data: acceptConfirmInvoice, navigation }));
-    setModalVisibleOk(false);
-  };
-
-  const fillAllCheck = () => {
-    // console.log(everyInvoice?.list, "everyInvoice");
-    const newData = everyInvoice?.list?.map((i) => {
-      return {
-        guid: i?.guid,
-        is_checked: true,
-        count: i?.count,
-      };
-    });
-    // console.log(newData, "newData");
-    dispatch(
-      changeAcceptInvoiceTA({
-        invoice_guid: everyInvoice?.guid,
-        products: newData,
-      })
-    );
-  };
 
   useEffect(() => {
     dispatch(getMyEveryInvoice(guid));
@@ -76,45 +47,28 @@ export const DetailedInvoice = ({ route, navigation }) => {
     });
     if (everyInvoice && everyInvoice.list) {
       const tableDataList = everyInvoice?.list?.map((item, index) => {
-        return [
-          `${item?.product_name}`,
-          `${item?.count}`,
-          <InputDifference
-            guidProduct={item?.guid}
-            guidInvoice={everyInvoice?.guid}
-          />,
-          <CheckBoxTable
-            guidProduct={item?.guid}
-            guidInvoice={everyInvoice?.guid}
-          />,
-        ];
+        return [`${item?.product_name}`, `${item?.change}`];
       });
       setListData(tableDataList);
     }
   }, [everyInvoice]);
 
   const windowWidth = Dimensions.get("window").width;
-  const arrWidth = [50, 18, 20, 12]; //  проценты %
+  const arrWidth = [50, 18, 12, 20]; //  проценты %
 
   // Преобразуем проценты в абсолютные значения ширины
   const resultWidths = arrWidth.map(
     (percentage) => (percentage / 100) * windowWidth
   );
 
-  // console.log(everyInvoice, "everyInvoice");
   const isTrue = acceptConfirmInvoice?.products?.length == listData?.length;
 
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Div style={{ justifyContent: "space-between", marginBottom: 5 }}>
-          <Div style={{ paddingTop: 10, paddingBottom: 15, paddingLeft: 0 }}>
-            <Text style={styles.titleDate}>{everyInvoice?.date}</Text>
-          </Div>
-        </Div>
         <Table>
           <Row
-            data={[" Продукт", "Вес (кол-во)", "Вес принято", "  ...."]}
+            data={[" Продукт", "Цена", "Вес", "Сумма"]}
             style={styles.head}
             textStyle={styles.textTitle}
             widthArr={resultWidths}
@@ -130,37 +84,20 @@ export const DetailedInvoice = ({ route, navigation }) => {
             }}
           />
         </Table>
-        <View style={styles.divAction}>
-          {isTrue ? (
-            <TouchableOpacity
-              style={[styles.divAction__inner, { paddingRight: 15 }]}
-              onPress={clickOkay}
-            >
-              <Image style={styles.imgCheck} source={gal} />
-              <Image style={styles.imgCheckTwo} source={gal} />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.divAction__inner}
-              onPress={fillAllCheck}
-            >
-              <Image style={styles.imgCheck} source={gal} />
-            </TouchableOpacity>
-          )}
-        </View>
-        {isTrue && (
+        {/* {isTrue && (
           <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
             Принять накладную
           </ViewButton>
-        )}
+        )} */}
       </View>
-      <ConfirmationModal
+
+      {/* <ConfirmationModal
         visible={modalVisibleOk}
         message="Принять накладную ?"
         onYes={changeModalApplication}
         onNo={() => setModalVisibleOk(false)}
         onClose={() => setModalVisibleOk(false)}
-      />
+      /> */}
     </ScrollView>
   );
 };
@@ -176,16 +113,18 @@ const styles = StyleSheet.create({
     paddingBottom: 102,
     paddingTop: 5,
   },
-  head: { height: 65, backgroundColor: "rgba(199, 210, 254, 0.250)" },
+  head: { height: 60, backgroundColor: "rgba(199, 210, 254, 0.250)" },
   text: { margin: 6, marginBottom: 8, marginTop: 8 },
+  textTitle: { margin: 6, fontSize: 16, fontWeight: 500 },
+
   titleDate: {
     fontSize: 20,
-    fontWeight: "500",
+    // font-weight: 400;
     color: "#222",
   },
   textTitle: {
     fontSize: 15,
-    fontWeight: 500,
+    // fontWeight: 500,
     paddingTop: 10,
     paddingRight: 0,
     paddingBottom: 15,
@@ -203,26 +142,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   divAction__inner: {
-    position: "relative",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 0,
     borderColor: "rgba(199, 210, 254, 0.718)",
     borderWidth: 1,
     borderRadius: 9,
-    padding: 5,
+    paddingBottom: 5,
   },
-
-  imgCheck: {
-    width: 35,
-    height: 35,
-  },
-
-  imgCheckTwo: {
-    width: 36,
-    height: 36,
-    position: "absolute",
-    top: 5,
-    left: 14,
-  },
-
   sendBtn: {
     backgroundColor: "#c2f8e2",
     color: "#1ab782",

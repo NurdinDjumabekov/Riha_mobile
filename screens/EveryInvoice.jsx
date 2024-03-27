@@ -4,23 +4,30 @@ import {
   RefreshControl,
   SafeAreaView,
   StyleSheet,
-  TextInput,
+  Text,
+  TouchableOpacity,
   View,
 } from "react-native";
-import { ViewContainer } from "../customsTags/ViewContainer";
 import { useDispatch, useSelector } from "react-redux";
-import RNPickerSelect from "react-native-picker-select";
-import { getCategoryTA, getProductTA } from "../store/reducers/requestSlice";
+import {
+  addProdInvoiceTT,
+  getCategoryTA,
+  getProductTA,
+} from "../store/reducers/requestSlice";
 import { EveryProduct } from "../components/EveryProduct";
 import { ViewButton } from "../customsTags/ViewButton";
-import { AddProductsTA } from "../components/TAComponents/AddProductsTA";
-import { changeTemporaryData } from "../store/reducers/stateSlice";
+import {
+  changeListProductForTT,
+  changeTemporaryData,
+} from "../store/reducers/stateSlice";
+import ConfirmationModal from "../components/ConfirmationModal";
+import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
 
 export const EveryInvoice = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { codeid, guid } = route.params;
-  const [review, setReview] = useState(false);
-  const { temporaryData } = useSelector((state) => state.stateSlice);
+  const [modal, setModal] = useState(false);
+  const { listProductForTT } = useSelector((state) => state.stateSlice);
   const { preloader, listCategoryTA, listProductTA } = useSelector(
     (state) => state.requestSlice
   );
@@ -29,8 +36,10 @@ export const EveryInvoice = ({ navigation, route }) => {
 
   useEffect(() => {
     getData();
-    return () => dispatch(changeTemporaryData({})); /// очищаю временный state
-  }, [codeid]);
+    navigation.setOptions({
+      title: `Накладная №${codeid}`,
+    });
+  }, [guid]);
 
   const getData = async () => {
     await dispatch(getCategoryTA(agent_guid));
@@ -40,65 +49,109 @@ export const EveryInvoice = ({ navigation, route }) => {
         agent_guid: agent_guid,
       })
     ); /// 0 - все продукты
+    dispatch(changeListProductForTT([]));
   };
 
-  const changeSelect = (guid) => {
-    dispatch(getProductTA({ guid, agent_guid: agent_guid }));
+  const sendData = () => {
+    const data = {
+      invoice_guid: guid,
+      products: listProductForTT?.map((i) => {
+        return {
+          guid: i.guid,
+          count: i.ves,
+          price: i.price,
+        };
+      }),
+    };
+    dispatch(addProdInvoiceTT({ data, navigation }));
+    setModal(false);
   };
 
+  const moreList = () => {
+    navigation.navigate("everyInvoiceList", {
+      codeid,
+      guid,
+    });
+    dispatch(changeTemporaryData({}));
+  };
+  const widthMax = { minWidth: "100%", width: "100%" };
   return (
-    <ViewContainer>
-      <SafeAreaView style={styles.parentBlock}>
-        <View style={styles.actionBlock}>
-          <ViewButton
-            styles={[styles.btnChoice, !review && styles.btnChoiceActive]}
-            onclick={() => setReview(false)}
-          >
-            Выбор категорий
-          </ViewButton>
-          <ViewButton
-            styles={[styles.btnChoice, review && styles.btnChoiceActive]}
-            onclick={() => setReview(true)}
-          >
-            Посмотреть список
-          </ViewButton>
-        </View>
-        {review ? (
-          <></>
-        ) : (
-          <>
+    <>
+      <View style={styles.container}>
+        <SafeAreaView style={styles.parentBlock}>
+          <TouchableOpacity
+            style={styles.arrow}
+            onPress={moreList}
+          ></TouchableOpacity>
+          <View style={styles.parentSelectBlock}>
             <View style={styles.selectBlock}>
-              <RNPickerSelect
-                onValueChange={changeSelect}
-                items={listCategoryTA}
-                placeholder={{ label: "Все", value: 0 }}
-                placeholderTextColor="black"
+              <Text style={styles.textCateg}>Категории</Text>
+              <FlatList
+                contentContainerStyle={widthMax}
+                data={listCategoryTA}
+                renderItem={({ item, index }) => (
+                  <EveryCategoryInner obj={item} />
+                )}
+                keyExtractor={(item, ind) => `${item.guid}${ind}`}
+                refreshControl={
+                  <RefreshControl refreshing={preloader} onRefresh={getData} />
+                }
               />
             </View>
-            <FlatList
-              contentContainerStyle={{
-                minWidth: "100%",
-                width: "100%",
-              }}
-              data={listProductTA}
-              renderItem={({ item, index }) => (
-                <EveryProduct obj={item} index={index} />
-              )}
-              keyExtractor={(item) => item.guid}
-              refreshControl={
-                <RefreshControl refreshing={preloader} onRefresh={getData} />
-              }
-            />
-            {Object.keys(temporaryData).length !== 0 && <AddProductsTA />}
-          </>
-        )}
-      </SafeAreaView>
-    </ViewContainer>
+          </View>
+          <Text style={[styles.textCateg, styles.textTovar]}>Товары</Text>
+          <FlatList
+            contentContainerStyle={widthMax}
+            data={listProductTA}
+            renderItem={({ item, index }) => (
+              <EveryProduct obj={item} index={index} />
+            )}
+            // keyExtractor={(item) => item.guid}
+            keyExtractor={(item, ind) => `${item.guid}${ind}`}
+            refreshControl={
+              <RefreshControl refreshing={preloader} onRefresh={getData} />
+            }
+          />
+        </SafeAreaView>
+      </View>
+      {/* /// для подтверждения отправки */}
+      <ConfirmationModal
+        visible={modal}
+        message="Подтвердить ?"
+        onYes={sendData}
+        onNo={() => setModal(false)}
+        onClose={() => setModal(false)}
+      />
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  parentBlock: { flex: 1, position: "relative" },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  parentSelectBlock: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  parentBlock: {
+    flex: 1,
+    position: "relative",
+    backgroundColor: "rgba(162, 178, 238, 0.102)",
+  },
+  arrow: {
+    borderTopWidth: 3,
+    borderRightWidth: 3,
+    borderColor: "rgba(162, 178, 238, 0.439)",
+    height: 30,
+    width: 30,
+    borderRadius: 3,
+    transform: [{ rotate: "45deg" }],
+    marginRight: 20,
+  },
   actionBlock: {
     display: "flex",
     flexDirection: "row",
@@ -107,28 +160,29 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 10,
   },
-  btnChoice: {
-    backgroundColor: "#fff",
-    color: "rgba(97 ,100, 239,0.7)",
-    minWidth: "49%",
-    paddingTop: 12,
-    borderRadius: 10,
-    fontWeight: 600,
-    borderWidth: 1,
-    borderColor: "rgb(217 223 232)",
-    fontSize: 18,
-  },
-  btnChoiceActive: {
-    backgroundColor: "rgba(47, 71, 190, 0.672)",
-    color: "#fff",
-  },
+
   selectBlock: {
     backgroundColor: "#fff",
-    marginTop: 15,
+    marginTop: 5,
+    marginBottom: 5,
     borderStyle: "solid",
-    borderWidth: 2,
-    borderColor: "rgb(217 223 232)",
-    borderRadius: 6,
-    minWidth: "100%",
+    // borderWidth: 2,
+    // borderColor: "rgb(217 223 232)",
+    borderRadius: 3,
+    width: "100%",
+    height: 250,
+  },
+  textCateg: {
+    padding: 8,
+    fontSize: 18,
+    fontWeight: "500",
+    // backgroundColor: "rgba(162, 178, 238, 0.439)",
+    // color: "rgba(97 ,100, 239,0.7)",
+  },
+  textTovar: {
+    borderTopColor: "rgba(97 ,100, 239,0.7)",
+    borderTopWidth: 2,
+    paddingBottom: 0,
+    paddingTop: 12,
   },
 });

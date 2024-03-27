@@ -42,35 +42,41 @@ export const LoginScreen = ({ navigation }) => {
   const link = "https://riha.kg/wp-content/themes/h/redesign/images/logo.png";
 
   return (
-    <ViewContainer>
-      <View style={{ paddingBottom: 50 }}>
-        <ViewImg
-          url={link}
-          stylesImg={{
-            width: 200,
-            height: 100,
-            objectFit: "contain",
-            marginBottom: 20,
-          }}
-          stylesDiv={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        />
-        <ViewInput
-          text="Введите логин"
-          value={dataLogin.login}
-          onChangeText={onChangeLogin}
-          placeholder="Ваш логин"
-        />
-        <ViewInput
-          text="Введите пароль"
-          value={dataLogin.password}
-          onChangeText={onChangePassword}
-          placeholder="Ваш пароль"
-          // onSubmitEditing={sendLogin}
-        />
-      </View>
+    <View
+      styles={{
+        position: "relative",
+      }}
+    >
+      <ViewContainer>
+        <View>
+          <ViewImg
+            url={link}
+            stylesImg={{
+              width: 200,
+              height: 100,
+              objectFit: "contain",
+              marginBottom: 20,
+            }}
+            stylesDiv={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          />
+          <ViewInput
+            text="Введите логин"
+            value={dataLogin.login}
+            onChangeText={onChangeLogin}
+            placeholder="Ваш логин"
+          />
+          <ViewInput
+            text="Введите пароль"
+            value={dataLogin.password}
+            onChangeText={onChangePassword}
+            placeholder="Ваш пароль"
+            // onSubmitEditing={sendLogin}
+          />
+        </View>
+      </ViewContainer>
       <ViewButton
         onclick={sendLogin}
         styles={{
@@ -79,13 +85,14 @@ export const LoginScreen = ({ navigation }) => {
           bottom: 30,
           left: 10,
           right: 10,
-          minWidth: "100%",
+          minWidth: "90%",
           elevation: 2,
-          color:"#fff"
+          color: "#fff",
+          marginTop: 0,
         }}
       >
         Войти
       </ViewButton>
-    </ViewContainer>
+    </View>
   );
 };

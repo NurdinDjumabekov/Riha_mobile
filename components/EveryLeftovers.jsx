@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Table, Row, Rows } from "react-native-table-component";
 import styled from "styled-components/native";
+import { getMyLeftovers } from "../store/reducers/requestSlice";
+import { useDispatch } from "react-redux";
 
 const TextTitle = styled.Text`
   font-size: 17px;
@@ -12,20 +14,21 @@ const TextTitle = styled.Text`
 
 export const EveryLeftovers = ({ obj }) => {
   const [listData, setListData] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const tableDataList = obj?.list?.map((item, index) => {
-      return [
-        `${item.name}`,
-        item.kol.toString(),
-        `${item.leftoversPrice.toString()} сом`,
-        `${item.leftoversSum.toString()} сом`,
-      ];
-    });
-    setListData(tableDataList);
+    // const tableDataList = obj?.list?.map((item, index) => {
+    //   return [
+    //     `${item.name}`,
+    //     item.kol.toString(),
+    //     `${item.leftoversPrice.toString()} сом`,
+    //     `${item.leftoversSum.toString()} сом`,
+    //   ];
+    // });
+    // setListData(tableDataList);
   }, []); //// ${index + 1}.
 
-  console.log(listData, "listData");
+  // console.log(listData, "listData");
 
   //   console.log(obj, "obj");
 
@@ -33,7 +36,7 @@ export const EveryLeftovers = ({ obj }) => {
 
   return (
     <>
-      <View style={styles.container}>
+      {/* <View style={styles.container}>
         <TextTitle>Дата: {obj?.date}</TextTitle>
 
         {listData?.length === 0 ? (
@@ -56,7 +59,7 @@ export const EveryLeftovers = ({ obj }) => {
           </Table>
         )}
         <Text style={styles.result}>Итого: {obj?.result} сом</Text>
-      </View>
+      </View> */}
     </>
   );
 };

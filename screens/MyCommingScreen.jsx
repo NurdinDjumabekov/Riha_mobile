@@ -1,13 +1,13 @@
 import {
   SafeAreaView,
   ScrollView,
-  Image,
   StyleSheet,
   Modal,
   Text,
   View,
   TextInput,
   Alert,
+  FlatList,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -16,13 +16,13 @@ import {
 } from "../store/reducers/requestSlice";
 import { useEffect, useState } from "react";
 import { ViewButton } from "../customsTags/ViewButton";
-import message from "../assets/icons/sendMessage.jpg";
 import RNPickerSelect from "react-native-picker-select";
 import { TouchableOpacity } from "react-native";
 import {
   changeEveryInvoiceTA,
   clearEveryInvoiceTA,
 } from "../store/reducers/stateSlice";
+import { EveryMyInvoice } from "../components/EveryMyInvoice";
 
 export const MyCommingScreen = ({ navigation }) => {
   const { listSellersPoints } = useSelector((state) => state.requestSlice);
@@ -65,6 +65,8 @@ export const MyCommingScreen = ({ navigation }) => {
     }
   };
 
+  const list = [];
+
   return (
     <>
       <ScrollView style={styles.parentBlock}>
@@ -73,13 +75,31 @@ export const MyCommingScreen = ({ navigation }) => {
             styles={styles.sendBtn}
             onclick={() => setModalState(true)}
           >
-            <Image style={styles.imgIcon} source={message} />
-            Создать накладную
+            {/* <Image style={styles.imgIcon} source={message} /> */}+ Создать
+            накладную
           </ViewButton>
-          <ViewButton styles={styles.sendBtn}>
-            <Image style={styles.imgIcon} source={message} />
-            Посмотреть мои накладные
-          </ViewButton>
+
+          {list?.length === 0 ? (
+            <Text style={styles.noneData}>Список накладных пустой</Text>
+          ) : (
+            <FlatList
+              contentContainerStyle={{
+                minWidth: "100%",
+                width: "100%",
+              }}
+              data={list}
+              renderItem={({ item }) => (
+                <EveryMyInvoice obj={item} navigation={navigation} />
+              )}
+              // keyExtractor={(item) => item.codeid}
+              // refreshControl={
+              //   <RefreshControl
+              //     refreshing={preloader}
+              //     onRefresh={() => dispatch(getMyInvoice({ obj: route?.params }))}
+              //   />
+              // }
+            />
+          )}
         </SafeAreaView>
       </ScrollView>
       <Modal
@@ -138,11 +158,19 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
 
+  noneData: {
+    flex: 1,
+    height: 500,
+    paddingTop: 250,
+    textAlign: "center",
+    fontSize: 20,
+  },
+
   modalInner: {
     backgroundColor: "#ebeef2",
     padding: 20,
     borderRadius: 10,
-    width: "80%",
+    width: "90%",
   },
 
   titleSelect: {
@@ -154,7 +182,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     color: "rgba(97 ,100, 239,0.7)",
     minWidth: "100%",
-    paddingTop: 0,
+    paddingTop: 10,
     borderRadius: 10,
     fontWeight: 600,
     borderWidth: 1,
@@ -194,3 +222,32 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 });
+
+// parentBlock: {
+//   flex: 1,
+//   paddingLeft: 0,
+//   paddingRight: 0,
+//   // padding: 10,
+//   backgroundColor: "#ebeef2",
+// },
+
+// everyBlock: {
+//   backgroundColor: "red",
+//   padding: 10,
+//   paddingBottom: 15,
+//   paddingTop: 15,
+//   backgroundColor: "rgba(162, 178, 238, 0.102)",
+
+//   borderBottomWidth: 1,
+//   borderColor: "rgba(47, 71, 190, 0.287)",
+// },
+
+// sendBtn: {
+//   // backgroundColor: "#fff",
+//   color: "rgba(97 ,100, 239,0.7)",
+//   minWidth: "100%",
+//   paddingTop: 0,
+//   borderRadius: 10,
+//   fontWeight: "600",
+//   // marginTop: 10,
+// },

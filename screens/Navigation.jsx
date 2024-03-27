@@ -2,7 +2,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { LoginScreen } from "./LoginScreen";
 import { MainScreen } from "./MainScreen";
-
 import { Provider } from "react-redux";
 import { store } from "../store/index";
 import { StatusBar } from "expo-status-bar";
@@ -11,9 +10,9 @@ import { MyApplicationScreen } from "./MyApplicationScreen";
 import { MyCommingScreen } from "./MyCommingScreen";
 import { LogOut } from "../components/LogOut";
 import { LeftoversScreen } from "./LeftoversScreen";
-import { Realization } from "./Realization";
 import { DetailedInvoice } from "./DetailedInvoice";
 import { EveryInvoice } from "./EveryInvoice";
+import { EveryInvoiceList } from "./EveryInvoiceList";
 
 const Stack = createNativeStackNavigator();
 
@@ -65,12 +64,16 @@ export const Navigation = () => {
               options={{ title: "Отгрузки" }}
             />
             <Stack.Screen name="everyInvoice" component={EveryInvoice} />
-            {/* /////////////////////// Отгрузки /////////////////////// */}
             <Stack.Screen
+              name="everyInvoiceList"
+              component={EveryInvoiceList}
+            />
+            {/* /////////////////////// Отгрузки /////////////////////// */}
+            {/* <Stack.Screen
               name="Realiz"
               component={Realization}
               options={{ title: "Отгрузки" }}
-            />
+            /> */}
           </>
         </Stack.Navigator>
         <StatusBar theme="auto" />

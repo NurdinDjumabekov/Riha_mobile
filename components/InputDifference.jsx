@@ -27,7 +27,7 @@ export const InputDifference = ({ guidProduct, guidInvoice }) => {
             ...acceptConfirmInvoice.products.filter(
               (item) => item.guid !== guidProduct
             ),
-            { guid: guidProduct, is_checked: false, count: text },
+            { guid: guidProduct, is_checked: false, change: text },
           ],
         })
       );
@@ -41,7 +41,7 @@ export const InputDifference = ({ guidProduct, guidInvoice }) => {
         value={
           acceptConfirmInvoice.products
             ?.filter((item) => item.guid === guidProduct)
-            ?.map((item) => item.count)?.[0]
+            ?.map((item) => item.change)?.[0]
         }
         onChangeText={checkInput}
         keyboardType="numeric"
