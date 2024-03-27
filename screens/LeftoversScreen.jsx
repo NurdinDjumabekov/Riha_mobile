@@ -10,6 +10,7 @@ import RNPickerSelect from "react-native-picker-select";
 import { Table, Row, Rows, TableWrapper } from "react-native-table-component";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ViewButton } from "../customsTags/ViewButton";
+import { ScrollView } from "react-native";
 
 export const LeftoversScreen = ({ route }) => {
   const dispatch = useDispatch();
@@ -64,7 +65,7 @@ export const LeftoversScreen = ({ route }) => {
 
   return (
     <>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <SafeAreaView>
           {/* <View style={styles.sortBlock}>
             <View style={select}>
@@ -121,8 +122,8 @@ export const LeftoversScreen = ({ route }) => {
             </Table>
           )}
         </SafeAreaView>
-      </View>
-      {showDatePicker && (
+      </ScrollView>
+      {/* {showDatePicker && (
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
@@ -131,7 +132,7 @@ export const LeftoversScreen = ({ route }) => {
           display="default"
           onChange={onChange}
         />
-      )}
+      )} */}
     </>
   );
 };
