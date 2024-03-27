@@ -73,7 +73,6 @@ export const EveryInvoice = ({ navigation, route }) => {
     });
     dispatch(changeTemporaryData({}));
   };
-
   const widthMax = { minWidth: "100%", width: "100%" };
   return (
     <>
