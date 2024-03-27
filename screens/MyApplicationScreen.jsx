@@ -31,29 +31,26 @@ export const MyApplicationScreen = ({ navigation, route }) => {
 
   // console.log(listMyInvoice, "listMyInvoice");
   return (
-    <ViewContainer>
-      <SafeAreaView>
-        <ParentDiv>
-          <FlatList
-            contentContainerStyle={{
-              minWidth: "100%",
-              width: "100%",
-            }}
-            data={listMyInvoice}
-            renderItem={({ item }) => (
-              <EveryMyInvoice obj={item} navigation={navigation} />
-            )}
-            // numColumns={2}
-            // keyExtractor={(item) => item.codeid}
-            refreshControl={
-              <RefreshControl
-                refreshing={preloader}
-                onRefresh={() => dispatch(getMyInvoice({ obj: route?.params }))}
-              />
-            }
-          />
-        </ParentDiv>
-      </SafeAreaView>
-    </ViewContainer>
+    <SafeAreaView>
+      <ParentDiv>
+        <FlatList
+          contentContainerStyle={{
+            minWidth: "100%",
+            width: "100%",
+          }}
+          data={listMyInvoice}
+          renderItem={({ item }) => (
+            <EveryMyInvoice obj={item} navigation={navigation} />
+          )}
+          // keyExtractor={(item) => item.codeid}
+          refreshControl={
+            <RefreshControl
+              refreshing={preloader}
+              onRefresh={() => dispatch(getMyInvoice({ obj: route?.params }))}
+            />
+          }
+        />
+      </ParentDiv>
+    </SafeAreaView>
   );
 };

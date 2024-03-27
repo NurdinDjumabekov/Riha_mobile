@@ -17,7 +17,9 @@ const initialState = {
   }, // для создания каждой накладной ТА
 
   temporaryData: {}, ///// временные данные(после добавления сюда, они добавляются в список(listProductForTT))
+  dataInputsInv: { price: "", ves: "" },
   listProductForTT: [],
+  stateForCategory: {}, // состояние для хранения временной категории(подсветка категории)
 };
 
 const stateSlice = createSlice({
@@ -52,13 +54,29 @@ const stateSlice = createSlice({
     changeTemporaryData: (state, action) => {
       state.temporaryData = action.payload;
     },
+    changeListProductForTT: (state, action) => {
+      state.listProductForTT = action.payload;
+    },
     addListProductForTT: (state, action) => {
       state.listProductForTT = [...state.listProductForTT, action.payload];
     },
     removeListProductForTT: (state, action) => {
-      state.listProductForTT = state.listProductForTT?.filter(
-        (i) => i.guid !== action.payload
+      const indexToRemove = state.listProductForTT.findIndex(
+        (item) => item.guid === action.payload?.guid
       );
+
+      if (indexToRemove !== -1) {
+        state.listProductForTT.splice(indexToRemove, 1);
+      }
+    },
+    changeDataInputsInv: (state, action) => {
+      state.dataInputsInv = action.payload;
+    },
+    clearDataInputsInv: (state, action) => {
+      state.dataInputsInv = { price: "", ves: "" };
+    },
+    changeStateForCategory: (state, action) => {
+      state.stateForCategory = action.payload;
     },
   },
 });
@@ -70,8 +88,12 @@ export const {
   changeEveryInvoiceTA,
   clearEveryInvoiceTA,
   changeTemporaryData,
+  changeListProductForTT,
   addListProductForTT,
   removeListProductForTT,
+  changeDataInputsInv,
+  clearDataInputsInv,
+  changeStateForCategory,
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

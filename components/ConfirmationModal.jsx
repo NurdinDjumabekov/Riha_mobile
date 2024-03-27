@@ -28,6 +28,7 @@ const ButtonContainer = styled.View`
 const Title = styled.Text`
   font-size: 20px;
   font-weight: 500;
+  text-align: center;
 `;
 
 const btns = {

@@ -4,7 +4,7 @@ import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
 
 export const CheckBoxTable = ({ guidProduct, guidInvoice }) => {
   const { acceptConfirmInvoice } = useSelector((state) => state.stateSlice);
-  console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
+  // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
   const dispatch = useDispatch();
 
   const isCheck = acceptConfirmInvoice?.products?.some(
@@ -31,7 +31,7 @@ export const CheckBoxTable = ({ guidProduct, guidInvoice }) => {
             ...acceptConfirmInvoice.products.filter(
               (item) => item.guid !== guidProduct
             ),
-            { guid: guidProduct, is_checked: true, count: "" },
+            { guid: guidProduct, is_checked: true, change: 0 },
           ],
         })
       );

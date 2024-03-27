@@ -6,7 +6,7 @@ import {
   listMyApplicationData,
   listPrihod,
 } from "../../helpers/Data";
-import { clearLogin } from "./stateSlice";
+import { changeListProductForTT, clearLogin } from "./stateSlice";
 import { changeToken } from "./saveDataSlice";
 import { Alert } from "react-native";
 
@@ -18,9 +18,9 @@ const initialState = {
   listSellersPoints: [],
   listCategoryTA: [], //  список категорий ТА
   listProductTA: [], //  список продуктов ТА (cписок прод-тов отсортированные селектами)
+  listLeftovers: [], // список остатков
 
   listComming: [],
-  listLeftovers: [],
   listSelectCategory: [],
 };
 
@@ -91,7 +91,7 @@ export const getMyEveryInvoice = createAsyncThunk(
         url: `${API}/ta/get_invoice?invoice_guid=${guid}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data?.[0],"444");
+        // console.log(response?.data?.[0], "5555555");
         return response?.data?.[0];
       } else {
         throw Error(`Error: ${response.status}`);
@@ -114,6 +114,7 @@ export const acceptInvoiceTA = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
+        console.log(response?.data, "response");
         navigation.navigate("Main");
       } else {
         throw Error(`Error: ${response.status}`);
@@ -136,14 +137,12 @@ export const createInvoiceTA = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data?.codeid, "444");
-        // console.log(response?.data?.guid, "guid");
         setTimeout(() => {
           navigation.navigate("everyInvoice", {
             codeid: response?.data?.codeid,
             guid: response?.data?.guid,
           });
-        }, 800);
+        }, 200);
         // return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -221,8 +220,8 @@ export const getProductTA = createAsyncThunk(
 /// addProdInvoiceTT
 export const addProdInvoiceTT = createAsyncThunk(
   "addProdInvoiceTT",
-  /// Добавление в накладную товаров для ТТ от ТА
-  async function (data, { dispatch, rejectWithValue }) {
+  /// Отправка накладной с товарами для ТТ от ТА
+  async function ({ data, navigation }, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
         method: "POST",
@@ -230,8 +229,28 @@ export const addProdInvoiceTT = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data, "444");
-        // console.log(response?.data, "guid");
+        dispatch(changeListProductForTT([])); /// очищаю список , где лежат данные для отправки ТТ
+        navigation.navigate("Main");
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getMyLeftovers
+export const getMyLeftovers = createAsyncThunk(
+  "getMyLeftovers",
+  async function (guid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/ta/get_report_leftovers?agent_guid=${guid}&data=2024-03-26`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -255,36 +274,6 @@ export const getMyComming = createAsyncThunk(
       dispatch(changePreloader(false));
     }, 500);
 
-    try {
-      const response = await axios({
-        method: "GET",
-        url: `${API}`,
-        // headers: {
-        //   Authorization: `Bearer ${tokenA}`,
-        // },
-      });
-      if (response.status >= 200 && response.status < 300) {
-        // return response?.data?.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-/// getMyLeftovers
-export const getMyLeftovers = createAsyncThunk(
-  "getMyLeftovers",
-  async function ({ obj }, { dispatch, rejectWithValue }) {
-    // console.log(obj, "obj");
-    // console.log(`${API}/${obj?.pathApi}`);
-    dispatch(changePreloader(true));
-    setTimeout(() => {
-      dispatch(changeLeftovers(listLeftovers));
-      dispatch(changePreloader(false));
-    }, 500);
     try {
       const response = await axios({
         method: "GET",
@@ -378,7 +367,7 @@ const requestSlice = createSlice({
     ///// acceptInvoiceTA
     builder.addCase(acceptInvoiceTA.fulfilled, (state, action) => {
       state.preloader = false;
-      Alert.alert("Накладная была успешно принята!");
+      Alert.alert("Принято!");
     });
     builder.addCase(acceptInvoiceTA.rejected, (state, action) => {
       state.error = action.payload;
@@ -410,7 +399,7 @@ const requestSlice = createSlice({
     //// createInvoiceTA
     builder.addCase(createInvoiceTA.fulfilled, (state, action) => {
       state.preloader = false;
-      Alert.alert("Накладная была успешно создана!");
+      Alert.alert("Успешно создано!");
     });
     builder.addCase(createInvoiceTA.rejected, (state, action) => {
       state.error = action.payload;
@@ -424,9 +413,9 @@ const requestSlice = createSlice({
     builder.addCase(getCategoryTA.fulfilled, (state, action) => {
       state.preloader = false;
       state.listCategoryTA = action?.payload?.map(
-        ({ codeid, category_name, guid }, ind) => ({
+        ({ codeid, category_name, category_guid }, ind) => ({
           label: `${ind + 1}. ${category_name}`,
-          value: guid,
+          value: category_guid,
         })
       );
     });
@@ -441,17 +430,44 @@ const requestSlice = createSlice({
     builder.addCase(getProductTA.fulfilled, (state, action) => {
       state.preloader = false;
       state.listProductTA = action.payload;
-      // state.listProductTA = [
-      //   ...action.payload,
-      //   ...action.payload,
-      //   ...action.payload,
-      // ];
     });
     builder.addCase(getProductTA.rejected, (state, action) => {
       state.error = action.payload;
       state.preloader = false;
     });
     builder.addCase(getProductTA.pending, (state, action) => {
+      state.preloader = true;
+    });
+    //////// addProdInvoiceTT
+    builder.addCase(addProdInvoiceTT.fulfilled, (state, action) => {
+      state.preloader = false;
+      Alert.alert("Товар был успешно передан!");
+    });
+    builder.addCase(addProdInvoiceTT.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось передать товар");
+    });
+    builder.addCase(addProdInvoiceTT.pending, (state, action) => {
+      state.preloader = true;
+    });
+    //////// getMyLeftovers
+    builder.addCase(getMyLeftovers.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listLeftovers = action.payload?.map((item) => [
+        `${item.product_name}`,
+        `${item.start_outcome}`,
+        `${item.income}`,
+        `${item.outcome}`,
+        `${item.end_outcome}`,
+      ]);
+    });
+    builder.addCase(getMyLeftovers.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
+    });
+    builder.addCase(getMyLeftovers.pending, (state, action) => {
       state.preloader = true;
     });
   },
