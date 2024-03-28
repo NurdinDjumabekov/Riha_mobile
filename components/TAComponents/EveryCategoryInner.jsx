@@ -20,7 +20,7 @@ export const EveryCategoryInner = ({ obj, index }) => {
     dispatch(changeTemporaryData({}));
   };
 
-  console.log(obj, "obj");
+  // console.log(obj, "obj");
 
   const isTrue = stateForCategory === obj?.value;
 

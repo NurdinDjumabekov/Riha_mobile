@@ -1,29 +1,26 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import styled from "styled-components/native";
+import { ViewButton } from "../customsTags/ViewButton";
 import { clearAcceptInvoiceTA } from "../store/reducers/stateSlice";
 import { useDispatch } from "react-redux";
-import { changePreloader } from "../store/reducers/requestSlice";
 
 export const EveryMyInvoice = ({ obj, navigation }) => {
   //// список загрузок(накладных)
   const dispatch = useDispatch();
 
-  console.log(obj, "obj");
-  const lookInvoice = () => {
-    navigation.navigate("detailedInvoice", { date: obj.date, guid: obj.guid });
-    dispatch(clearAcceptInvoiceTA());
-    dispatch(changePreloader(true)); /// чтобы вначале не показывался пустой массив
-  };
+  // console.log(obj, "obj");
+//   const lookInvoice = () => {
+//     navigation.navigate("detailedInvoice", { date: obj.date, guid: obj.guid });
+//     dispatch(clearAcceptInvoiceTA());
+//   };
 
   return (
     <>
-      <TouchableOpacity style={styles.container} onPress={lookInvoice}>
-        <View style={styles.innerBlock}>
+      <TouchableOpacity style={styles.container} >
+        {/* <View style={styles.innerBlock}>
           <View style={styles.mainData}>
             <Text style={styles.titleNum}>{obj.codeid} </Text>
-            <View>
-              <Text style={[styles.titleDate, styles.role]}>Админ</Text>
-              <Text style={styles.titleDate}>{obj.date}</Text>
-            </View>
+            <Text style={styles.titleDate}>{obj.date}</Text>
           </View>
           {obj.comment?.length !== 0 && (
             <Text
@@ -41,7 +38,7 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
             <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
           </View>
           <View style={styles.arrow}></View>
-        </View>
+        </View> */}
       </TouchableOpacity>
     </>
   );
@@ -67,42 +64,32 @@ const styles = StyleSheet.create({
   innerBlock: {
     display: "flex",
     width: "60%",
-    gap: 5,
+    // backgroundColor: "red",
   },
 
   titleNum: {
-    fontSize: 19,
+    fontSize: 20,
     fontWeight: "700",
+    // color: "rgba(12, 169, 70, 0.9)",
     color: "rgba(47, 71, 190, 0.672)",
-    borderColor: "rgba(47, 71, 190, 0.672)",
-    borderWidth: 1,
-    backgroundColor: "#d4dfee",
-    padding: 3,
-    paddingLeft: 7,
-    paddingRight: 0,
-    borderRadius: 5,
+    // borderBottomWidth: 1,
+    // borderRightWidth: 1,
+    // borderColor: "rgba(47, 71, 190, 0.672)",
+    // textAlign: "center",
   },
 
   titleDate: {
     fontSize: 14,
     fontWeight: "500",
+    // color: "rgba(47, 71, 190, 0.672)",
     // color: "#2fce8e53",
     // backgroundColor: "rgba(12, 169, 70, 0.1)",
     borderRadius: 5,
     // padding: 5,
-    lineHeight: 17,
-  },
-
-  role: {
-    fontSize: 14,
-    fontWeight: "500",
-    borderRadius: 5,
-    lineHeight: 17,
-    color: "rgba(47, 71, 190, 0.672)",
   },
 
   status: {
-    color: "rgba(205, 70, 92, 0.756)",
+    color: "rgba(12, 169, 70, 0.9)",
   },
 
   totalPrice: {
@@ -120,7 +107,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 5,
   },
 
   mainDataArrow: {
@@ -142,5 +129,36 @@ const styles = StyleSheet.create({
     width: 16,
     borderRadius: 3,
     transform: [{ rotate: "45deg" }],
+  },
+  ////////////////////////////////
+
+  titleMoreDate: {
+    fontSize: 20,
+    color: "#fff",
+    position: "absolute",
+    top: -10,
+    right: 15,
+    zIndex: 10,
+    backgroundColor: "rgb(102 105 245)",
+    padding: 4,
+    paddingRight: 10,
+    paddingLeft: 10,
+    borderRadius: 4,
+  },
+
+  imgIcon: {
+    width: 35,
+    height: 35,
+  },
+  btn: {
+    backgroundColor: "transparent",
+    color: "rgba(97 ,100, 239,0.7)",
+    width: "100%",
+    paddingTop: 0,
+    borderRadius: 0,
+    fontWeight: 600,
+    borderTopWidth: 1,
+    borderTopColor: "rgb(217 223 232)",
+    marginTop: 5,
   },
 });

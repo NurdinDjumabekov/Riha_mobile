@@ -7,44 +7,35 @@ export const InputDifference = ({ guidProduct, guidInvoice }) => {
   const dispatch = useDispatch();
 
   const checkInput = (text) => {
-    if (!text) {
-      // Если текст пустой, удаляем объект из массива
-      dispatch(
-        changeAcceptInvoiceTA({
-          ...acceptConfirmInvoice,
-          products: acceptConfirmInvoice.products.filter(
-            (item) => item.guid !== guidProduct
-          ),
-        })
-      );
-    } else {
-      // Если текст не пустой, обновляем значение объекта
+    if (/^\d*\.?\d*$/.test(text) || text === "") {
       dispatch(
         changeAcceptInvoiceTA({
           ...acceptConfirmInvoice,
           invoice_guid: guidInvoice,
-          products: [
-            ...acceptConfirmInvoice.products.filter(
-              (item) => item.guid !== guidProduct
-            ),
-            { guid: guidProduct, is_checked: false, change: text },
-          ],
+          products: acceptConfirmInvoice?.products?.map((i) => ({
+            ...i,
+            change: i?.guid === guidProduct ? text : i?.change,
+          })),
         })
       );
     }
   };
 
+  const changeCount = acceptConfirmInvoice.products?.filter(
+    (item) => item.guid === guidProduct
+  );
+
+  // console.log(changeCount?.[0]?.change);
+  // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
+
   return (
     <View style={styles.standartBox}>
       <TextInput
         style={styles.input}
-        value={
-          acceptConfirmInvoice.products
-            ?.filter((item) => item.guid === guidProduct)
-            ?.map((item) => item.change)?.[0]
-        }
+        value={changeCount?.[0]?.change?.toString()}
         onChangeText={checkInput}
         keyboardType="numeric"
+        maxLength={8}
       />
       <View style={styles.standartBox__inner}></View>
     </View>

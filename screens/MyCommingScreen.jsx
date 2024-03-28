@@ -8,11 +8,13 @@ import {
   TextInput,
   Alert,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createInvoiceTA,
   getAllSellersPoint,
+  getInvoiceEveryTA,
 } from "../store/reducers/requestSlice";
 import { useEffect, useState } from "react";
 import { ViewButton } from "../customsTags/ViewButton";
@@ -22,17 +24,25 @@ import {
   changeEveryInvoiceTA,
   clearEveryInvoiceTA,
 } from "../store/reducers/stateSlice";
-import { EveryMyInvoice } from "../components/EveryMyInvoice";
+import { EveryInvoiceTA } from "../components/TAComponents/EveryInvoiceTA";
 
 export const MyCommingScreen = ({ navigation }) => {
-  const { listSellersPoints } = useSelector((state) => state.requestSlice);
+  const { preloader, listSellersPoints, listInvoiceEveryTA } = useSelector(
+    (state) => state.requestSlice
+  );
   const { createEveryInvoiceTA } = useSelector((state) => state.stateSlice);
   const dispatch = useDispatch();
   const [modalState, setModalState] = useState(false);
 
+  const agent_guid = "b3120f36-3fcd-4ca0-8346-484881974846";
+
   useEffect(() => {
-    dispatch(getAllSellersPoint("b3120f36-3fcd-4ca0-8346-484881974846")); /// guid агента
+    getData();
   }, []);
+  const getData = () => {
+    dispatch(getAllSellersPoint(agent_guid));
+    dispatch(getInvoiceEveryTA(agent_guid));
+  };
 
   const changeSelect = (guid) => {
     dispatch(
@@ -65,19 +75,21 @@ export const MyCommingScreen = ({ navigation }) => {
     }
   };
 
-  const list = [];
+  // console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
 
   return (
     <>
-      <ScrollView style={styles.parentBlock}>
+      <View style={styles.parentBlock}>
         <SafeAreaView>
-          <ViewButton
-            styles={styles.sendBtn}
-            onclick={() => setModalState(true)}
-          >
-            + Создать накладную
-          </ViewButton>
-          {list?.length === 0 ? (
+          <View style={{ padding: 10 }}>
+            <ViewButton
+              styles={[styles.sendBtn, styles.sendBtnMore]}
+              onclick={() => setModalState(true)}
+            >
+              + Создать накладную
+            </ViewButton>
+          </View>
+          {listInvoiceEveryTA?.length === 0 ? (
             <Text style={styles.noneData}>Список накладных пустой</Text>
           ) : (
             <FlatList
@@ -85,23 +97,23 @@ export const MyCommingScreen = ({ navigation }) => {
                 minWidth: "100%",
                 width: "100%",
               }}
-              data={list}
+              data={listInvoiceEveryTA}
               renderItem={({ item }) => (
-                <EveryMyInvoice obj={item} navigation={navigation} />
+                <EveryInvoiceTA obj={item} navigation={navigation} />
               )}
-              // keyExtractor={(item) => item.codeid}
-              // refreshControl={
-              //   <RefreshControl
-              //     refreshing={preloader}
-              //     onRefresh={() => dispatch(getMyInvoice({ obj: route?.params }))}
-              //   />
-              // }
+              keyExtractor={(item) => item.codeid}
+              refreshControl={
+                <RefreshControl
+                  refreshing={preloader}
+                  onRefresh={() => getData()}
+                />
+              }
             />
           )}
         </SafeAreaView>
-      </ScrollView>
+      </View>
       <Modal
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         visible={modalState}
         onRequestClose={closeModal}
@@ -143,9 +155,6 @@ export const MyCommingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   parentBlock: {
     flex: 1,
-    paddingLeft: 10,
-    paddingRight: 10,
-    padding: 10,
     backgroundColor: "#ebeef2",
   },
 
@@ -186,6 +195,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgb(217 223 232)",
     marginTop: 10,
+  },
+  sendBtnMore: {
+    marginBottom: 20,
+    // marginLeft: 10,
+    // marginRight: 10,
+    // width: "95%",
+    // minWidth: "95%",
+    // alignContent: "center",
   },
   actionSendBtn: {
     paddingTop: 12,

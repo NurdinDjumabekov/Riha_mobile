@@ -13,6 +13,7 @@ import { LeftoversScreen } from "./LeftoversScreen";
 import { DetailedInvoice } from "./DetailedInvoice";
 import { EveryInvoice } from "./EveryInvoice";
 import { EveryInvoiceList } from "./EveryInvoiceList";
+import { EveryInvoiceHistoryScreen } from "./EveryInvoiceHistoryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -67,6 +68,10 @@ export const Navigation = () => {
             <Stack.Screen
               name="everyInvoiceList"
               component={EveryInvoiceList}
+            />
+            <Stack.Screen
+              name="everyInvoiceHistoryScreen"
+              component={EveryInvoiceHistoryScreen}
             />
             {/* /////////////////////// Отгрузки /////////////////////// */}
             {/* <Stack.Screen

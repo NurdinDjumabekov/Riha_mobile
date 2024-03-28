@@ -1,18 +1,22 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { clearAcceptInvoiceTA } from "../store/reducers/stateSlice";
 import { useDispatch } from "react-redux";
-import { changePreloader } from "../store/reducers/requestSlice";
+import { getProductEveryInvoice } from "../../store/reducers/requestSlice";
 
-export const EveryMyInvoice = ({ obj, navigation }) => {
-  //// список загрузок(накладных)
+export const EveryInvoiceTA = ({ obj, navigation }) => {
+  //// каждая загрузка(накладная) типо истории
   const dispatch = useDispatch();
 
-  console.log(obj, "obj");
   const lookInvoice = () => {
-    navigation.navigate("detailedInvoice", { date: obj.date, guid: obj.guid });
-    dispatch(clearAcceptInvoiceTA());
-    dispatch(changePreloader(true)); /// чтобы вначале не показывался пустой массив
+    dispatch(getProductEveryInvoice(obj.guid));
+    navigation.navigate("everyInvoiceHistoryScreen", {
+      obj,
+      title: `Накладная №${obj.codeid}`,
+    });
   };
+
+  //   console.log(obj, "obj");
+  //   console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
+  //   console.log(listProductEveryInvoiceTA, "listProductEveryInvoiceTA");
 
   return (
     <>
@@ -37,7 +41,7 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
         </View>
         <View style={styles.mainDataArrow}>
           <View>
-            <Text style={styles.status}>Отгружено</Text>
+            <Text style={styles.status}>Принято</Text>
             <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
           </View>
           <View style={styles.arrow}></View>
@@ -51,11 +55,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgba(162, 178, 238, 0.102)",
     minWidth: "100%",
-    // marginBottom: 20,
     padding: 8,
     paddingTop: 15,
     paddingBottom: 15,
-    // borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: "rgba(47, 71, 190, 0.287)",
     display: "flex",
@@ -93,6 +95,10 @@ const styles = StyleSheet.create({
     lineHeight: 17,
   },
 
+  status: {
+    color: "rgba(12, 169, 70, 0.9)",
+  },
+
   role: {
     fontSize: 14,
     fontWeight: "500",
@@ -101,26 +107,21 @@ const styles = StyleSheet.create({
     color: "rgba(47, 71, 190, 0.672)",
   },
 
-  status: {
-    color: "rgba(205, 70, 92, 0.756)",
-  },
-
   totalPrice: {
     fontSize: 16,
     fontWeight: "400",
-    // color: "blue",
   },
 
   comments: {
-    // backgroundColor: "red",
     maxWidth: 230,
+    fontSize: 12,
   },
 
   mainData: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 5,
   },
 
   mainDataArrow: {
@@ -128,7 +129,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    // backgroundColor: "red",
     paddingRight: 15,
     width: "35%",
   },
@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
   arrow: {
     borderTopWidth: 3,
     borderRightWidth: 3,
-    // borderColor: "rgba(12, 169, 70, 0.498)",
     borderColor: "rgba(162, 178, 238, 0.439)",
     height: 16,
     width: 16,

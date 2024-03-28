@@ -11,31 +11,16 @@ export const CheckBoxTable = ({ guidProduct, guidInvoice }) => {
     (item) => item?.guid === guidProduct && item?.is_checked === true
   );
   const checkGuid = () => {
-    if (isCheck) {
-      // удаляем guid из массива
-      dispatch(
-        changeAcceptInvoiceTA({
-          ...acceptConfirmInvoice,
-          products: acceptConfirmInvoice?.products?.filter(
-            (item) => item.guid !== guidProduct
-          ),
-        })
-      );
-    } else {
-      // добавляем guid в массив
-      dispatch(
-        changeAcceptInvoiceTA({
-          ...acceptConfirmInvoice,
-          invoice_guid: guidInvoice,
-          products: [
-            ...acceptConfirmInvoice.products.filter(
-              (item) => item.guid !== guidProduct
-            ),
-            { guid: guidProduct, is_checked: true, change: 0 },
-          ],
-        })
-      );
-    }
+    dispatch(
+      changeAcceptInvoiceTA({
+        ...acceptConfirmInvoice,
+        invoice_guid: guidInvoice,
+        products: acceptConfirmInvoice?.products?.map((i) => ({
+          ...i,
+          is_checked: i?.guid === guidProduct ? !i?.is_checked : i?.is_checked,
+        })),
+      })
+    );
   };
 
   // console.log(isCheck);

@@ -6,7 +6,11 @@ import {
   listMyApplicationData,
   listPrihod,
 } from "../../helpers/Data";
-import { changeListProductForTT, clearLogin } from "./stateSlice";
+import {
+  changeAcceptInvoiceTA,
+  changeListProductForTT,
+  clearLogin,
+} from "./stateSlice";
 import { changeToken } from "./saveDataSlice";
 import { Alert } from "react-native";
 
@@ -19,6 +23,8 @@ const initialState = {
   listCategoryTA: [], //  список категорий ТА
   listProductTA: [], //  список продуктов ТА (cписок прод-тов отсортированные селектами)
   listLeftovers: [], // список остатков
+  listInvoiceEveryTA: [], /// список накладных каждого ТА(типо истории)
+  listProductEveryInvoiceTA: [], /// список товаров каждой накладной ТА(типо истории)
 
   listComming: [],
   listSelectCategory: [],
@@ -91,8 +97,21 @@ export const getMyEveryInvoice = createAsyncThunk(
         url: `${API}/ta/get_invoice?invoice_guid=${guid}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data?.[0], "5555555");
-        return response?.data?.[0];
+        const data = response?.data?.[0];
+        // console.log(data, "sadas");
+        dispatch(
+          changeAcceptInvoiceTA({
+            invoice_guid: data?.guid,
+            products: data?.list?.map((i) => {
+              return {
+                guid: i?.guid,
+                is_checked: false,
+                change: i?.count,
+              };
+            }),
+          })
+        );
+        return data;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -114,7 +133,6 @@ export const acceptInvoiceTA = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log(response?.data, "response");
         navigation.navigate("Main");
       } else {
         throw Error(`Error: ${response.status}`);
@@ -143,7 +161,6 @@ export const createInvoiceTA = createAsyncThunk(
             guid: response?.data?.guid,
           });
         }, 200);
-        // return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -164,7 +181,7 @@ export const getAllSellersPoint = createAsyncThunk(
         url: `${API}/ta/get_points?agent_guid=${guid}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log(response?.data, "444");
+        // console.log(response?.data, "444");
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -247,10 +264,53 @@ export const getMyLeftovers = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `${API}/ta/get_report_leftovers?agent_guid=${guid}&data=2024-03-26`,
+        url: `${API}/ta/get_report_leftovers?agent_guid=${guid}&data=2024-03-28`,
       });
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getInvoiceEveryTA
+/// список накладных каждого ТА(типо истории)
+export const getInvoiceEveryTA = createAsyncThunk(
+  "getInvoiceEveryTA",
+  async function (guid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/ta/get_agent_invoice?agent_guid=${guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getProductEveryInvoice
+/// список товароы каждой накладной ТА(типо истории)
+export const getProductEveryInvoice = createAsyncThunk(
+  "getProductEveryInvoice",
+  async function (guid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/ta/get_agent__invoice_product?invoice_guid=${guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        // console.log(response?.data?.[0]?.list, "response?.data");
+        return response?.data?.[0]?.list;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -470,7 +530,34 @@ const requestSlice = createSlice({
     builder.addCase(getMyLeftovers.pending, (state, action) => {
       state.preloader = true;
     });
+    ////// getInvoiceEveryTA
+    builder.addCase(getInvoiceEveryTA.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listInvoiceEveryTA = action.payload;
+    });
+    builder.addCase(getInvoiceEveryTA.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
+    });
+    builder.addCase(getInvoiceEveryTA.pending, (state, action) => {
+      state.preloader = true;
+    });
+    ////// getProductEveryInvoice
+    builder.addCase(getProductEveryInvoice.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listProductEveryInvoiceTA = action.payload;
+    });
+    builder.addCase(getProductEveryInvoice.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
+    });
+    builder.addCase(getProductEveryInvoice.pending, (state, action) => {
+      state.preloader = true;
+    });
   },
+
   reducers: {
     changePreloader: (state, action) => {
       state.preloader = action.payload;

@@ -100,12 +100,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#d4dfee",
     padding: 10,
-    paddingRight: 5,
-    paddingLeft: 5,
+    paddingRight: 0,
+    paddingLeft: 0,
   },
   sendBtn: {
     backgroundColor: "rgba(95, 230, 165, 0.99)",
     color: "#fff",
     marginTop: 20,
+    width: "95%",
+    alignSelf:"center"
   },
 });

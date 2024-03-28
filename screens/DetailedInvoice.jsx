@@ -12,6 +12,7 @@ import styled from "styled-components/native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   acceptInvoiceTA,
+  changePreloader,
   getMyEveryInvoice,
 } from "../store/reducers/requestSlice";
 import { Row, Rows, Table } from "react-native-table-component";
@@ -34,6 +35,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
   const { date, guid } = route.params;
   const [listData, setListData] = useState([]);
   const [modalVisibleOk, setModalVisibleOk] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   const dispatch = useDispatch();
   const { everyInvoice } = useSelector((state) => state.requestSlice);
@@ -48,22 +50,18 @@ export const DetailedInvoice = ({ route, navigation }) => {
     setModalVisibleOk(false);
   };
 
-  const fillAllCheck = () => {
-    // console.log(everyInvoice?.list, "everyInvoice");
-    const newData = everyInvoice?.list?.map((i) => {
-      return {
-        guid: i?.guid,
-        is_checked: true,
-        count: i?.count,
-      };
-    });
-    // console.log(newData, "newData");
+  const changeAllCheckbox = () => {
+    const newData = acceptConfirmInvoice?.products?.map((i) => ({
+      ...i,
+      is_checked: !isChecked, // Инвертируем значение is_checked
+    }));
     dispatch(
       changeAcceptInvoiceTA({
-        invoice_guid: everyInvoice?.guid,
+        invoice_guid: acceptConfirmInvoice?.invoice_guid,
         products: newData,
       })
     );
+    setIsChecked(!isChecked); // Инвертируем состояние чекбокса
   };
 
   useEffect(() => {
@@ -75,13 +73,14 @@ export const DetailedInvoice = ({ route, navigation }) => {
       title: `Накладная №${everyInvoice?.codeid}`,
     });
     if (everyInvoice && everyInvoice.list) {
-      const tableDataList = everyInvoice?.list?.map((item, index) => {
+      const tableDataList = everyInvoice?.list?.map((item) => {
         return [
-          `${item?.product_name}`,
+          `${item?.codeid}. ${item?.product_name}`,
           `${item?.count}`,
           <InputDifference
             guidProduct={item?.guid}
             guidInvoice={everyInvoice?.guid}
+            item={item}
           />,
           <CheckBoxTable
             guidProduct={item?.guid}
@@ -101,8 +100,23 @@ export const DetailedInvoice = ({ route, navigation }) => {
     (percentage) => (percentage / 100) * windowWidth
   );
 
-  // console.log(everyInvoice, "everyInvoice");
-  const isTrue = acceptConfirmInvoice?.products?.length == listData?.length;
+  const totalItemCount = acceptConfirmInvoice?.products?.reduce(
+    (total, item) => +total + +item?.change,
+    0
+  );
+
+  const isTrue =
+    acceptConfirmInvoice?.products?.length === everyInvoice?.list?.length &&
+    acceptConfirmInvoice?.products?.every(
+      (product) => product.is_checked === true
+    ) &&
+    acceptConfirmInvoice?.products?.every((product) => {
+      const changeValue = product?.change;
+      return changeValue !== 0 && changeValue !== "";
+    });
+
+  // console.log(everyInvoice.list, "everyInvoice");
+  // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
 
   return (
     <ScrollView>
@@ -131,22 +145,16 @@ export const DetailedInvoice = ({ route, navigation }) => {
           />
         </Table>
         <View style={styles.divAction}>
-          {isTrue ? (
-            <TouchableOpacity
-              style={[styles.divAction__inner, { paddingRight: 15 }]}
-              onPress={clickOkay}
-            >
-              <Image style={styles.imgCheck} source={gal} />
-              <Image style={styles.imgCheckTwo} source={gal} />
+          <View style={styles.divActionInner}>
+            <Text style={styles.totalItemCount}>Итого: {totalItemCount}</Text>
+            <TouchableOpacity onPress={changeAllCheckbox}>
+              <View style={styles.standartBox}>
+                <View style={styles.standartBox__inner}>
+                  <View style={styles.checkmark}></View>
+                </View>
+              </View>
             </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.divAction__inner}
-              onPress={fillAllCheck}
-            >
-              <Image style={styles.imgCheck} source={gal} />
-            </TouchableOpacity>
-          )}
+          </View>
         </View>
         {isTrue && (
           <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
@@ -185,7 +193,7 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     fontSize: 15,
-    fontWeight: 500,
+    fontWeight: "500",
     paddingTop: 10,
     paddingRight: 0,
     paddingBottom: 15,
@@ -200,28 +208,51 @@ const styles = StyleSheet.create({
     gap: 2,
     width: "100%",
     paddingRight: 20,
+    paddingLeft: 20,
     marginTop: 10,
   },
-  divAction__inner: {
-    position: "relative",
-    borderColor: "rgba(199, 210, 254, 0.718)",
+
+  divActionInner: {
+    // backgroundColor: "red",
+    display: "flex",
+    gap: 15,
+    flexDirection: "row",
+    alignItems: "flex-end",
+  },
+
+  totalItemCount: {
+    // backgroundColor: "red",
+    fontSize: 20,
+    fontWeight: "500",
+    color: "#383838",
+  },
+
+  /////// checkbox
+  standartBox: {
+    width: 45,
+    height: 45,
     borderWidth: 1,
-    borderRadius: 9,
-    padding: 5,
+    borderColor: "rgb(206 217 230)",
+    borderRadius: 7,
+    backgroundColor: "rgba(95, 230, 165, 0.99)",
   },
-
-  imgCheck: {
-    width: 35,
-    height: 35,
-  },
-
-  imgCheckTwo: {
-    width: 36,
-    height: 36,
+  standartBox__inner: {
     position: "absolute",
-    top: 5,
-    left: 14,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    bottom: 3,
   },
+  checkmark: {
+    width: 15,
+    height: 23,
+    borderBottomWidth: 4,
+    borderRightWidth: 4,
+    borderColor: "white",
+    transform: [{ rotate: "45deg" }],
+  },
+  /////// checkbox
 
   sendBtn: {
     backgroundColor: "#c2f8e2",
