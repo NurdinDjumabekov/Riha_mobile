@@ -66,12 +66,12 @@ export const Navigation = () => {
             />
             <Stack.Screen name="everyInvoice" component={EveryInvoice} />
             <Stack.Screen
-              name="everyInvoiceList"
-              component={EveryInvoiceList}
-            />
-            <Stack.Screen
               name="everyInvoiceHistoryScreen"
               component={EveryInvoiceHistoryScreen}
+            />
+            <Stack.Screen
+              name="everyInvoiceList"
+              component={EveryInvoiceList}
             />
             {/* /////////////////////// Отгрузки /////////////////////// */}
             {/* <Stack.Screen

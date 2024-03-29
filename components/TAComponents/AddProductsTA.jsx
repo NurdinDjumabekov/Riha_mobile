@@ -27,11 +27,13 @@ export const AddProductsTA = () => {
     }
   };
 
+  console.log(dataInputsInv, "dataInputsInv");
+
   return (
     <View style={styles.addDataBlock}>
       <TextInput
         style={styles.input}
-        value={dataInputsInv.price}
+        value={dataInputsInv?.price?.toString()}
         onChangeText={(text) =>
           dispatch(changeDataInputsInv({ ...dataInputsInv, price: text }))
         }

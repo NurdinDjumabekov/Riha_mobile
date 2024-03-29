@@ -73,6 +73,9 @@ export const EveryInvoice = ({ navigation, route }) => {
     });
     dispatch(changeTemporaryData({}));
   };
+
+  // console.log(listProductTA, "listProductTA");
+
   const widthMax = { minWidth: "100%", width: "100%" };
   return (
     <>

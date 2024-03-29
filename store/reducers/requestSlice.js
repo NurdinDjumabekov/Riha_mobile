@@ -264,7 +264,7 @@ export const getMyLeftovers = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `${API}/ta/get_report_leftovers?agent_guid=${guid}&data=2024-03-28`,
+        url: `${API}/ta/get_report_leftovers?agent_guid=${guid}&data=2024-03-29`,
       });
       if (response.status >= 200 && response.status < 300) {
         return response?.data;

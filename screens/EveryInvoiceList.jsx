@@ -4,6 +4,7 @@ import {
   RefreshControl,
   SafeAreaView,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -60,28 +61,44 @@ export const EveryInvoiceList = ({ navigation, route }) => {
     setModal(false);
   };
 
+  // console.log(listProductForTT, "listProductForTT");
+
+  const totalSum = listProductForTT.reduce((total, item) => {
+    return +item.price * +item.ves + total;
+  }, 0);
+
   const widthMax = { minWidth: "100%", width: "100%" };
+  const noneData = listProductForTT?.length === 0;
   return (
     <>
       <View style={styles.container}>
-        <SafeAreaView style={styles.parentBlock}>
-          <FlatList
-            contentContainerStyle={widthMax}
-            data={listProductForTT}
-            renderItem={({ item, index }) => (
-              <EveryProduct obj={item} index={index} type="simpleList" />
+        {noneData ? (
+          <Text style={styles.noneData}>Список пустой </Text>
+        ) : (
+          <SafeAreaView>
+            <FlatList
+              contentContainerStyle={widthMax}
+              data={listProductForTT}
+              renderItem={({ item, index }) => (
+                <EveryProduct obj={item} index={index} type="simpleList" />
+              )}
+              keyExtractor={(item, ind) => `${item.guid}${ind}`}
+              // refreshControl={
+              //   <RefreshControl refreshing={preloader} onRefresh={getData} />
+              // }
+            />
+            <Text style={styles.resultSum}>Итого: {totalSum} сом</Text>
+
+            {!noneData && (
+              <ViewButton
+                styles={styles.sendBtn}
+                onclick={() => setModal(true)}
+              >
+                Подтвердить
+              </ViewButton>
             )}
-            keyExtractor={(item, ind) => `${item.guid}${ind}`}
-            // refreshControl={
-            //   <RefreshControl refreshing={preloader} onRefresh={getData} />
-            // }
-          />
-          {listProductForTT?.length !== 0 && (
-            <ViewButton styles={styles.sendBtn} onclick={() => setModal(true)}>
-              Подтвердить
-            </ViewButton>
-          )}
-        </SafeAreaView>
+          </SafeAreaView>
+        )}
       </View>
       {/* /// для подтверждения отправки */}
       <ConfirmationModal
@@ -103,11 +120,27 @@ const styles = StyleSheet.create({
     paddingRight: 0,
     paddingLeft: 0,
   },
+  noneData: {
+    flex: 1,
+    paddingTop: 300,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "500",
+  },
   sendBtn: {
     backgroundColor: "rgba(95, 230, 165, 0.99)",
     color: "#fff",
-    marginTop: 20,
+    // marginTop: 20,
     width: "95%",
-    alignSelf:"center"
+    alignSelf: "center",
+  },
+
+  resultSum: {
+    fontSize: 20,
+    fontWeight: "500",
+    color: "#222",
+    // color: "rgba(47, 71, 190, 0.891)",
+    textAlign: "right",
+    padding: 20,
   },
 });

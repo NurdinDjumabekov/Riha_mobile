@@ -20,8 +20,8 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
     });
   }, []);
 
-  const totalProductPrice = listProductEveryInvoiceTA.reduce((total, item) => {
-    return total + item.product_price;
+  const totalSum = listProductEveryInvoiceTA.reduce((total, item) => {
+    return +item.price * +item.count + total;
   }, 0);
 
   // console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
@@ -31,38 +31,41 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
 
   return (
     <>
-      <View style={styles.parentDataModal}>
-        <FlatList
-          contentContainerStyle={{
-            minWidth: "100%",
-            width: "100%",
-          }}
-          data={listProductEveryInvoiceTA}
-          renderItem={({ item }) => (
-            <View style={styles.everyProd}>
-              <Text style={styles.titleHistory}>{item.product_name}</Text>
-              <View style={styles.everyProdInner}>
-                <Text style={styles.koll}>Кол-во (вес): {item.count}</Text>
-                {/* <Text style={styles.koll}>Кол-во (вес): {item.change}</Text> */}
-                <Text style={styles.priceHistory}>
-                  {item.product_price} сом
-                </Text>
-                <Text style={styles.summ}>
-                  Сумма: {+item.product_price * +item.count}сом
-                </Text>
+      {listProductEveryInvoiceTA?.length === 0 ? (
+         <Text style={styles.noneData}>Данные отсутствуют</Text>
+      ) : (
+        <View style={styles.parentDataModal}>
+          <FlatList
+            contentContainerStyle={{
+              minWidth: "100%",
+              width: "100%",
+              paddingTop: 8,
+            }}
+            data={listProductEveryInvoiceTA}
+            renderItem={({ item }) => (
+              <View style={styles.everyProd}>
+                <Text style={styles.titleHistory}>{item.product_name}</Text>
+                <View style={styles.everyProdInner}>
+                  <Text style={styles.koll}>Кол-во (вес): {item.count}</Text>
+                  {/* <Text style={styles.koll}>Кол-во (вес): {item.change}</Text> */}
+                  <Text style={styles.priceHistory}>{item.price} сом</Text>
+                  <Text style={styles.summ}>
+                    Сумма: {+item.price * +item.count}сом
+                  </Text>
+                </View>
               </View>
-            </View>
-          )}
-          keyExtractor={(item) => item.codeid}
-          //   refreshControl={
-          //     <RefreshControl
-          //       refreshing={preloader}
-          //       onRefresh={() => getData()}
-          //     />
-          //   }
-        />
-        <Text style={styles.result}>Итого: {totalProductPrice} сом </Text>
-      </View>
+            )}
+            keyExtractor={(item) => item.codeid}
+            //   refreshControl={
+            //     <RefreshControl
+            //       refreshing={preloader}
+            //       onRefresh={() => getData()}
+            //     />
+            //   }
+          />
+          <Text style={styles.result}>Итого: {totalSum} сом </Text>
+        </View>
+      )}
     </>
   );
 };
@@ -118,5 +121,13 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "right",
     padding: 10,
+  },
+
+  noneData: {
+    flex: 1,
+    paddingTop: 300,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "500",
   },
 });

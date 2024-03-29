@@ -78,18 +78,19 @@ export const MyCommingScreen = ({ navigation }) => {
       Alert.alert("Выберите торговую точку!");
     } else {
       dispatch(createInvoiceTA({ data: createEveryInvoiceTA, navigation }));
+      dispatch(clearEveryInvoiceTA());
     }
   };
 
   // console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
-  console.log(listSellersPoints, "listSellersPoints");
+  // console.log(listSellersPoints, "listSellersPoints");
   // console.log(createEveryInvoiceTA, "createEveryInvoiceTA");
 
   const FlatListStyle = {
     minWidth: "100%",
     width: "100%",
     paddingBottom: 20,
-    borderWidth: 1,
+    borderTopWidth: 1,
     borderColor: "rgba(47, 71, 190, 0.587)",
   };
   return (

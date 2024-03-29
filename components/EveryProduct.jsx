@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  changeDataInputsInv,
   changeTemporaryData,
   clearDataInputsInv,
   removeListProductForTT,
@@ -24,7 +25,7 @@ export const EveryProduct = ({ obj, index, type }) => {
 
   const addInTemporary = () => {
     dispatch(changeTemporaryData(obj));
-    dispatch(clearDataInputsInv());
+    dispatch(changeDataInputsInv({ price: obj?.product_price, ves: "" }));
   };
 
   const deleteProd = () => {
@@ -32,29 +33,31 @@ export const EveryProduct = ({ obj, index, type }) => {
     setModalDel(true);
   };
 
+  // console.log(obj, "obj");
+
   const isCheck = temporaryData?.guid === obj?.guid;
   return (
     <>
       {type ? ( //// для списка продкетов , которые отправятся к ТТ
         <TouchableOpacity style={styles.blockProducts} onLongPress={deleteProd}>
-          <View style={styles.innerBlock}>
-            <Text style={styles.title}>{index + 1}. </Text>
-            <Text style={styles.title}>{obj?.product_name}</Text>
+          <View style={styles.flexBlock}>
+            <Text style={styles.mainTitle}>{index + 1}. </Text>
+            <Text style={styles.mainTitle}>{obj?.product_name}</Text>
           </View>
-          <View style={styles.moreInfo}>
-            <View style={styles.moreInfo__inner}>
-              <Text style={styles.titleMore}>Вес (кол-во): </Text>
-              <Text style={styles.titleMoreInner}>{obj?.ves}</Text>
+          <View style={styles.flexBlockSpace}>
+            <View>
+              <View style={styles.flexBlock}>
+                <Text style={styles.vesText}>Вес (кол-во): </Text>
+                <Text style={styles.vesText}>{obj?.ves}</Text>
+              </View>
+              <View style={styles.flexBlock}>
+                <Text style={styles.priceText}>Цена: </Text>
+                <Text style={styles.priceText}>{obj?.price} сом</Text>
+              </View>
             </View>
-            <View style={styles.moreInfo__inner}>
-              <Text style={styles.titleMore}>Цена: </Text>
-              <Text style={styles.titleMoreInner}>{obj?.price} сом</Text>
-            </View>
-            <View style={styles.moreInfo__inner}>
-              <Text style={styles.titleMore}>Сумма: </Text>
-              <Text style={styles.titleMoreInner}>
-                {+obj?.ves * +obj?.price} сом
-              </Text>
+            <View style={styles.flexBlock}>
+              <Text style={styles.sumText}>Сумма: </Text>
+              <Text style={styles.sumText}>{+obj?.ves * +obj?.price} сом</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -127,15 +130,6 @@ const styles = StyleSheet.create({
     borderColor: "rgb(217 223 232)",
   },
 
-  blockProducts: {
-    backgroundColor: "#fff",
-    minWidth: "100%",
-    marginBottom: 10,
-    // borderRadius: 5,
-    borderBottomWidth: 2,
-    borderTopWidth: 2,
-    borderColor: "rgba(47, 71, 190, 0.287)",
-  },
   innerBlock: {
     display: "flex",
     flexDirection: "row",
@@ -226,5 +220,52 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 3,
+  },
+
+  //////////////////////////////
+
+  blockProducts: {
+    backgroundColor: "#fff",
+    minWidth: "100%",
+    marginBottom: 0,
+    // borderRadius: 5,
+    borderBottomWidth: 1,
+    padding: 10,
+    borderTopWidth: 1,
+    borderColor: "rgba(47, 71, 190, 0.287)",
+  },
+  flexBlock: {
+    display: "flex",
+    flexDirection: "row",
+  },
+
+  flexBlockSpace: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    marginTop: 10,
+  },
+
+  blockProductsMore: {},
+  mainTitle: {
+    fontSize: 17,
+    fontWeight: "500",
+  },
+  vesText: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "rgba(47, 71, 190, 0.891)",
+  },
+  priceText: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "rgba(47, 71, 190, 0.891)",
+  },
+
+  sumText: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "rgba(12, 169, 70, 0.9)",
   },
 });

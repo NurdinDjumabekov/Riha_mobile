@@ -14,7 +14,7 @@ export const EveryInvoiceTA = ({ obj, navigation }) => {
     });
   };
 
-  console.log(obj, "obj111");
+  // console.log(obj, "asdasd");
   //   console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
   //   console.log(listProductEveryInvoiceTA, "listProductEveryInvoiceTA");
 
