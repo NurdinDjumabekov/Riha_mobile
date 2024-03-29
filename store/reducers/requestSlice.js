@@ -1,14 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API } from "../../env";
+import { listMyApplicationData, listPrihod } from "../../helpers/Data";
 import {
-  listLeftovers,
-  listMyApplicationData,
-  listPrihod,
-} from "../../helpers/Data";
-import {
+  addListProductForTT,
   changeAcceptInvoiceTA,
   changeListProductForTT,
+  changeTemporaryData,
+  clearDataInputsInv,
   clearLogin,
 } from "./stateSlice";
 import { changeToken } from "./saveDataSlice";
@@ -181,7 +180,7 @@ export const getAllSellersPoint = createAsyncThunk(
         url: `${API}/ta/get_points?agent_guid=${guid}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        // console.log(response?.data, "444");
+        console.log(response?.data, "444");
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -264,7 +263,7 @@ export const getMyLeftovers = createAsyncThunk(
     try {
       const response = await axios({
         method: "GET",
-        url: `${API}/ta/get_report_leftovers?agent_guid=${guid}&data=2024-03-29`,
+        url: `${API}/ta/get_report_leftovers?agent_guid=${guid}`, /// тут есть еще search и category
       });
       if (response.status >= 200 && response.status < 300) {
         return response?.data;
@@ -312,6 +311,45 @@ export const getProductEveryInvoice = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         // console.log(response?.data?.[0]?.list, "response?.data");
         return response?.data?.[0]?.list;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// checkProductLeftovers
+/// проверяю продукт на его кол-во, если кол-во есть,
+/// то добавляю в список , а если не т, то выводится alert
+export const checkProductLeftovers = createAsyncThunk(
+  "checkProductLeftovers",
+  async function (info, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/ta/check_product_leftover`,
+        data: {
+          product_guid: info?.productGuid,
+          count: info?.ves,
+        },
+      });
+      if (response.status >= 200 && response.status < 300) {
+        const check = +response?.data?.resukt; /// 1 - успешный, 0 - неуспешный
+        if (+check === 1) {
+          dispatch(addListProductForTT(data));
+          dispatch(clearDataInputsInv());
+          dispatch(changeTemporaryData({}));
+          Alert.alert("Товар добавлен в накладную");
+          dispatch(changePreloader(false));
+        } else {
+          Alert.alert(
+            "Ошибка!",
+            "Введенное количество товара больше доступного количества. Пожалуйста, введите корректное количество."
+          );
+          dispatch(changePreloader(false));
+        }
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -442,9 +480,9 @@ const requestSlice = createSlice({
     builder.addCase(getAllSellersPoint.fulfilled, (state, action) => {
       state.preloader = false;
       state.listSellersPoints = action.payload?.map(
-        ({ address, name, guid }) => ({
-          label: `${name}, ${address}`,
-          value: guid,
+        ({ name, seller_guid, seller_fio }) => ({
+          label: `${name}, ${seller_fio}`,
+          value: seller_guid,
         })
       );
     });
@@ -474,11 +512,17 @@ const requestSlice = createSlice({
     builder.addCase(getCategoryTA.fulfilled, (state, action) => {
       state.preloader = false;
       state.listCategoryTA = action?.payload?.map(
-        ({ codeid, category_name, category_guid }, ind) => ({
-          label: `${ind + 1}. ${category_name}`,
+        ({ category_name, category_guid }, ind) => ({
+          label: `${ind + 2}. ${category_name}`,
           value: category_guid,
         })
       );
+
+      // Добавляем категорию "Все" в начало массива
+      state.listCategoryTA.unshift({
+        label: "1. Все",
+        value: "0", // Здесь может быть уникальное значение для категории "Все"
+      });
     });
     builder.addCase(getCategoryTA.rejected, (state, action) => {
       state.error = action.payload;

@@ -7,13 +7,13 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
   //// список загрузок(накладных)
   const dispatch = useDispatch();
 
-  console.log(obj, "obj");
   const lookInvoice = () => {
     navigation.navigate("detailedInvoice", { date: obj.date, guid: obj.guid });
     dispatch(clearAcceptInvoiceTA());
     dispatch(changePreloader(true)); /// чтобы вначале не показывался пустой массив
   };
-
+  
+  // console.log(obj, "obj");
   return (
     <>
       <TouchableOpacity style={styles.container} onPress={lookInvoice}>
@@ -21,7 +21,7 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
           <View style={styles.mainData}>
             <Text style={styles.titleNum}>{obj.codeid} </Text>
             <View>
-              <Text style={[styles.titleDate, styles.role]}>Админ</Text>
+              <Text style={[styles.titleDate, styles.role]}>{obj?.operator}</Text>
               <Text style={styles.titleDate}>{obj.date}</Text>
             </View>
           </View>

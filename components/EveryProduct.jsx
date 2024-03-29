@@ -42,7 +42,16 @@ export const EveryProduct = ({ obj, index, type }) => {
         <TouchableOpacity style={styles.blockProducts} onLongPress={deleteProd}>
           <View style={styles.flexBlock}>
             <Text style={styles.mainTitle}>{index + 1}. </Text>
-            <Text style={styles.mainTitle}>{obj?.product_name}</Text>
+            <Text
+              style={[
+                styles.mainTitle,
+                {
+                  width: "90%",
+                },
+              ]}
+            >
+              {obj?.product_name}
+            </Text>
           </View>
           <View style={styles.flexBlockSpace}>
             <View>
@@ -90,7 +99,7 @@ export const EveryProduct = ({ obj, index, type }) => {
             {!isCheck && <View style={styles.arrow}></View>}
           </View>
           {Object.keys(temporaryData).length !== 0 && isCheck && (
-            <AddProductsTA />
+            <AddProductsTA productGuid={obj?.guid} />
           )}
         </TouchableOpacity>
       )}

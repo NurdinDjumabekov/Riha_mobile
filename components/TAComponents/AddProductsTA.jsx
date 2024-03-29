@@ -1,14 +1,10 @@
 import { Alert, StyleSheet, TextInput, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { ViewButton } from "../../customsTags/ViewButton";
-import {
-  addListProductForTT,
-  changeDataInputsInv,
-  changeTemporaryData,
-  clearDataInputsInv,
-} from "../../store/reducers/stateSlice";
+import { changeDataInputsInv } from "../../store/reducers/stateSlice";
+import { changePreloader, checkProductLeftovers } from "../../store/reducers/requestSlice";
 
-export const AddProductsTA = () => {
+export const AddProductsTA = ({ productGuid }) => {
   //// для добавления продуктов в список
   const dispatch = useDispatch();
 
@@ -20,15 +16,13 @@ export const AddProductsTA = () => {
     if (dataInputsInv.price === "" || dataInputsInv.ves === "") {
       Alert.alert("Введите цену и вес!");
     } else {
-      dispatch(addListProductForTT({ ...temporaryData, ...dataInputsInv }));
-      dispatch(clearDataInputsInv());
-      dispatch(changeTemporaryData({}));
-      Alert.alert("Товар добавлен в накладную");
+      const data = { ...temporaryData, ...dataInputsInv, productGuid };
+      dispatch(checkProductLeftovers(data));
+      dispatch(changePreloader(true));
     }
   };
 
-  console.log(dataInputsInv, "dataInputsInv");
-
+  // console.log(dataInputsInv, "dataInputsInv");
   return (
     <View style={styles.addDataBlock}>
       <TextInput

@@ -27,8 +27,7 @@ export const EveryInvoiceTA = ({ obj, navigation }) => {
             <View>
               <Text style={[styles.titleDate, styles.role]}>
                 {/* Жанара (Точка1) */}
-                {obj?.seller}
-                {obj?.point ? `(${obj.point})` : ""}
+                {obj?.seller} {obj?.point ? `(${obj.point})` : ""}
               </Text>
               <Text style={styles.titleDate}>{obj.date}</Text>
             </View>
@@ -109,6 +108,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     lineHeight: 17,
     color: "rgba(47, 71, 190, 0.672)",
+    width: "85%",
+    // backgroundColor: "red",
+    overflow: "hidden",
+    height: 18,
   },
 
   totalPrice: {

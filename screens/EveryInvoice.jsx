@@ -45,7 +45,7 @@ export const EveryInvoice = ({ navigation, route }) => {
     await dispatch(
       getProductTA({
         guid: "0",
-        agent_guid: agent_guid,
+        agent_guid,
       })
     ); /// 0 - все продукты
     dispatch(changeListProductForTT([]));

@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   everyProd: {
     // backgroundColor: "red",
     padding: 10,
-    paddingRight: 20,
+    paddingRight: 10,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: "rgba(162, 178, 238, 0.439)",
@@ -93,13 +93,15 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
+    // backgroundColor:'red',
+    width:"33%"
   },
 
   titleHistory: {
     color: "#222",
     fontSize: 13,
     fontWeight: "500",
-    width: "70%",
+    width: "65%",
   },
 
   priceHistory: {

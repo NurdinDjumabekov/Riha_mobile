@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  FlatList,
-  RefreshControl,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { EveryProduct } from "../components/EveryProduct";
 import { ViewButton } from "../customsTags/ViewButton";
@@ -22,7 +15,6 @@ export const EveryInvoiceList = ({ navigation, route }) => {
   const { codeid, guid } = route.params;
   const [modal, setModal] = useState(false);
   const { listProductForTT } = useSelector((state) => state.stateSlice);
-  const { preloader } = useSelector((state) => state.requestSlice);
 
   const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
 
@@ -83,12 +75,8 @@ export const EveryInvoiceList = ({ navigation, route }) => {
                 <EveryProduct obj={item} index={index} type="simpleList" />
               )}
               keyExtractor={(item, ind) => `${item.guid}${ind}`}
-              // refreshControl={
-              //   <RefreshControl refreshing={preloader} onRefresh={getData} />
-              // }
             />
             <Text style={styles.resultSum}>Итого: {totalSum} сом</Text>
-
             {!noneData && (
               <ViewButton
                 styles={styles.sendBtn}
