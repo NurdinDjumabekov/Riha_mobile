@@ -2,7 +2,10 @@ import { Alert, StyleSheet, TextInput, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { ViewButton } from "../../customsTags/ViewButton";
 import { changeDataInputsInv } from "../../store/reducers/stateSlice";
-import { changePreloader, checkProductLeftovers } from "../../store/reducers/requestSlice";
+import {
+  changePreloader,
+  checkProductLeftovers,
+} from "../../store/reducers/requestSlice";
 
 export const AddProductsTA = ({ productGuid }) => {
   //// для добавления продуктов в список
@@ -13,11 +16,17 @@ export const AddProductsTA = ({ productGuid }) => {
   );
 
   const addInInvoice = () => {
-    if (dataInputsInv.price === "" || dataInputsInv.ves === "") {
+    if (
+      dataInputsInv.price === "" ||
+      dataInputsInv.ves === "" ||
+      dataInputsInv.price == 0 ||
+      dataInputsInv.ves == 0
+    ) {
       Alert.alert("Введите цену и вес!");
     } else {
       const data = { ...temporaryData, ...dataInputsInv, productGuid };
       dispatch(checkProductLeftovers(data));
+      // console.log(data,"data");
       dispatch(changePreloader(true));
     }
   };

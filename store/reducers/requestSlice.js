@@ -326,6 +326,7 @@ export const getProductEveryInvoice = createAsyncThunk(
 export const checkProductLeftovers = createAsyncThunk(
   "checkProductLeftovers",
   async function (info, { dispatch, rejectWithValue }) {
+    // dispatch(changePreloader(true));
     try {
       const response = await axios({
         method: "POST",
@@ -336,9 +337,10 @@ export const checkProductLeftovers = createAsyncThunk(
         },
       });
       if (response.status >= 200 && response.status < 300) {
-        const check = +response?.data?.resukt; /// 1 - успешный, 0 - неуспешный
-        if (+check === 1) {
-          dispatch(addListProductForTT(data));
+        console.log(response?.data?.result);
+        const check = response?.data?.result; /// 1 - успешный, 0 - неуспешный
+        if (+check == 1) {
+          dispatch(addListProductForTT(info));
           dispatch(clearDataInputsInv());
           dispatch(changeTemporaryData({}));
           Alert.alert("Товар добавлен в накладную");

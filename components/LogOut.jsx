@@ -51,8 +51,8 @@ export const LogOut = ({ navigation }) => {
 const styles = StyleSheet.create({
   logoutParent: {
     // backgroundColor: "red",
-    width: 42,
-    height: 42,
+    width: 40,
+    height: 40,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -75,11 +75,11 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
     position: "absolute",
-    top: -10,
+    top: -9,
   },
   lineInner: {
     width: 5,
-    height: 18,
+    height: 17,
     backgroundColor: "rgba(47, 71, 190, 0.591)",
     // backgroundColor: "red",
     borderRadius: 5,
