@@ -29,12 +29,12 @@ export const Navigation = () => {
             },
           }}
         >
-          {/* <Stack.Screen
+          <Stack.Screen
             name="Login"
             component={LoginScreen}
             // options={{ title: "Вход" }}
             options={{ headerShown: false }}
-          /> */}
+          />
           <>
             <Stack.Screen
               name="Main"

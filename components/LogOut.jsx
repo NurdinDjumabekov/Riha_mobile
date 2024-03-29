@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ViewImg } from "../customsTags/ViewImg";
 import { useDispatch } from "react-redux";
 import { changePreloader } from "../store/reducers/requestSlice";
@@ -20,8 +20,8 @@ export const LogOut = ({ navigation }) => {
   };
 
   return (
-    <TouchableOpacity onPress={logOut}>
-      <ViewImg
+    <TouchableOpacity onPress={logOut} style={styles.logoutParent}>
+      {/* <ViewImg
         url={imgLogOut}
         stylesImg={{
           width: 42,
@@ -38,7 +38,50 @@ export const LogOut = ({ navigation }) => {
           backgroundColor: "rgba(199, 210, 254, 0.250)",
           borderRadius: 20,
         }}
-      />
+      /> */}
+      <View style={styles.logoutInner}>
+        <View style={styles.line}>
+          <View style={styles.lineInner}></View>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  logoutParent: {
+    // backgroundColor: "red",
+    width: 42,
+    height: 42,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  logoutInner: {
+    position: "relative",
+    width: "70%",
+    height: "70%",
+    borderWidth: 4,
+    borderRadius: 20,
+    borderColor: "rgba(47, 71, 190, 0.591)",
+    // borderColor: "red",
+    display: "flex",
+    alignItems: "center",
+  },
+
+  line: {
+    backgroundColor: "#fff",
+    padding: 3,
+    paddingLeft: 4,
+    paddingRight: 4,
+    position: "absolute",
+    top: -10,
+  },
+  lineInner: {
+    width: 5,
+    height: 18,
+    backgroundColor: "rgba(47, 71, 190, 0.591)",
+    // backgroundColor: "red",
+    borderRadius: 5,
+  },
+});
