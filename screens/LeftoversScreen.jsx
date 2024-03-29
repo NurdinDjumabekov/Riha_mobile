@@ -109,13 +109,18 @@ export const LeftoversScreen = ({ route }) => {
                   "Остаток на конец",
                 ]}
                 style={styles.head}
-                textStyle={styles.textTitle}
+                textStyle={{ margin: 3, fontSize: 13, fontWeight: 500 }}
                 flexArr={resultWidths}
               />
               <TableWrapper style={{ flexDirection: "row" }}>
                 <Rows
                   data={listLeftovers}
-                  textStyle={styles.text}
+                  textStyle={{
+                    margin: 6,
+                    marginBottom: 8,
+                    marginTop: 8,
+                    fontSize: 12,
+                  }}
                   flexArr={resultWidths}
                 />
               </TableWrapper>
@@ -155,17 +160,17 @@ const styles = StyleSheet.create({
     height: 65,
     backgroundColor: "rgba(199, 210, 254, 0.250)",
   },
-  textTitle: {
-    margin: 3,
-    fontSize: 13,
-    fontWeight: 500,
-    // textAlign: "center",
-  },
-  text: {
-    margin: 6,
-    marginBottom: 8,
-    marginTop: 8,
-    fontSize: 12,
-    // textAlign: "center",
-  },
+  // textTitle: {
+  //   margin: 3,
+  //   fontSize: 13,
+  //   fontWeight: 500,
+  //   // textAlign: "center",
+  // },
+  // text: {
+  //   margin: 6,
+  //   marginBottom: 8,
+  //   marginTop: 8,
+  //   fontSize: 12,
+  //   // textAlign: "center",
+  // },
 });
