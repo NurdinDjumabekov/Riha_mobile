@@ -14,7 +14,7 @@ export const EveryInvoiceTA = ({ obj, navigation }) => {
     });
   };
 
-  //   console.log(obj, "obj");
+  console.log(obj, "obj111");
   //   console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
   //   console.log(listProductEveryInvoiceTA, "listProductEveryInvoiceTA");
 
@@ -25,7 +25,11 @@ export const EveryInvoiceTA = ({ obj, navigation }) => {
           <View style={styles.mainData}>
             <Text style={styles.titleNum}>{obj.codeid} </Text>
             <View>
-              <Text style={[styles.titleDate, styles.role]}>Админ</Text>
+              <Text style={[styles.titleDate, styles.role]}>
+                {/* Жанара (Точка1) */}
+                {obj?.seller}
+                {obj?.point ? `(${obj.point})` : ""}
+              </Text>
               <Text style={styles.titleDate}>{obj.date}</Text>
             </View>
           </View>
@@ -41,7 +45,7 @@ export const EveryInvoiceTA = ({ obj, navigation }) => {
         </View>
         <View style={styles.mainDataArrow}>
           <View>
-            <Text style={styles.status}>Принято</Text>
+            <Text style={styles.status}>Отгружено</Text>
             <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
           </View>
           <View style={styles.arrow}></View>

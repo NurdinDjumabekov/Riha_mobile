@@ -288,6 +288,7 @@ export const getInvoiceEveryTA = createAsyncThunk(
         url: `${API}/ta/get_agent_invoice?agent_guid=${guid}`,
       });
       if (response.status >= 200 && response.status < 300) {
+        // console.log(response?.data,"response?.data");
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);

@@ -25,7 +25,7 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
   }, 0);
 
   // console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
-  console.log(listProductEveryInvoiceTA, "listProductEveryInvoiceTA");
+  // console.log(listProductEveryInvoiceTA, "listProductEveryInvoiceTA");
   // console.log(obj, "obj");
   // console.log(route, "route");
 
@@ -44,7 +44,7 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
               <View style={styles.everyProdInner}>
                 <Text style={styles.koll}>Кол-во (вес): {item.count}</Text>
                 {/* <Text style={styles.koll}>Кол-во (вес): {item.change}</Text> */}
-                <Text style={styles.titleHistory}>
+                <Text style={styles.priceHistory}>
                   {item.product_price} сом
                 </Text>
                 <Text style={styles.summ}>
@@ -73,10 +73,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 
-  ///// modal //////
   everyProd: {
     // backgroundColor: "red",
     padding: 10,
+    paddingRight: 20,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: "rgba(162, 178, 238, 0.439)",
@@ -91,7 +91,15 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
   },
+
   titleHistory: {
+    color: "#222",
+    fontSize: 13,
+    fontWeight: "500",
+    width: "70%",
+  },
+
+  priceHistory: {
     color: "#222",
     fontSize: 13,
     fontWeight: "500",

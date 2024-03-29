@@ -1,6 +1,5 @@
 import {
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Modal,
   Text,
@@ -9,6 +8,7 @@ import {
   Alert,
   FlatList,
   RefreshControl,
+  TouchableOpacity,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,13 +18,12 @@ import {
 } from "../store/reducers/requestSlice";
 import { useEffect, useState } from "react";
 import { ViewButton } from "../customsTags/ViewButton";
-import RNPickerSelect from "react-native-picker-select";
-import { TouchableOpacity } from "react-native";
 import {
   changeEveryInvoiceTA,
   clearEveryInvoiceTA,
 } from "../store/reducers/stateSlice";
 import { EveryInvoiceTA } from "../components/TAComponents/EveryInvoiceTA";
+import RNPickerSelect from "react-native-picker-select";
 
 export const MyCommingScreen = ({ navigation }) => {
   const { preloader, listSellersPoints, listInvoiceEveryTA } = useSelector(
@@ -38,7 +37,14 @@ export const MyCommingScreen = ({ navigation }) => {
 
   useEffect(() => {
     getData();
+    dispatch(
+      changeEveryInvoiceTA({
+        ...createEveryInvoiceTA,
+        seller_guid: listSellersPoints?.[0]?.value,
+      })
+    );
   }, []);
+
   const getData = () => {
     dispatch(getAllSellersPoint(agent_guid));
     dispatch(getInvoiceEveryTA(agent_guid));
@@ -76,7 +82,16 @@ export const MyCommingScreen = ({ navigation }) => {
   };
 
   // console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
+  console.log(listSellersPoints, "listSellersPoints");
+  // console.log(createEveryInvoiceTA, "createEveryInvoiceTA");
 
+  const FlatListStyle = {
+    minWidth: "100%",
+    width: "100%",
+    paddingBottom: 20,
+    borderWidth: 1,
+    borderColor: "rgba(47, 71, 190, 0.587)",
+  };
   return (
     <>
       <View style={styles.parentBlock}>
@@ -93,10 +108,7 @@ export const MyCommingScreen = ({ navigation }) => {
             <Text style={styles.noneData}>Список накладных пустой</Text>
           ) : (
             <FlatList
-              contentContainerStyle={{
-                minWidth: "100%",
-                width: "100%",
-              }}
+              contentContainerStyle={FlatListStyle}
               data={listInvoiceEveryTA}
               renderItem={({ item }) => (
                 <EveryInvoiceTA obj={item} navigation={navigation} />
@@ -113,7 +125,7 @@ export const MyCommingScreen = ({ navigation }) => {
         </SafeAreaView>
       </View>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalState}
         onRequestClose={closeModal}
@@ -126,10 +138,38 @@ export const MyCommingScreen = ({ navigation }) => {
           <View style={styles.modalInner} onPress={() => setModalState(true)}>
             <Text style={styles.titleSelect}>Выберите торговую точку</Text>
             <View style={styles.selectBlock}>
-              <RNPickerSelect
+              {/* <RNPickerSelect
                 onValueChange={changeSelect}
                 items={listSellersPoints}
                 placeholder={{ label: "Выбрать торговую точку", value: null }}
+              /> */}
+              <FlatList
+                contentContainerStyle={{
+                  minWidth: "100%",
+                  width: "100%",
+                }}
+                data={listSellersPoints}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={[
+                      styles.selectBlockInner,
+                      createEveryInvoiceTA?.seller_guid === item?.value &&
+                        styles.activeSelect,
+                    ]}
+                    onPress={() => changeSelect(item?.value)}
+                  >
+                    <Text
+                      style={[
+                        styles.selectText,
+                        createEveryInvoiceTA?.seller_guid === item?.value &&
+                          styles.activeSelectText,
+                      ]}
+                    >
+                      {item?.label}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                // keyExtractor={(item) => item.value}
               />
             </View>
             <TextInput
@@ -175,7 +215,7 @@ const styles = StyleSheet.create({
 
   modalInner: {
     backgroundColor: "#ebeef2",
-    padding: 20,
+    padding: 15,
     borderRadius: 10,
     width: "90%",
   },
@@ -197,12 +237,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   sendBtnMore: {
-    marginBottom: 20,
-    // marginLeft: 10,
-    // marginRight: 10,
-    // width: "95%",
-    // minWidth: "95%",
-    // alignContent: "center",
+    marginBottom: 10,
   },
   actionSendBtn: {
     paddingTop: 12,
@@ -220,9 +255,38 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "rgb(217 223 232)",
-    borderRadius: 6,
-    backgroundColor: "#fff",
+    borderRadius: 5,
+    backgroundColor: "#f0f0f0",
+    minHeight: 70,
+    maxHeight: 250,
   },
+
+  selectBlockInner: {
+    minWidth: "100%",
+    // backgroundColor: "red",
+    // paddingTop: 10,
+    // paddingBottom: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "rgb(217 223 232)",
+    backgroundColor: "#fff",
+    borderRadius: 3,
+  },
+
+  activeSelect: {
+    backgroundColor: "rgba(47, 71, 190, 0.672)",
+  },
+
+  selectText: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "rgba(47, 71, 190, 0.672)",
+  },
+
+  activeSelectText: {
+    color: "#fff",
+  },
+
   inputComm: {
     borderWidth: 1,
     borderColor: "rgb(217 223 232)",
