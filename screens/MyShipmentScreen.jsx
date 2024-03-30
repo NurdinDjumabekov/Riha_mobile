@@ -20,12 +20,13 @@ import { useEffect, useState } from "react";
 import { ViewButton } from "../customsTags/ViewButton";
 import {
   changeEveryInvoiceTA,
+  changeTemporaryData,
+  clearDataInputsInv,
   clearEveryInvoiceTA,
 } from "../store/reducers/stateSlice";
 import { EveryInvoiceTA } from "../components/TAComponents/EveryInvoiceTA";
-import RNPickerSelect from "react-native-picker-select";
 
-export const MyCommingScreen = ({ navigation }) => {
+export const MyShipmentScreen = ({ navigation }) => {
   const { preloader, listSellersPoints, listInvoiceEveryTA } = useSelector(
     (state) => state.requestSlice
   );
@@ -79,6 +80,8 @@ export const MyCommingScreen = ({ navigation }) => {
     } else {
       dispatch(createInvoiceTA({ data: createEveryInvoiceTA, navigation }));
       dispatch(clearEveryInvoiceTA());
+      dispatch(clearDataInputsInv());
+      dispatch(changeTemporaryData({}));
     }
   };
 

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { View, Image } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { changeDataLogin, clearLogin } from "../store/reducers/stateSlice";
 import { changeToken } from "../store/reducers/saveDataSlice";
@@ -7,7 +7,8 @@ import { ViewContainer } from "../customsTags/ViewContainer";
 import { ViewButton } from "../customsTags/ViewButton";
 import { logInAccount } from "../store/reducers/requestSlice";
 import { useEffect } from "react";
-import { ViewImg } from "../customsTags/ViewImg";
+import logo from "../assets/images/logo.png";
+import { StyleSheet } from "react-native";
 
 export const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -39,8 +40,6 @@ export const LoginScreen = ({ navigation }) => {
     //     dispatch(changeToken(""));
   }, []);
 
-  const link = "https://riha.kg/wp-content/themes/h/redesign/images/logo.png";
-
   return (
     <View
       styles={{
@@ -49,19 +48,9 @@ export const LoginScreen = ({ navigation }) => {
     >
       <ViewContainer>
         <View>
-          <ViewImg
-            url={link}
-            stylesImg={{
-              width: 200,
-              height: 100,
-              objectFit: "contain",
-              marginBottom: 20,
-            }}
-            stylesDiv={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          />
+          <View style={styles.logoBlock}>
+            <Image source={logo} style={{ width: 200, height: 65 }} />
+          </View>
           <ViewInput
             text="Введите логин"
             value={dataLogin.login}
@@ -77,22 +66,29 @@ export const LoginScreen = ({ navigation }) => {
           />
         </View>
       </ViewContainer>
-      <ViewButton onclick={sendLogin} styles={styles.loginBtn}>
+      <ViewButton onclick={sendLogin} styles={styles.btnLogin}>
         Войти
       </ViewButton>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
-  loginBtn: {
-    backgroundColor: "rgba(184, 196, 246, 0.99)",
+  logoBlock: {
+    // minWidth: 400,
+    height: 120,
+    display: "flex",
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "center",
+  },
+
+  btnLogin: {
+    backgroundColor: "rgba(47, 71, 190, 0.591))",
     position: "absolute",
     bottom: 30,
     left: 10,
     right: 10,
     minWidth: "90%",
-    // elevation: 2,
     color: "#fff",
     marginTop: 0,
   },

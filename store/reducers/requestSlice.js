@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API } from "../../env";
-import { listMyApplicationData, listPrihod } from "../../helpers/Data";
 import {
   addListProductForTT,
   changeAcceptInvoiceTA,
@@ -352,70 +351,6 @@ export const checkProductLeftovers = createAsyncThunk(
           );
           dispatch(changePreloader(false));
         }
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-////////////////////////////////////////
-
-/// getMyComming
-export const getMyComming = createAsyncThunk(
-  "getMyComming",
-  async function ({ obj }, { dispatch, rejectWithValue }) {
-    // console.log(obj, "obj");
-    // console.log(`${API}/${obj?.pathApi}`);
-    dispatch(changePreloader(true));
-    setTimeout(() => {
-      dispatch(changeComming(listPrihod));
-      dispatch(changePreloader(false));
-    }, 500);
-
-    try {
-      const response = await axios({
-        method: "GET",
-        url: `${API}`,
-        // headers: {
-        //   Authorization: `Bearer ${tokenA}`,
-        // },
-      });
-      if (response.status >= 200 && response.status < 300) {
-        // return response?.data?.data;
-      } else {
-        throw Error(`Error: ${response.status}`);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-/// changeStatus
-export const changeStatus = createAsyncThunk(
-  "changeStatus",
-  async function ({ obj }, { dispatch, rejectWithValue }) {
-    // console.log(obj, "obj");
-    // console.log(`${API}/${obj?.pathApi}`);
-    dispatch(changePreloader(true));
-    setTimeout(() => {
-      dispatch(changeListInvoices(listMyApplicationData));
-      dispatch(changePreloader(false));
-    }, 500);
-
-    try {
-      const response = await axios({
-        method: "GET",
-        url: `${API}`,
-        // headers: {
-        //   Authorization: `Bearer ${tokenA}`,
-        // },
-      });
-      if (response.status >= 200 && response.status < 300) {
-        // return response?.data?.data;
       } else {
         throw Error(`Error: ${response.status}`);
       }

@@ -17,6 +17,7 @@ import {
 import { EveryProduct } from "../components/EveryProduct";
 import {
   changeListProductForTT,
+  changeStateForCategory,
   changeTemporaryData,
 } from "../store/reducers/stateSlice";
 import ConfirmationModal from "../components/ConfirmationModal";
@@ -38,6 +39,7 @@ export const EveryInvoice = ({ navigation, route }) => {
     navigation.setOptions({
       title: `Накладная №${codeid}`,
     });
+    dispatch(changeStateForCategory("0"));
   }, [guid]);
 
   const getData = async () => {

@@ -20,7 +20,6 @@ import { CheckBoxTable } from "../components/CheckBoxTable";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { ViewButton } from "../customsTags/ViewButton";
 import { InputDifference } from "../components/InputDifference";
-import gal from "../assets/images/checkGal2.png";
 import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
 
 const Div = styled.View`

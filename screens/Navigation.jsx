@@ -7,7 +7,7 @@ import { store } from "../store/index";
 import { StatusBar } from "expo-status-bar";
 import { Preloader } from "../components/Preloader";
 import { MyApplicationScreen } from "./MyApplicationScreen";
-import { MyCommingScreen } from "./MyCommingScreen";
+import { MyShipmentScreen } from "./MyShipmentScreen";
 import { LogOut } from "../components/LogOut";
 import { LeftoversScreen } from "./LeftoversScreen";
 import { DetailedInvoice } from "./DetailedInvoice";
@@ -60,8 +60,8 @@ export const Navigation = () => {
             />
             {/* /////////////////////// Отгрузки ///////////////////////*/}
             <Stack.Screen
-              name="Comming"
-              component={MyCommingScreen}
+              name="Shipment"
+              component={MyShipmentScreen}
               options={{ title: "Отгрузки" }}
             />
             <Stack.Screen name="everyInvoice" component={EveryInvoice} />

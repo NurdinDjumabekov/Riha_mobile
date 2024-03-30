@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, View, Text, TouchableWithoutFeedback } from "react-native";
+import { Modal, TouchableWithoutFeedback } from "react-native";
 import styled from "styled-components/native";
 import { ViewButton } from "../customsTags/ViewButton";
 
