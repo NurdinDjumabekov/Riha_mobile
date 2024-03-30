@@ -74,11 +74,6 @@ export const Navigation = () => {
               component={EveryInvoiceList}
             />
             {/* /////////////////////// Отгрузки /////////////////////// */}
-            {/* <Stack.Screen
-              name="Realiz"
-              component={Realization}
-              options={{ title: "Отгрузки" }}
-            /> */}
           </>
         </Stack.Navigator>
         <StatusBar theme="auto" />

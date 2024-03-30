@@ -8,7 +8,6 @@ import {
 import { useEffect, useState } from "react";
 import RNPickerSelect from "react-native-picker-select";
 import { Table, Row, Rows, TableWrapper } from "react-native-table-component";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { ViewButton } from "../customsTags/ViewButton";
 import { ScrollView } from "react-native";
 
@@ -32,7 +31,7 @@ export const LeftoversScreen = ({ route }) => {
     await dispatch(getMyLeftovers(agent_guid));
   };
 
-  console.log(listLeftovers, "listLeftovers");
+  // console.log(listLeftovers, "listLeftovers");
 
   const select = {
     height: 50,
@@ -63,6 +62,13 @@ export const LeftoversScreen = ({ route }) => {
     setDate(currentDate);
   };
 
+  const textStyles = {
+    margin: 6,
+    marginBottom: 8,
+    marginTop: 8,
+    fontSize: 12,
+  };
+
   return (
     <>
       <ScrollView style={styles.container}>
@@ -88,7 +94,6 @@ export const LeftoversScreen = ({ route }) => {
               Сортировать по дате
             </ViewButton>
           </View> */}
-
           {listLeftovers?.length === 0 ? (
             <Text style={styles.noneData}>Остатка нет...</Text>
           ) : (
@@ -113,7 +118,7 @@ export const LeftoversScreen = ({ route }) => {
                 flexArr={resultWidths}
               />
               <TableWrapper style={{ flexDirection: "row" }}>
-                <Rows
+                {/* <Rows
                   data={listLeftovers}
                   textStyle={{
                     margin: 6,
@@ -122,22 +127,27 @@ export const LeftoversScreen = ({ route }) => {
                     fontSize: 12,
                   }}
                   flexArr={resultWidths}
+                /> */}
+                <Rows
+                  data={listLeftovers.map((item) => [
+                    item[0], // Товар
+                    item[1], // Остаток на начало
+                    <Text style={[textStyles, { color: "green" }]}>
+                      {item[2]}
+                    </Text>, // Приход
+                    <Text style={[textStyles, { color: "red" }]}>
+                      {item[3]}
+                    </Text>, // Расход
+                    item[4], // Остаток на конец
+                  ])}
+                  textStyle={textStyles}
+                  flexArr={resultWidths}
                 />
               </TableWrapper>
             </Table>
           )}
         </SafeAreaView>
       </ScrollView>
-      {/* {showDatePicker && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode="date"
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-      )} */}
     </>
   );
 };
@@ -160,17 +170,4 @@ const styles = StyleSheet.create({
     height: 65,
     backgroundColor: "rgba(199, 210, 254, 0.250)",
   },
-  // textTitle: {
-  //   margin: 3,
-  //   fontSize: 13,
-  //   fontWeight: 500,
-  //   // textAlign: "center",
-  // },
-  // text: {
-  //   margin: 6,
-  //   marginBottom: 8,
-  //   marginTop: 8,
-  //   fontSize: 12,
-  //   // textAlign: "center",
-  // },
 });

@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { changeDataLogin, clearLogin } from "../store/reducers/stateSlice";
 import { changeToken } from "../store/reducers/saveDataSlice";
@@ -77,22 +77,23 @@ export const LoginScreen = ({ navigation }) => {
           />
         </View>
       </ViewContainer>
-      <ViewButton
-        onclick={sendLogin}
-        styles={{
-          backgroundColor: "rgba(184, 196, 246, 0.99)",
-          position: "absolute",
-          bottom: 30,
-          left: 10,
-          right: 10,
-          minWidth: "90%",
-          elevation: 2,
-          color: "#fff",
-          marginTop: 0,
-        }}
-      >
+      <ViewButton onclick={sendLogin} styles={styles.loginBtn}>
         Войти
       </ViewButton>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  loginBtn: {
+    backgroundColor: "rgba(184, 196, 246, 0.99)",
+    position: "absolute",
+    bottom: 30,
+    left: 10,
+    right: 10,
+    minWidth: "90%",
+    // elevation: 2,
+    color: "#fff",
+    marginTop: 0,
+  },
+});

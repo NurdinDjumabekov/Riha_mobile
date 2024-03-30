@@ -83,7 +83,7 @@ export const MyCommingScreen = ({ navigation }) => {
   };
 
   // console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
-  console.log(listSellersPoints, "listSellersPoints");
+  // console.log(listSellersPoints, "listSellersPoints");
   // console.log(createEveryInvoiceTA, "createEveryInvoiceTA");
 
   const FlatListStyle = {

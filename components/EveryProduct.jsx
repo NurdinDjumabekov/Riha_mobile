@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   changeDataInputsInv,
   changeTemporaryData,
-  clearDataInputsInv,
   removeListProductForTT,
 } from "../store/reducers/stateSlice";
 import { AddProductsTA } from "./TAComponents/AddProductsTA";
@@ -80,26 +79,32 @@ export const EveryProduct = ({ obj, index, type }) => {
           ]}
         >
           <View style={styles.blockMainInner}>
-            <View style={styles.mainContent}>
-              <Text style={[styles.title, isCheck && styles.activeTitle]}>
-                {index + 1}.{" "}
-              </Text>
-              <Text
-                style={[
-                  styles.title,
-                  isCheck && styles.activeTitle,
-                  {
-                    width: "85%",
-                  },
-                ]}
-              >
-                {obj?.product_name}
-              </Text>
+            <View>
+              <View style={styles.mainContent}>
+                <Text style={[styles.title, isCheck && styles.activeTitle]}>
+                  {index + 1}.{" "}
+                </Text>
+                <Text
+                  style={[
+                    styles.title,
+                    isCheck && styles.activeTitle,
+                    {
+                      width: "85%",
+                    },
+                  ]}
+                >
+                  {obj?.product_name}
+                </Text>
+              </View>
+              {isCheck && (
+                <Text style={styles.leftovers}>Остаток: {obj.end_outcome}</Text>
+              )}
             </View>
+
             {!isCheck && <View style={styles.arrow}></View>}
           </View>
           {Object.keys(temporaryData).length !== 0 && isCheck && (
-            <AddProductsTA productGuid={obj?.guid} />
+            <AddProductsTA productGuid={obj.guid} />
           )}
         </TouchableOpacity>
       )}
@@ -188,6 +193,12 @@ const styles = StyleSheet.create({
     borderColor: "rgba(184, 196, 246, 0.99)",
     display: "flex",
     flexDirection: "column",
+  },
+
+  leftovers: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "rgba(47, 71, 190, 0.591)",
   },
 
   title: {

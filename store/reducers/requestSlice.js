@@ -561,8 +561,8 @@ const requestSlice = createSlice({
     //////// getMyLeftovers
     builder.addCase(getMyLeftovers.fulfilled, (state, action) => {
       state.preloader = false;
-      state.listLeftovers = action.payload?.map((item) => [
-        `${item.product_name}`,
+      state.listLeftovers = action.payload?.map((item, ind) => [
+        `${ind + 1}. ${item.product_name}`,
         `${item.start_outcome}`,
         `${item.income}`,
         `${item.outcome}`,
