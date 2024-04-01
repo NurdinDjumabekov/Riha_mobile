@@ -26,7 +26,7 @@ export const AddProductsTA = ({ productGuid }) => {
     } else {
       const data = { ...temporaryData, ...dataInputsInv, productGuid };
       dispatch(checkProductLeftovers(data));
-      // console.log(data,"data");
+      console.log(data,"data");
       dispatch(changePreloader(true));
     }
   };

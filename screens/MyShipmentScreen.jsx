@@ -111,20 +111,22 @@ export const MyShipmentScreen = ({ navigation }) => {
           {listInvoiceEveryTA?.length === 0 ? (
             <Text style={styles.noneData}>Список накладных пустой</Text>
           ) : (
-            <FlatList
-              contentContainerStyle={FlatListStyle}
-              data={listInvoiceEveryTA}
-              renderItem={({ item }) => (
-                <EveryInvoiceTA obj={item} navigation={navigation} />
-              )}
-              keyExtractor={(item) => item.codeid}
-              refreshControl={
-                <RefreshControl
-                  refreshing={preloader}
-                  onRefresh={() => getData()}
-                />
-              }
-            />
+            <View style={{ paddingBottom: 180 }}>
+              <FlatList
+                contentContainerStyle={FlatListStyle}
+                data={listInvoiceEveryTA}
+                renderItem={({ item }) => (
+                  <EveryInvoiceTA obj={item} navigation={navigation} />
+                )}
+                keyExtractor={(item) => item.codeid}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={preloader}
+                    onRefresh={() => getData()}
+                  />
+                }
+              />
+            </View>
           )}
         </SafeAreaView>
       </View>

@@ -338,6 +338,7 @@ export const checkProductLeftovers = createAsyncThunk(
       if (response.status >= 200 && response.status < 300) {
         console.log(response?.data?.result);
         const check = response?.data?.result; /// 1 - успешный, 0 - неуспешный
+        console.log(response?.data,"response?.data");
         if (+check == 1) {
           dispatch(addListProductForTT(info));
           dispatch(clearDataInputsInv());

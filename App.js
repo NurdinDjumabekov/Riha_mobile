@@ -1,10 +1,13 @@
-import { StatusBar } from "expo-status-bar";
-import { View } from "react-native";
-import styled from "styled-components/native";
-import MainScreen from "./screens/MainScreen";
-import { LoginScreen } from "./screens/LoginScreen";
+import { useEffect } from "react";
 import { Navigation } from "./screens/Navigation";
+import * as SplashScreen from "expo-splash-screen";
+import { Platform } from "react-native";
 
 export default function App() {
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      SplashScreen.hideAsync();
+    }
+  }, []);
   return <Navigation />;
 }

@@ -70,10 +70,9 @@ export const LeftoversScreen = ({ route }) => {
   };
 
   return (
-    <>
-      <ScrollView style={styles.container}>
-        <SafeAreaView>
-          {/* <View style={styles.sortBlock}>
+    <ScrollView style={styles.container}>
+      <SafeAreaView>
+        {/* <View style={styles.sortBlock}>
             <View style={select}>
               <RNPickerSelect
                 onValueChange={(value) => console.log(value)}
@@ -94,31 +93,31 @@ export const LeftoversScreen = ({ route }) => {
               Сортировать по дате
             </ViewButton>
           </View> */}
-          {listLeftovers?.length === 0 ? (
-            <Text style={styles.noneData}>Остатка нет...</Text>
-          ) : (
-            <Table
-              borderStyle={{
-                borderWidth: 1,
-                borderColor: "rgba(199, 210, 254, 0.718)",
-                minWidth: "100%",
-                textAlign: "center",
-              }}
-            >
-              <Row
-                data={[
-                  "Товар",
-                  "Остаток на начало",
-                  "Приход",
-                  "Расход",
-                  "Остаток на конец",
-                ]}
-                style={styles.head}
-                textStyle={{ margin: 3, fontSize: 13, fontWeight: 500 }}
-                flexArr={resultWidths}
-              />
-              <TableWrapper style={{ flexDirection: "row" }}>
-                {/* <Rows
+        {listLeftovers?.length === 0 ? (
+          <Text style={styles.noneData}>Остатка нет...</Text>
+        ) : (
+          <Table
+            borderStyle={{
+              borderWidth: 1,
+              borderColor: "rgba(199, 210, 254, 0.718)",
+              minWidth: "100%",
+              textAlign: "center",
+            }}
+          >
+            <Row
+              data={[
+                "Товар",
+                "Остаток на начало",
+                "Приход",
+                "Расход",
+                "Остаток на конец",
+              ]}
+              style={styles.head}
+              textStyle={{ margin: 3, fontSize: 13, fontWeight: 500 }}
+              flexArr={resultWidths}
+            />
+            <TableWrapper style={{ flexDirection: "row" }}>
+              {/* <Rows
                   data={listLeftovers}
                   textStyle={{
                     margin: 6,
@@ -128,27 +127,26 @@ export const LeftoversScreen = ({ route }) => {
                   }}
                   flexArr={resultWidths}
                 /> */}
-                <Rows
-                  data={listLeftovers.map((item) => [
-                    item[0], // Товар
-                    item[1], // Остаток на начало
-                    <Text style={{ ...textStyles, textStyles, color: "green" }}>
-                      {item[2]}
-                    </Text>, // Приход
-                    <Text style={{ ...textStyles, textStyles, color: "red" }}>
-                      {item[3]}
-                    </Text>, // Расход
-                    item[4], // Остаток на конец
-                  ])}
-                  textStyle={textStyles}
-                  flexArr={resultWidths}
-                />
-              </TableWrapper>
-            </Table>
-          )}
-        </SafeAreaView>
-      </ScrollView>
-    </>
+              <Rows
+                data={listLeftovers.map((item) => [
+                  item[0], // Товар
+                  item[1], // Остаток на начало
+                  <Text style={{ ...textStyles, textStyles, color: "green" }}>
+                    {item[2]}
+                  </Text>, // Приход
+                  <Text style={{ ...textStyles, textStyles, color: "red" }}>
+                    {item[3]}
+                  </Text>, // Расход
+                  item[4], // Остаток на конец
+                ])}
+                textStyle={textStyles}
+                flexArr={resultWidths}
+              />
+            </TableWrapper>
+          </Table>
+        )}
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
@@ -156,7 +154,7 @@ const styles = StyleSheet.create({
     paddingLeft: 1,
     paddingRight: 1,
     paddingTop: 10,
-    paddingBottom: 30,
+    marginBottom: 10,
   },
   sortBlock: {
     display: "flex",
