@@ -4,6 +4,7 @@ import { API } from "../../env";
 import {
   addListProductForTT,
   changeAcceptInvoiceTA,
+  changeAmountExpenses,
   changeListProductForTT,
   changeTemporaryData,
   clearDataInputsInv,
@@ -23,6 +24,7 @@ const initialState = {
   listLeftovers: [], // список остатков
   listInvoiceEveryTA: [], /// список накладных каждого ТА(типо истории)
   listProductEveryInvoiceTA: [], /// список товаров каждой накладной ТА(типо истории)
+  listExpenses: [], /// список затрат(трат) у ТТ
 
   listComming: [],
   listSelectCategory: [],
@@ -156,7 +158,8 @@ export const createInvoiceTA = createAsyncThunk(
         setTimeout(() => {
           navigation.navigate("everyInvoice", {
             codeid: response?.data?.codeid,
-            guid: response?.data?.guid,
+            guid: response?.data?.guid, /// guid накладной
+            seller_guid: data?.seller_guid, /// seller_guid точки(магазина)
           });
         }, 200);
       } else {
@@ -179,7 +182,7 @@ export const getAllSellersPoint = createAsyncThunk(
         url: `${API}/ta/get_points?agent_guid=${guid}`,
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log(response?.data, "444");
+        // console.log(response?.data, "444");
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -245,6 +248,7 @@ export const addProdInvoiceTT = createAsyncThunk(
       });
       if (response.status >= 200 && response.status < 300) {
         dispatch(changeListProductForTT([])); /// очищаю список , где лежат данные для отправки ТТ
+        dispatch(changeAmountExpenses(""));  /// очищаю input для суммы трат денег ТТ
         navigation.navigate("Main");
       } else {
         throw Error(`Error: ${response.status}`);
@@ -298,7 +302,7 @@ export const getInvoiceEveryTA = createAsyncThunk(
 );
 
 /// getProductEveryInvoice
-/// список товароы каждой накладной ТА(типо истории)
+/// список товаров каждой накладной ТА(типо истории)
 export const getProductEveryInvoice = createAsyncThunk(
   "getProductEveryInvoice",
   async function (guid, { dispatch, rejectWithValue }) {
@@ -336,14 +340,14 @@ export const checkProductLeftovers = createAsyncThunk(
         },
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log(response?.data?.result);
+        // console.log(response?.data?.result);
         const check = response?.data?.result; /// 1 - успешный, 0 - неуспешный
-        console.log(response?.data,"response?.data");
+        // console.log(response?.data, "response?.data");
         if (+check == 1) {
           dispatch(addListProductForTT(info));
           dispatch(clearDataInputsInv());
           dispatch(changeTemporaryData({}));
-          Alert.alert("Товар добавлен в накладную");
+          // Alert.alert("Товар добавлен в накладную");
           dispatch(changePreloader(false));
         } else {
           Alert.alert(
@@ -352,6 +356,28 @@ export const checkProductLeftovers = createAsyncThunk(
           );
           dispatch(changePreloader(false));
         }
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// getListExpenses
+/// список накладных каждого ТА(типо истории)
+export const getListExpenses = createAsyncThunk(
+  "getListExpenses",
+  async function (guid, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${API}/ta/get_point_expenses?point_guid=${guid}`,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        // console.log(response?.data,"response?.data");
+        return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
       }
@@ -436,7 +462,7 @@ const requestSlice = createSlice({
     //// createInvoiceTA
     builder.addCase(createInvoiceTA.fulfilled, (state, action) => {
       state.preloader = false;
-      Alert.alert("Успешно создано!");
+      // Alert.alert("Успешно создано!");
     });
     builder.addCase(createInvoiceTA.rejected, (state, action) => {
       state.error = action.payload;
@@ -537,6 +563,32 @@ const requestSlice = createSlice({
       Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
     });
     builder.addCase(getProductEveryInvoice.pending, (state, action) => {
+      state.preloader = true;
+    });
+    ////// checkProductLeftovers
+    builder.addCase(checkProductLeftovers.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listProductEveryInvoiceTA = action.payload;
+    });
+    builder.addCase(checkProductLeftovers.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
+    });
+    builder.addCase(checkProductLeftovers.pending, (state, action) => {
+      state.preloader = true;
+    });
+    ////// getListExpenses
+    builder.addCase(getListExpenses.fulfilled, (state, action) => {
+      state.preloader = false;
+      state.listExpenses = action.payload;
+    });
+    builder.addCase(getListExpenses.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
+    });
+    builder.addCase(getListExpenses.pending, (state, action) => {
       state.preloader = true;
     });
   },

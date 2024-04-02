@@ -82,6 +82,7 @@ export const MyShipmentScreen = ({ navigation }) => {
       dispatch(clearEveryInvoiceTA());
       dispatch(clearDataInputsInv());
       dispatch(changeTemporaryData({}));
+      setModalState(false)
     }
   };
 

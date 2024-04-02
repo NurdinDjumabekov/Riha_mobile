@@ -25,7 +25,7 @@ import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInne
 
 export const EveryInvoice = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const { codeid, guid } = route.params;
+  const { codeid, guid, seller_guid } = route.params; /// guid накладной и  seller_guid точки(магазина)
   const [modal, setModal] = useState(false);
   const { listProductForTT } = useSelector((state) => state.stateSlice);
   const { preloader, listCategoryTA, listProductTA } = useSelector(
@@ -72,6 +72,7 @@ export const EveryInvoice = ({ navigation, route }) => {
     navigation.navigate("everyInvoiceList", {
       codeid,
       guid,
+      seller_guid,
     });
     dispatch(changeTemporaryData({}));
   };

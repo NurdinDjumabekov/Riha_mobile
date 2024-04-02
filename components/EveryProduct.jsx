@@ -264,27 +264,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
-    marginTop: 10,
+    marginTop: 5,
   },
 
-  blockProductsMore: {},
   mainTitle: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: "500",
   },
   vesText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "500",
     color: "rgba(47, 71, 190, 0.891)",
   },
   priceText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "500",
     color: "rgba(47, 71, 190, 0.891)",
   },
 
   sumText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "500",
     color: "rgba(12, 169, 70, 0.9)",
   },

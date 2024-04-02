@@ -18,7 +18,8 @@ const initialState = {
 
   temporaryData: {}, ///// временные данные(после добавления сюда, они добавляются в список(listProductForTT))
   dataInputsInv: { price: "", ves: "" },
-  listProductForTT: [],
+  listProductForTT: [], /// список твоаров для ТТ
+  amountExpenses: "", /// state для input суммы расходов ТТ
   stateForCategory: {}, // состояние для хранения временной категории(подсветка категории)
 };
 
@@ -78,6 +79,9 @@ const stateSlice = createSlice({
     changeStateForCategory: (state, action) => {
       state.stateForCategory = action.payload;
     },
+    changeAmountExpenses: (state, action) => {
+      state.amountExpenses = action.payload;
+    },
   },
 });
 export const {
@@ -94,6 +98,7 @@ export const {
   changeDataInputsInv,
   clearDataInputsInv,
   changeStateForCategory,
+  changeAmountExpenses,
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

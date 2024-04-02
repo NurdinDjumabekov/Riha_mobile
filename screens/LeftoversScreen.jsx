@@ -168,4 +168,11 @@ const styles = StyleSheet.create({
     height: 65,
     backgroundColor: "rgba(199, 210, 254, 0.250)",
   },
+  noneData: {
+    flex: 1,
+    height: 500,
+    paddingTop: 250,
+    textAlign: "center",
+    fontSize: 20,
+  },
 });
