@@ -100,7 +100,6 @@ export const EveryProduct = ({ obj, index, type }) => {
                 <Text style={styles.leftovers}>Остаток: {obj.end_outcome}</Text>
               )}
             </View>
-
             {!isCheck && <View style={styles.arrow}></View>}
           </View>
           {Object.keys(temporaryData).length !== 0 && isCheck && (

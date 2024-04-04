@@ -34,9 +34,9 @@ export const EveryInvoiceList = ({ navigation, route }) => {
       title: `Накладная №${codeid}`,
     });
     getData();
-  }, [guid]);
+  }, []);
 
-  const sumExpenses = listExpenses.reduce((total, item) => {
+  const sumExpenses = listExpenses?.reduce((total, item) => {
     return +item.amount + total;
   }, 0); //// сумма трат(расходов) ТТ
 
@@ -74,7 +74,7 @@ export const EveryInvoiceList = ({ navigation, route }) => {
   // console.log(seller_guid, "seller_guid");
   // console.log(amountExpenses, "amountExpenses");
 
-  const totalSum = listProductForTT.reduce((total, item) => {
+  const totalSum = listProductForTT?.reduce((total, item) => {
     return +item.price * +item.ves + total;
   }, 0);
 
@@ -110,7 +110,7 @@ export const EveryInvoiceList = ({ navigation, route }) => {
           </SafeAreaView>
         )}
         {checkList && (
-          <View style={{ minHeight: "38%" }}>
+          <View style={{ maxHeight: 290 }}>
             <ListExpense getData={getData} />
           </View>
         )}
@@ -129,7 +129,10 @@ export const EveryInvoiceList = ({ navigation, route }) => {
             </View>
           )}
           {checkEmpty && (
-            <ViewButton styles={styles.sendBtn} onclick={() => setModal(true)}>
+            <ViewButton
+              styles={[styles.sendBtn, !checkList && styles.moreSendBtn]}
+              onclick={() => setModal(true)}
+            >
               Подтвердить
             </ViewButton>
           )}
@@ -158,9 +161,6 @@ const styles = StyleSheet.create({
   },
 
   noneData: {
-    // flex: 1,
-    // paddingTop: 100,
-    // marginTop:200,
     paddingVertical: 100,
     textAlign: "center",
     fontSize: 16,
@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
   },
 
+ 
   input: {
     width: 120,
     height: 40,
@@ -223,7 +224,15 @@ const styles = StyleSheet.create({
     paddingBottom: 9,
     paddingTop: 9,
     borderRadius: 7,
+    
   },
+
+  moreSendBtn: {
+    minWidth: "100%",
+    paddingBottom: 13,
+    paddingTop: 13,
+  },
+
 
   resultSum: {
     fontSize: 16,

@@ -15,8 +15,13 @@ export const ListExpense = ({ getData }) => {
   );
   // console.log(listExpenses, "listExpenses");
 
+  const lengthThree = listExpenses?.length > 3;
+
   return (
-    <SafeAreaView style={styles.parentBlock}>
+    <SafeAreaView
+      style={[styles.parentBlock, lengthThree && styles.paddingBottom]}
+      ///// для отталкивания карточек(данных) снизу вверх
+    >
       <Text style={styles.titleExpenses}>
         Расходы ({listExpenses?.[0]?.point})
       </Text>
@@ -53,10 +58,15 @@ export const ListExpense = ({ getData }) => {
 
 const styles = StyleSheet.create({
   parentBlock: {
-    flex: 1,
-    maxHeight: "100%",
-    // paddingBottom: "105%",
+    // flex: 1,
+    // maxHeight: "100%",
+    // paddingBottom: 40,
   },
+
+  paddingBottom: {
+    paddingBottom: 40,
+  },
+
   titleExpenses: {
     fontSize: 17,
     fontWeight: "500",

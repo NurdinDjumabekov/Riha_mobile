@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Keyboard,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -27,6 +28,7 @@ export const EveryInvoice = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { codeid, guid, seller_guid } = route.params; /// guid накладной и  seller_guid точки(магазина)
   const [modal, setModal] = useState(false);
+  const [openKeyBoard, setOpenKeyBoard] = useState(false);
   const { listProductForTT } = useSelector((state) => state.stateSlice);
   const { preloader, listCategoryTA, listProductTA } = useSelector(
     (state) => state.requestSlice
@@ -77,7 +79,27 @@ export const EveryInvoice = ({ navigation, route }) => {
     dispatch(changeTemporaryData({}));
   };
 
+  useEffect(() => {
+    /// события открытия клавиатуры
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => setOpenKeyBoard(true)
+    );
+    /// события закрытия клавиатуры
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => setOpenKeyBoard(false)
+    );
+    // Удаление слушателей после использования
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   // console.log(listProductTA, "listProductTA");
+  // console.log(openKeyBoard, "openKeyBoard");
+
+  const checkLength = listProductTA?.length <= 4;
 
   const widthMax = { minWidth: "100%", width: "100%" };
   return (
@@ -103,18 +125,21 @@ export const EveryInvoice = ({ navigation, route }) => {
             </View>
           </View>
           <Text style={[styles.textCateg, styles.textTovar]}>Товары</Text>
-          <FlatList
-            contentContainerStyle={widthMax}
-            data={listProductTA}
-            renderItem={({ item, index }) => (
-              <EveryProduct obj={item} index={index} />
-            )}
-            // keyExtractor={(item) => item.guid}
-            keyExtractor={(item, ind) => `${item.guid}${ind}`}
-            refreshControl={
-              <RefreshControl refreshing={preloader} onRefresh={getData} />
-            }
-          />
+          <View
+            style={[styles.blockSelectProd, openKeyBoard && checkLength && styles.paddingB50]}
+          >
+            <FlatList
+              contentContainerStyle={widthMax}
+              data={listProductTA}
+              renderItem={({ item, index }) => (
+                <EveryProduct obj={item} index={index} />
+              )}
+              keyExtractor={(item, ind) => `${item.guid}${ind}`}
+              refreshControl={
+                <RefreshControl refreshing={preloader} onRefresh={getData} />
+              }
+            />
+          </View>
         </SafeAreaView>
       </View>
       {/* /// для подтверждения отправки */}
@@ -140,6 +165,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+
+  selectBlock: {
+    backgroundColor: "#fff",
+    marginTop: 5,
+    marginBottom: 5,
+    borderStyle: "solid",
+    borderRadius: 3,
+    width: "100%",
+    maxHeight: 250,
+  },
   parentBlock: {
     flex: 1,
     position: "relative",
@@ -153,6 +188,7 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
     backgroundColor: "rgba(12, 169, 70, 0.486)",
+    marginBottom: 0,
   },
   arrowInner: {
     borderTopWidth: 3,
@@ -179,28 +215,28 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-  selectBlock: {
-    backgroundColor: "#fff",
-    marginTop: 5,
-    marginBottom: 5,
-    borderStyle: "solid",
-    borderRadius: 3,
-    width: "100%",
-    height: 250,
-  },
   textCateg: {
     padding: 8,
     fontSize: 18,
     fontWeight: "500",
     marginBottom: 3,
     shadowColor: "#000",
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.9,
     shadowRadius: 4,
     elevation: 2,
     paddingBottom: 10,
     paddingTop: 10,
+    backgroundColor: "#fff",
   },
   textTovar: {
     backgroundColor: "#fff",
+  },
+  blockSelectProd: {
+    minHeight: "30%",
+    overflow: "scroll",
+    height: "50%",
+  },
+  paddingB50: {
+    // paddingBottom: 95,
   },
 });

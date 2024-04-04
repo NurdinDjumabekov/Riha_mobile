@@ -20,7 +20,7 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
     });
   }, []);
 
-  const totalSum = listProductEveryInvoiceTA.reduce((total, item) => {
+  const totalSum = listProductEveryInvoiceTA?.reduce((total, item) => {
     return +item.price * +item.count + total;
   }, 0);
 

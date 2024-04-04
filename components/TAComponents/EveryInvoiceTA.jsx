@@ -8,7 +8,7 @@ export const EveryInvoiceTA = ({ obj, navigation }) => {
 
   const lookInvoice = () => {
     dispatch(getProductEveryInvoice(obj.guid));
-    navigation.navigate("everyInvoiceHistoryScreen", {
+    navigation?.navigate("everyInvoiceHistoryScreen", {
       obj,
       title: `Накладная №${obj.codeid}`,
     });

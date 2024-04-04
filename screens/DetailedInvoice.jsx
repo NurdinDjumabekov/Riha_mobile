@@ -75,6 +75,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
       const tableDataList = everyInvoice?.list?.map((item) => {
         return [
           `${item?.codeid}. ${item?.product_name}`,
+          `${item?.product_price}`,
           `${item?.count}`,
           <InputDifference
             guidProduct={item?.guid}
@@ -92,15 +93,20 @@ export const DetailedInvoice = ({ route, navigation }) => {
   }, [everyInvoice]);
 
   const windowWidth = Dimensions.get("window").width;
-  const arrWidth = [50, 18, 20, 12]; //  проценты %
+  const arrWidth = [40, 14, 17, 17, 12]; //  проценты %
 
   // Преобразуем проценты в абсолютные значения ширины
   const resultWidths = arrWidth.map(
     (percentage) => (percentage / 100) * windowWidth
   );
 
-  const totalItemCount = acceptConfirmInvoice?.products?.reduce(
+  const totalItemCountt = acceptConfirmInvoice?.products?.reduce(
     (total, item) => +total + +item?.change,
+    0
+  );
+
+  const totalSum = everyInvoice?.list?.reduce(
+    (total, item) => +total + +item?.total,
     0
   );
 
@@ -127,7 +133,7 @@ export const DetailedInvoice = ({ route, navigation }) => {
         </Div>
         <Table>
           <Row
-            data={[" Продукт", "Вес (кол-во)", "Вес принято", "  ...."]}
+            data={[" Продукт", "Цена", "Вес (кол-во)", "Вес принято", "  ...."]}
             style={styles.head}
             textStyle={styles.textTitle}
             widthArr={resultWidths}
@@ -145,15 +151,20 @@ export const DetailedInvoice = ({ route, navigation }) => {
         </Table>
         <View style={styles.divAction}>
           <View style={styles.divActionInner}>
-            <Text style={styles.totalItemCount}>Итого: {totalItemCount}</Text>
-            <TouchableOpacity onPress={changeAllCheckbox}>
-              <View style={styles.standartBox}>
-                <View style={styles.standartBox__inner}>
-                  <View style={styles.checkmark}></View>
-                </View>
-              </View>
-            </TouchableOpacity>
+            <View style={styles.blockTotal}>
+              <Text style={styles.totalItemCount}>Сумма: {totalSum} сом</Text>
+              <Text style={styles.totalItemCount}>
+                Кол-во: {totalItemCountt}
+              </Text>
+            </View>
           </View>
+          <TouchableOpacity onPress={changeAllCheckbox}>
+            <View style={styles.standartBox}>
+              <View style={styles.standartBox__inner}>
+                <View style={styles.checkmark}></View>
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
         {isTrue && (
           <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
@@ -191,11 +202,11 @@ const styles = StyleSheet.create({
     color: "#222",
   },
   textTitle: {
-    fontSize: 15,
-    fontWeight: "500",
-    paddingTop: 10,
+    fontSize: 14,
+    fontWeight: "600",
+    // paddingTop: 10,
     paddingRight: 0,
-    paddingBottom: 15,
+    // paddingBottom: 15,
     paddingLeft: 5,
     color: "#383838",
   },
@@ -203,27 +214,31 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "flex-end",
-    justifyContent: "flex-end",
-    gap: 2,
+    justifyContent: "space-between",
+    gap: 5,
     width: "100%",
     paddingRight: 20,
-    paddingLeft: 20,
+    paddingLeft: 10,
     marginTop: 10,
   },
 
+  blockTotal: {
+    // backgroundColor: "red",
+    paddingTop: 10,
+  },
   divActionInner: {
     // backgroundColor: "red",
-    display: "flex",
-    gap: 15,
-    flexDirection: "row",
-    alignItems: "flex-end",
+    // display: "flex",
+    // gap: 15,
+    // flexDirection: "row",
+    // alignItems: "flex-end",
   },
 
   totalItemCount: {
     // backgroundColor: "red",
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "500",
-    color: "#383838",
+    color: "rgba(47, 71, 190, 0.991)",
   },
 
   /////// checkbox
