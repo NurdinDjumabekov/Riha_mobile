@@ -30,7 +30,7 @@ const Div = styled.View`
   padding: 0px 10px;
 `;
 
-export const DetailedInvoice = ({ route, navigation }) => {
+export const DetailedInvoiceScreen = ({ route, navigation }) => {
   const { date, guid } = route.params;
   const [listData, setListData] = useState([]);
   const [modalVisibleOk, setModalVisibleOk] = useState(false);

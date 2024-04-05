@@ -18,7 +18,7 @@ import {
 import { ListExpense } from "../components/ListExpense";
 import { changeAmountExpenses } from "../store/reducers/stateSlice";
 
-export const EveryInvoiceList = ({ navigation, route }) => {
+export const EveryInvoiceListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { codeid, guid, seller_guid } = route.params;
   const [modal, setModal] = useState(false);
@@ -203,7 +203,6 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
   },
 
- 
   input: {
     width: 120,
     height: 40,
@@ -224,7 +223,6 @@ const styles = StyleSheet.create({
     paddingBottom: 9,
     paddingTop: 9,
     borderRadius: 7,
-    
   },
 
   moreSendBtn: {
@@ -232,7 +230,6 @@ const styles = StyleSheet.create({
     paddingBottom: 13,
     paddingTop: 13,
   },
-
 
   resultSum: {
     fontSize: 16,

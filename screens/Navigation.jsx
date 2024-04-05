@@ -10,33 +10,31 @@ import { MyApplicationScreen } from "./MyApplicationScreen";
 import { MyShipmentScreen } from "./MyShipmentScreen";
 import { LogOut } from "../components/LogOut";
 import { LeftoversScreen } from "./LeftoversScreen";
-import { DetailedInvoice } from "./DetailedInvoice";
-import { EveryInvoice } from "./EveryInvoice";
-import { EveryInvoiceList } from "./EveryInvoiceList";
+import { DetailedInvoiceScreen } from "./DetailedInvoiceScreen";
+import { EveryInvoiceScreen } from "./EveryInvoiceScreen";
+import { EveryInvoiceListScreen } from "./EveryInvoiceListScreen";
 import { EveryInvoiceHistoryScreen } from "./EveryInvoiceHistoryScreen";
 import UserInfo from "../components/UserInfo";
+import { ReturnScreen } from "./ReturnScreen";
+import { MoneyScreen } from "./MoneyScreen";
 
 const Stack = createNativeStackNavigator();
 
 export const Navigation = () => {
+  const white = { backgroundColor: "#fff" };
   return (
     <Provider store={store}>
       <NavigationContainer>
         <Preloader />
-        <Stack.Navigator
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: "#fff", /// f2f2f2
-            },
-          }}
-        >
+        <Stack.Navigator screenOptions={{ headerStyle: white }}>
+          {/* //////////////////////////////////////////////////////////////// Login ///////////////////////*/}
           <Stack.Screen
             name="Login"
             component={LoginScreen}
-            // options={{ title: "Вход" }}
             options={{ headerShown: false }}
           />
           <>
+            {/* //////////////////////////////////////////////////////////////// Main ///////////////////////*/}
             <Stack.Screen
               name="Main"
               component={MainScreen}
@@ -46,35 +44,49 @@ export const Navigation = () => {
                 headerRight: () => <LogOut navigation={navigation} />,
               })}
             />
-            {/* /////////////////////// Main ///////////////////////*/}
+            {/* //////////////////////////////////////////////////////////////// Main ///////////////////////*/}
             <Stack.Screen
               name="Application"
               component={MyApplicationScreen}
               options={{ title: "Список накладных" }}
             />
-            <Stack.Screen name="detailedInvoice" component={DetailedInvoice} />
-            {/* /////////////////////// Остатки ///////////////////////*/}
+            <Stack.Screen
+              name="detailedInvoice"
+              component={DetailedInvoiceScreen}
+            />
+            {/* //////////////////////////////////////////////////////////////// Остатки ///////////////////////*/}
             <Stack.Screen
               name="Leftovers"
               component={LeftoversScreen}
               options={{ title: "Остатки" }}
             />
-            {/* /////////////////////// Отгрузки ///////////////////////*/}
+            {/* //////////////////////////////////////////////////////////////// Отгрузки ///////////////////////*/}
             <Stack.Screen
               name="Shipment"
               component={MyShipmentScreen}
               options={{ title: "Отгрузки" }}
             />
-            <Stack.Screen name="everyInvoice" component={EveryInvoice} />
+            <Stack.Screen name="everyInvoice" component={EveryInvoiceScreen} />
             <Stack.Screen
               name="everyInvoiceHistoryScreen"
               component={EveryInvoiceHistoryScreen}
             />
             <Stack.Screen
               name="everyInvoiceList"
-              component={EveryInvoiceList}
+              component={EveryInvoiceListScreen}
             />
-            {/* /////////////////////// Отгрузки /////////////////////// */}
+            {/* //////////////////////////////////////////////////////////////// Money /////////////////////// */}
+            <Stack.Screen
+              name="ReturnProd"
+              component={ReturnScreen}
+              options={{ title: "Возврат товара" }}
+            />
+            {/* //////////////////////////////////////////////////////////////// ReturnScreen /////////////////////// */}
+            <Stack.Screen
+              name="Money"
+              component={MoneyScreen}
+              options={{ title: "Деньги" }}
+            />
           </>
         </Stack.Navigator>
         <StatusBar theme="auto" />

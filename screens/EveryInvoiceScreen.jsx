@@ -24,7 +24,7 @@ import {
 import ConfirmationModal from "../components/ConfirmationModal";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
 
-export const EveryInvoice = ({ navigation, route }) => {
+export const EveryInvoiceScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { codeid, guid, seller_guid } = route.params; /// guid накладной и  seller_guid точки(магазина)
   const [modal, setModal] = useState(false);
@@ -126,7 +126,10 @@ export const EveryInvoice = ({ navigation, route }) => {
           </View>
           <Text style={[styles.textCateg, styles.textTovar]}>Товары</Text>
           <View
-            style={[styles.blockSelectProd, openKeyBoard && checkLength && styles.paddingB50]}
+            style={[
+              styles.blockSelectProd,
+              openKeyBoard && checkLength && styles.paddingB50,
+            ]}
           >
             <FlatList
               contentContainerStyle={widthMax}
