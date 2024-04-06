@@ -25,18 +25,16 @@ export const EveryCategoryInner = ({ obj, index }) => {
   const isTrue = stateForCategory === obj?.value;
 
   return (
-    <>
-      <TouchableOpacity
-        style={[styles.container, isTrue && styles.activeCateg]}
-        onPress={changeSelect}
-      >
-        <Text style={[styles.titleNum, isTrue && { color: "#fff" }]}>
-          {index}
-          {obj.label}
-        </Text>
-        <View style={[styles.arrow, isTrue && styles.activeArrow]}></View>
-      </TouchableOpacity>
-    </>
+    <TouchableOpacity
+      style={[styles.container, isTrue && styles.activeCateg]}
+      onPress={changeSelect}
+    >
+      <Text style={[styles.titleNum, isTrue && { color: "#fff" }]}>
+        {index}
+        {obj.label}
+      </Text>
+      <View style={[styles.arrow, isTrue && styles.activeArrow]}></View>
+    </TouchableOpacity>
   );
 };
 

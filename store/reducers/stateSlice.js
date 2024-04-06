@@ -21,6 +21,12 @@ const initialState = {
   listProductForTT: [], /// список твоаров для ТТ
   amountExpenses: "", /// state для input суммы расходов ТТ
   stateForCategory: {}, // состояние для хранения временной категории(подсветка категории)
+  temporaryGuidPoint: {
+    comment: "",
+    amount: "",
+    seller_guid: "",
+    agent_guid: "",
+  },
 };
 
 const stateSlice = createSlice({
@@ -82,6 +88,17 @@ const stateSlice = createSlice({
     changeAmountExpenses: (state, action) => {
       state.amountExpenses = action.payload;
     },
+    changeTempGuidPoint: (state, action) => {
+      state.temporaryGuidPoint = action.payload;
+    },
+    clearTempGuidPoint: (state, action) => {
+      state.temporaryGuidPoint = {
+        comment: "",
+        amount: "",
+        seller_guid: "",
+        agent_guid: "",
+      };
+    },
   },
 });
 export const {
@@ -99,6 +116,8 @@ export const {
   clearDataInputsInv,
   changeStateForCategory,
   changeAmountExpenses,
+  changeTempGuidPoint,
+  clearTempGuidPoint,
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

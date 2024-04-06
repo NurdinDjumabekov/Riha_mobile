@@ -16,7 +16,7 @@ import { EveryInvoiceListScreen } from "./EveryInvoiceListScreen";
 import { EveryInvoiceHistoryScreen } from "./EveryInvoiceHistoryScreen";
 import UserInfo from "../components/UserInfo";
 import { ReturnScreen } from "./ReturnScreen";
-import { MoneyScreen } from "./MoneyScreen";
+import { PayMoneyScreen } from "./PayMoneyScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,11 +28,11 @@ export const Navigation = () => {
         <Preloader />
         <Stack.Navigator screenOptions={{ headerStyle: white }}>
           {/* //////////////////////////////////////////////////////////////// Login ///////////////////////*/}
-          <Stack.Screen
+          {/* <Stack.Screen
             name="Login"
             component={LoginScreen}
             options={{ headerShown: false }}
-          />
+          /> */}
           <>
             {/* //////////////////////////////////////////////////////////////// Main ///////////////////////*/}
             <Stack.Screen
@@ -66,11 +66,11 @@ export const Navigation = () => {
               component={MyShipmentScreen}
               options={{ title: "Отгрузки" }}
             />
-            <Stack.Screen name="everyInvoice" component={EveryInvoiceScreen} />
             <Stack.Screen
               name="everyInvoiceHistoryScreen"
               component={EveryInvoiceHistoryScreen}
             />
+            <Stack.Screen name="everyInvoice" component={EveryInvoiceScreen} />
             <Stack.Screen
               name="everyInvoiceList"
               component={EveryInvoiceListScreen}
@@ -83,9 +83,9 @@ export const Navigation = () => {
             />
             {/* //////////////////////////////////////////////////////////////// ReturnScreen /////////////////////// */}
             <Stack.Screen
-              name="Money"
-              component={MoneyScreen}
-              options={{ title: "Деньги" }}
+              name="PayMoney"
+              component={PayMoneyScreen}
+              options={{ title: "Оплата" }}
             />
           </>
         </Stack.Navigator>

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   ScrollView,
+  View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,6 +15,7 @@ import {
 } from "../store/reducers/requestSlice";
 import { useEffect } from "react";
 import { Table, Row, Rows, TableWrapper } from "react-native-table-component";
+import { ViewButton } from "../customsTags/ViewButton";
 
 export const LeftoversScreen = ({ route }) => {
   const dispatch = useDispatch();
@@ -49,6 +51,7 @@ export const LeftoversScreen = ({ route }) => {
     (percentage) => (percentage / 100) * windowWidth
   );
 
+  const returnTovar = () => {};
   // console.log(listLeftovers, "listLeftovers");
 
   const textStyles = {
@@ -111,6 +114,13 @@ export const LeftoversScreen = ({ route }) => {
           </Table>
         )}
       </SafeAreaView>
+      {listLeftovers?.length !== 0 && (
+        <View style={styles.returnBlock}>
+          <ViewButton styles={styles.return} onclick={returnTovar}>
+            Сформировать накладную для возврата товара
+          </ViewButton>
+        </View>
+      )}
     </ScrollView>
   );
 };
@@ -139,5 +149,25 @@ const styles = StyleSheet.create({
     paddingTop: 250,
     textAlign: "center",
     fontSize: 20,
+  },
+
+  returnBlock: {
+    textAlign: "center",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    minWidth: "100%",
+  },
+
+  return: {
+    fontSize: 14,
+    color: "#fff",
+    minWidth: "95%",
+    paddingTop: 10,
+    borderRadius: 10,
+    fontWeight: 600,
+    backgroundColor: "rgba(97 ,100, 239,0.7)",
+    marginTop: 10,
+    marginBottom: 20,
   },
 });

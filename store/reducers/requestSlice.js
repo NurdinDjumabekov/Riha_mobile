@@ -380,6 +380,29 @@ export const getListExpenses = createAsyncThunk(
   }
 );
 
+/// acceptMoney
+/// прнятие денег у ТТ (принимает ТА)
+export const acceptMoney = createAsyncThunk(
+  "acceptMoney",
+  async function ({ data, closeModal }, { dispatch, rejectWithValue }) {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API}/ta/point_oplata`,
+        data,
+      });
+      if (response.status >= 200 && response.status < 300) {
+        closeModal();
+        return response?.data;
+      } else {
+        throw Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const requestSlice = createSlice({
   name: "requestSlice",
   initialState,
@@ -582,6 +605,19 @@ const requestSlice = createSlice({
       Alert.alert("Упс, что-то пошло не так! Не удалось загрузить данные");
     });
     builder.addCase(getListExpenses.pending, (state, action) => {
+      state.preloader = true;
+    });
+    ////// acceptMoney
+    builder.addCase(acceptMoney.fulfilled, (state, action) => {
+      state.preloader = false;
+      Alert.alert("Оплата успешно принята");
+    });
+    builder.addCase(acceptMoney.rejected, (state, action) => {
+      state.error = action.payload;
+      state.preloader = false;
+      Alert.alert("Упс, что-то пошло не так! Не удалось принять оплату");
+    });
+    builder.addCase(acceptMoney.pending, (state, action) => {
       state.preloader = true;
     });
   },

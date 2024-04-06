@@ -15,6 +15,18 @@ export const AddProductsTA = ({ productGuid }) => {
     (state) => state.stateSlice
   );
 
+  const changePrice = (text) => {
+    if (/^\d*\.?\d*$/.test(text)) {
+      dispatch(changeDataInputsInv({ ...dataInputsInv, price: text }));
+    }
+  };
+
+  const changeText = (text) => {
+    if (/^\d*\.?\d*$/.test(text)) {
+      dispatch(changeDataInputsInv({ ...dataInputsInv, ves: text }));
+    }
+  };
+
   const addInInvoice = () => {
     if (
       dataInputsInv.price === "" ||
@@ -37,20 +49,18 @@ export const AddProductsTA = ({ productGuid }) => {
       <TextInput
         style={styles.input}
         value={dataInputsInv?.price?.toString()}
-        onChangeText={(text) =>
-          dispatch(changeDataInputsInv({ ...dataInputsInv, price: text }))
-        }
+        onChangeText={changePrice}
         keyboardType="numeric"
         placeholder="Цена"
+        maxLength={8}
       />
       <TextInput
         style={styles.input}
         value={dataInputsInv.ves}
-        onChangeText={(text) =>
-          dispatch(changeDataInputsInv({ ...dataInputsInv, ves: text }))
-        }
+        onChangeText={changeText}
         keyboardType="numeric"
         placeholder="Вес"
+        maxLength={8}
       />
       <ViewButton styles={styles.btnAdd} onclick={addInInvoice}>
         Добавить
