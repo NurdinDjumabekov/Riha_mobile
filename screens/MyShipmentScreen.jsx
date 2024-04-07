@@ -45,13 +45,6 @@ export const MyShipmentScreen = ({ navigation }) => {
     dispatch(getInvoiceEveryTA(agent_guid));
   };
 
-  const FlatListStyle = {
-    minWidth: "100%",
-    width: "100%",
-    paddingBottom: 20,
-    borderTopWidth: 1,
-    borderColor: "rgba(47, 71, 190, 0.587)",
-  };
   return (
     <>
       <View style={styles.parentBlock}>
@@ -69,7 +62,7 @@ export const MyShipmentScreen = ({ navigation }) => {
           ) : (
             <View style={{ paddingBottom: 180 }}>
               <FlatList
-                contentContainerStyle={FlatListStyle}
+                contentContainerStyle={styles.flatListStyle}
                 data={listInvoiceEveryTA}
                 renderItem={({ item }) => (
                   <EveryInvoiceTA obj={item} navigation={navigation} />
@@ -121,5 +114,12 @@ const styles = StyleSheet.create({
   },
   sendBtnMore: {
     marginBottom: 10,
+  },
+  flatListStyle: {
+    minWidth: "100%",
+    width: "100%",
+    paddingBottom: 20,
+    borderTopWidth: 1,
+    borderColor: "rgba(47, 71, 190, 0.587)",
   },
 });

@@ -51,7 +51,7 @@ export const ModalPayTA = ({ modalState, setModalState }) => {
   };
 
   //   console.log(listSellersPoints, "listSellersPoints");
-  console.log(temporaryGuidPoint, "temporaryGuidPoint");
+  // console.log(temporaryGuidPoint, "temporaryGuidPoint");
 
   return (
     <Modal

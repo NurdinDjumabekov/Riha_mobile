@@ -16,12 +16,14 @@ import {
 import { useEffect } from "react";
 import { Table, Row, Rows, TableWrapper } from "react-native-table-component";
 import { ViewButton } from "../customsTags/ViewButton";
+import { changeReturnInvoice } from "../store/reducers/stateSlice";
+import { listTableLeftoverst } from "../helpers/Data";
 
-export const LeftoversScreen = ({ route }) => {
+export const LeftoversScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
   const { id, name } = route?.params;
 
-  const { preloader, listLeftovers } = useSelector(
+  const { preloader, listLeftovers, createReturnInvoice } = useSelector(
     (state) => state.requestSlice
   );
 
@@ -33,7 +35,7 @@ export const LeftoversScreen = ({ route }) => {
   }, []);
 
   const getData = async () => {
-    await dispatch(getCategoryTA(agent_guid));
+    // await dispatch(getCategoryTA(agent_guid)); /// на будущее
     await dispatch(getMyLeftovers(agent_guid));
   };
 
@@ -51,16 +53,18 @@ export const LeftoversScreen = ({ route }) => {
     (percentage) => (percentage / 100) * windowWidth
   );
 
-  const returnTovar = () => {};
-  // console.log(listLeftovers, "listLeftovers");
-
-  const textStyles = {
-    margin: 6,
-    marginBottom: 8,
-    marginTop: 8,
-    fontSize: 12,
+  const returnTovar = () => {
+    /// для создания возврата накладной
+    navigation.navigate("ReturnInvoice");
+    dispatch(
+      changeReturnInvoice({
+        ...createReturnInvoice,
+        stateModal: true,
+        agent_guid,
+      })
+    );
   };
-
+  // console.log(listLeftovers, "listLeftovers");
   return (
     <ScrollView
       style={styles.container}
@@ -74,22 +78,9 @@ export const LeftoversScreen = ({ route }) => {
         {listLeftovers?.length === 0 ? (
           <Text style={styles.noneData}>Остатка нет...</Text>
         ) : (
-          <Table
-            borderStyle={{
-              borderWidth: 1,
-              borderColor: "rgba(199, 210, 254, 0.718)",
-              minWidth: "100%",
-              textAlign: "center",
-            }}
-          >
+          <Table borderStyle={styles.styleHeadTable}>
             <Row
-              data={[
-                "Товар",
-                "Остаток на начало",
-                "Приход",
-                "Расход",
-                "Остаток на конец",
-              ]}
+              data={listTableLeftoverst}
               style={styles.head}
               textStyle={{ margin: 3, fontSize: 13, fontWeight: 500 }}
               flexArr={resultWidths}
@@ -99,15 +90,15 @@ export const LeftoversScreen = ({ route }) => {
                 data={listLeftovers.map((item) => [
                   item[0], // Товар
                   item[1], // Остаток на начало
-                  <Text style={{ ...textStyles, textStyles, color: "green" }}>
+                  <Text style={{ ...styles.textStyles, color: "green" }}>
                     {item[2]}
                   </Text>, // Приход
-                  <Text style={{ ...textStyles, textStyles, color: "red" }}>
+                  <Text style={{ ...styles.textStyles, color: "red" }}>
                     {item[3]}
                   </Text>, // Расход
                   item[4], // Остаток на конец
                 ])}
-                textStyle={textStyles}
+                textStyle={styles.textStyles}
                 flexArr={resultWidths}
               />
             </TableWrapper>
@@ -169,5 +160,20 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(97 ,100, 239,0.7)",
     marginTop: 10,
     marginBottom: 20,
+    borderRadius: 5,
+  },
+
+  styleHeadTable: {
+    borderWidth: 1,
+    borderColor: "rgba(199, 210, 254, 0.718)",
+    minWidth: "100%",
+    textAlign: "center",
+  },
+
+  textStyles: {
+    margin: 6,
+    marginBottom: 8,
+    marginTop: 8,
+    fontSize: 12,
   },
 });

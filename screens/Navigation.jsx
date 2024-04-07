@@ -17,6 +17,7 @@ import { EveryInvoiceHistoryScreen } from "./EveryInvoiceHistoryScreen";
 import UserInfo from "../components/UserInfo";
 import { ReturnScreen } from "./ReturnScreen";
 import { PayMoneyScreen } from "./PayMoneyScreen";
+import { ReturnProdScreen } from "./ReturnProdScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -77,15 +78,20 @@ export const Navigation = () => {
             />
             {/* //////////////////////////////////////////////////////////////// Money /////////////////////// */}
             <Stack.Screen
-              name="ReturnProd"
-              component={ReturnScreen}
-              options={{ title: "Возврат товара" }}
-            />
-            {/* //////////////////////////////////////////////////////////////// ReturnScreen /////////////////////// */}
-            <Stack.Screen
               name="PayMoney"
               component={PayMoneyScreen}
               options={{ title: "Оплата" }}
+            />
+            {/* //////////////////////////////////////////////////////////////// ReturnScreen /////////////////////// */}
+            <Stack.Screen
+              name="ReturnInvoice"
+              component={ReturnScreen}
+              options={{ title: "Возврат товара" }}
+            />
+            <Stack.Screen
+              name="ReturnProd"
+              component={ReturnProdScreen}
+              options={{ title: "" }}
             />
           </>
         </Stack.Navigator>

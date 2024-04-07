@@ -60,7 +60,6 @@ export const EveryInvoiceListScreen = ({ navigation, route }) => {
       agent_guid,
     };
     dispatch(addProdInvoiceTT({ data, navigation }));
-    // console.log(data,"data");
     setModal(false);
   };
 
@@ -70,15 +69,9 @@ export const EveryInvoiceListScreen = ({ navigation, route }) => {
     }
   };
 
-  // console.log(listProductForTT, "listProductForTT");
-  // console.log(seller_guid, "seller_guid");
-  // console.log(amountExpenses, "amountExpenses");
-
   const totalSum = listProductForTT?.reduce((total, item) => {
     return +item.price * +item.ves + total;
   }, 0);
-
-  // console.log(sumExpenses, "sumExpenses");
 
   const widthMax = { minWidth: "100%", width: "100%" };
   const noneData = listProductForTT?.length === 0;
@@ -90,9 +83,6 @@ export const EveryInvoiceListScreen = ({ navigation, route }) => {
     <>
       <View style={styles.container}>
         {noneData ? (
-          // <Text style={[styles.noneData, !checkEmpty && styles.emptyAll]}>
-          //   Список товаров пустой{" "}
-          // </Text>
           <></>
         ) : (
           <SafeAreaView style={{ maxHeight: "50%" }}>

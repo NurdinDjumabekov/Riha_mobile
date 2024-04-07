@@ -27,6 +27,20 @@ const initialState = {
     seller_guid: "",
     agent_guid: "",
   },
+  createReturnInvoice: {
+    /// для создания накладной возврата товара ТА
+    oper_guid: "",
+    agent_guid: "",
+    comment: "",
+    stateModal: false,
+  },
+
+  returnProducts: {
+    //// для возврата списка товаров
+    invoice_guid: "",
+    products: [],
+    amount: "",
+  },
 };
 
 const stateSlice = createSlice({
@@ -99,6 +113,20 @@ const stateSlice = createSlice({
         agent_guid: "",
       };
     },
+    changeReturnInvoice: (state, action) => {
+      state.createReturnInvoice = action.payload;
+    },
+    cleareReturnInvoice: (state, action) => {
+      state.createReturnInvoice = {
+        oper_guid: "",
+        agent_guid: "",
+        comment: "",
+        stateModal: false,
+      };
+    },
+    changeReturnProd: (state, action) => {
+      state.returnProducts = action.payload;
+    },
   },
 });
 export const {
@@ -118,6 +146,9 @@ export const {
   changeAmountExpenses,
   changeTempGuidPoint,
   clearTempGuidPoint,
+  changeReturnInvoice,
+  cleareReturnInvoice,
+  changeReturnProd,
 } = stateSlice.actions;
 
 export default stateSlice.reducer;

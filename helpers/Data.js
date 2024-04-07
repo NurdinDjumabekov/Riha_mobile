@@ -37,9 +37,9 @@ export const dataCategory = [
   {
     codeid: 5,
     name: "Возврат",
-    link: "ReturnProd",
+    link: "ReturnInvoice",
     img: "https://img.freepik.com/free-vector/courier-delivering-order-customer-door-man-getting-parcel-box-package-flat-vector-illustration-postman-shipping-service_74855-8309.jpg?w=1380",
-    pathApi: "ReturnProd",
+    pathApi: "ReturnInvoice",
   },
   // {
   //   codeid: 6,
@@ -48,4 +48,33 @@ export const dataCategory = [
   //   img: "https://img.freepik.com/free-vector/flat-university-concept_23-2148184535.jpg?t=st=1710925750~exp=1710929350~hmac=69394729219cd3ff08fc08714f54ac8b04644046299d520ab2fd1003d3b779b6&w=740",
   //   pathApi: "Request",
   // },
+];
+
+export const listTableLeftoverst = [
+  "Товар",
+  "Остаток на начало",
+  "Приход",
+  "Расход",
+  "Остаток на конец",
+];
+
+export const listTableForAcceptInvoice = [
+  " Продукт",
+  "Цена",
+  "Вес (кол-во)",
+  "Вес принято",
+  "  ....",
+];
+
+export const listTableForReturnProd = [
+  " Продукт",
+  "В наличии",
+  "Возврат",
+  " ....",
+];
+
+export const deleteList = [
+  ["1. Ветчина Говяжья в синюге Ал-Халал", "500", "550"],
+  ["2. Докторская в синюге Ал-Халал", "500", "550"],
+  ["3. КОЛБАСА НС ВЕТЧИНА ВАРЕНАЯ В СИНЮГЕ КГ", "500", "550"],
 ];

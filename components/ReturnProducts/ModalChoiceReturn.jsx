@@ -1,69 +1,81 @@
+import { useEffect } from "react";
 import {
   StyleSheet,
-  Modal,
   Text,
-  View,
   TextInput,
-  Alert,
-  FlatList,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-
 import {
-  changeEveryInvoiceTA,
-  changeTemporaryData,
-  clearDataInputsInv,
-  clearEveryInvoiceTA,
+  changeReturnInvoice,
+  cleareReturnInvoice,
 } from "../../store/reducers/stateSlice";
-import { createInvoiceTA } from "../../store/reducers/requestSlice";
+import { Modal } from "react-native";
 import { ViewButton } from "../../customsTags/ViewButton";
+import { FlatList } from "react-native";
+import { createInvoiceReturnTA } from "../../store/reducers/requestSlice";
+import { Alert } from "react-native";
 
-export const ModalCreateInvoice = ({
-  modalState,
-  setModalState,
-  navigation,
-}) => {
-  const { listSellersPoints } = useSelector((state) => state.requestSlice);
-  const { createEveryInvoiceTA } = useSelector((state) => state.stateSlice);
+export const ModalChoiceReturn = ({ navigation }) => {
+  //// модалка создания накладной для возрата товара
   const dispatch = useDispatch();
 
-  const agent_guid = "b3120f36-3fcd-4ca0-8346-484881974846";
+  const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
 
-  const changeSelect = (guid) => {
-    dispatch(
-      changeEveryInvoiceTA({
-        ...createEveryInvoiceTA,
-        seller_guid: guid,
-      })
-    );
+  const { listAdmins } = useSelector((state) => state.requestSlice);
+  const { createReturnInvoice } = useSelector((state) => state.stateSlice);
+
+  useEffect(() => {}, []);
+
+  const closeModal = () => {
+    dispatch(cleareReturnInvoice());
+  };
+
+  const openModal = () => {
+    dispatch(changeReturnInvoice({ ...createReturnInvoice, stateModal: true }));
+  };
+
+  const changeSelect = (oper_guid) => {
+    dispatch(changeReturnInvoice({ ...createReturnInvoice, oper_guid }));
   };
 
   const changeComm = (text) => {
     dispatch(
-      changeEveryInvoiceTA({
-        ...createEveryInvoiceTA,
+      changeReturnInvoice({
+        ...createReturnInvoice,
         comment: text,
       })
     );
   };
 
-  const closeModal = () => {
-    setModalState(false);
-    dispatch(clearEveryInvoiceTA()); /// очистка выбора временного состояния для отправки
+  const createInvoiceReturn = () => {
+    if (createReturnInvoice?.oper_guid === "") {
+      Alert.alert("Выберите админа!");
+    } else {
+      const { stateModal, ...data } = createReturnInvoice;
+    //   dispatch(createInvoiceReturnTA({ data, navigation, closeModal }));
+      closeModal();
+      navigation?.navigate("ReturnProd", {
+        invoice_guid: "****",
+      });
+      //// delete 
+    }
+    // navigation.navigate("");
   };
 
-  const createAppInvoiceTA = () => {
-    if (createEveryInvoiceTA?.seller_guid === "") {
-      Alert.alert("Выберите торговую точку!");
-    } else {
-      dispatch(createInvoiceTA({ data: createEveryInvoiceTA, navigation }));
-      dispatch(clearEveryInvoiceTA());
-      dispatch(clearDataInputsInv());
-      dispatch(changeTemporaryData({}));
-      setModalState(false);
-    }
-  };
+  console.log(createReturnInvoice, "createReturnInvoice");
+
+  const list = [
+    {
+      admin_name: "admin1",
+      value: "68C264D9-7BBF-11E5-A74F-643150130793",
+    },
+    {
+      admin_name: "admin2",
+      value: "2B246E6D-7BC1-11E5-A74F-643150130793",
+    },
+  ];
 
   const widthMax = { minWidth: "100%", width: "100%" };
 
@@ -71,25 +83,26 @@ export const ModalCreateInvoice = ({
     <Modal
       animationType="fade"
       transparent={true}
-      visible={modalState}
+      visible={createReturnInvoice.stateModal}
       onRequestClose={closeModal}
     >
       <TouchableOpacity
         style={styles.modalOuter}
         activeOpacity={1}
-        onPress={closeModal} // Закрыть модальное окно
+        onPress={closeModal}
       >
-        <View style={styles.modalInner} onPress={() => setModalState(true)}>
-          <Text style={styles.titleSelect}>Выберите торговую точку</Text>
+        <View style={styles.modalInner} onPress={openModal}>
+          <Text style={styles.titleSelect}>Выберите админа</Text>
           <View style={styles.selectBlock}>
             <FlatList
               contentContainerStyle={widthMax}
-              data={listSellersPoints}
+              //   data={listAdmins}
+              data={list}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
                     styles.selectBlockInner,
-                    createEveryInvoiceTA?.seller_guid === item?.value &&
+                    createReturnInvoice?.oper_guid === item?.value &&
                       styles.activeSelect,
                   ]}
                   onPress={() => changeSelect(item?.value)}
@@ -97,11 +110,11 @@ export const ModalCreateInvoice = ({
                   <Text
                     style={[
                       styles.selectText,
-                      createEveryInvoiceTA?.seller_guid === item?.value &&
+                      createReturnInvoice?.oper_guid === item?.value &&
                         styles.activeSelectText,
                     ]}
                   >
-                    {item?.label}
+                    {item?.admin_name}
                   </Text>
                 </TouchableOpacity>
               )}
@@ -109,15 +122,15 @@ export const ModalCreateInvoice = ({
           </View>
           <TextInput
             style={styles.inputComm}
-            value={createEveryInvoiceTA.comment}
+            value={createReturnInvoice.comment}
             onChangeText={changeComm}
             placeholder="Ваш комментарий"
-            multiline={true} // Многострочное поле для комментариев
-            numberOfLines={4} // Опционально: количество отображаемых строк
+            multiline={true}
+            numberOfLines={4}
           />
           <ViewButton
             styles={{ ...styles.sendBtn, ...styles.actionSendBtn }}
-            onclick={createAppInvoiceTA}
+            onclick={createInvoiceReturn}
           >
             Создать накладную
           </ViewButton>
@@ -126,6 +139,7 @@ export const ModalCreateInvoice = ({
     </Modal>
   );
 };
+
 const styles = StyleSheet.create({
   modalOuter: {
     flex: 1,
@@ -172,7 +186,7 @@ const styles = StyleSheet.create({
     borderColor: "rgb(217 223 232)",
     borderRadius: 5,
     backgroundColor: "#f0f0f0",
-    minHeight: 70,
+    minHeight: 30,
     maxHeight: 250,
   },
 

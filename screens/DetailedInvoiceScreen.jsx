@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   Dimensions,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,7 +11,6 @@ import styled from "styled-components/native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   acceptInvoiceTA,
-  changePreloader,
   getMyEveryInvoice,
 } from "../store/reducers/requestSlice";
 import { Row, Rows, Table } from "react-native-table-component";
@@ -21,6 +19,7 @@ import ConfirmationModal from "../components/ConfirmationModal";
 import { ViewButton } from "../customsTags/ViewButton";
 import { InputDifference } from "../components/InputDifference";
 import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
+import { listTableForAcceptInvoice } from "../helpers/Data";
 
 const Div = styled.View`
   display: flex;
@@ -64,7 +63,7 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    dispatch(getMyEveryInvoice(guid));
+    dispatch(getMyEveryInvoice(guid)); /// для получения данных накладной
   }, []);
 
   useEffect(() => {
@@ -80,7 +79,6 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
           <InputDifference
             guidProduct={item?.guid}
             guidInvoice={everyInvoice?.guid}
-            item={item}
           />,
           <CheckBoxTable
             guidProduct={item?.guid}
@@ -133,7 +131,7 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
         </Div>
         <Table>
           <Row
-            data={[" Продукт", "Цена", "Вес (кол-во)", "Вес принято", "  ...."]}
+            data={listTableForAcceptInvoice}
             style={styles.head}
             textStyle={styles.textTitle}
             widthArr={resultWidths}
@@ -142,11 +140,7 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
             data={listData}
             textStyle={styles.text}
             widthArr={resultWidths}
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: "rgba(199, 210, 254, 0.718)",
-              paddingLeft: 2,
-            }}
+            style={styles.rowStyle}
           />
         </Table>
         <View style={styles.divAction}>
@@ -201,12 +195,17 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#222",
   },
+
+  rowStyle: {
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(199, 210, 254, 0.718)",
+    paddingLeft: 2,
+  },
+
   textTitle: {
     fontSize: 14,
     fontWeight: "600",
-    // paddingTop: 10,
     paddingRight: 0,
-    // paddingBottom: 15,
     paddingLeft: 5,
     color: "#383838",
   },
@@ -223,19 +222,11 @@ const styles = StyleSheet.create({
   },
 
   blockTotal: {
-    // backgroundColor: "red",
     paddingTop: 10,
   },
-  divActionInner: {
-    // backgroundColor: "red",
-    // display: "flex",
-    // gap: 15,
-    // flexDirection: "row",
-    // alignItems: "flex-end",
-  },
+  divActionInner: {},
 
   totalItemCount: {
-    // backgroundColor: "red",
     fontSize: 18,
     fontWeight: "500",
     color: "rgba(47, 71, 190, 0.991)",
