@@ -6,42 +6,40 @@ export const EveryInvoiceReturn = ({ obj, navigation }) => {
   const dispatch = useDispatch();
 
   const lookInvoice = () => {
-    // navigation?.navigate("everyInvoiceHistoryScreen", {
-    //   obj,
-    //   title: `Накладная №${obj.codeid}`,
-    // });
+    navigation?.navigate("listReturnProd", {
+      obj,
+      title: `Накладная №${obj?.codeid}`,
+    });
   };
 
   return (
-    <>
-      <TouchableOpacity style={styles.container} onPress={lookInvoice}>
-        <View style={styles.innerBlock}>
-          <View style={styles.mainData}>
-            <Text style={styles.titleNum}>{obj.codeid} </Text>
-            <View>
-              <Text style={[styles.titleDate, styles.role]}>{obj?.seller}</Text>
-              <Text style={styles.titleDate}>{obj.date}</Text>
-            </View>
-          </View>
-          {obj.comment?.length !== 0 && (
-            <Text
-              style={styles.comments}
-              numberOfLines={4}
-              ellipsizeMode="tail"
-            >
-              {obj.comment}
-            </Text>
-          )}
-        </View>
-        <View style={styles.mainDataArrow}>
+    <TouchableOpacity style={styles.container} onPress={lookInvoice}>
+      <View style={styles.innerBlock}>
+        <View style={styles.mainData}>
+          <Text style={styles.titleNum}>{obj.codeid} </Text>
           <View>
-            <Text style={styles.status}>Подтверждён</Text>
-            <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
+            <Text style={[styles.titleDate, styles.role]}>{obj?.operator}</Text>
+            <Text style={styles.titleDate}>{obj.date}</Text>
           </View>
-          <View style={styles.arrow}></View>
         </View>
-      </TouchableOpacity>
-    </>
+        {obj.comment?.length !== 0 && (
+          <Text style={styles.comments} numberOfLines={4} ellipsizeMode="tail">
+            {obj.comment}
+          </Text>
+        )}
+      </View>
+      <View style={styles.mainDataArrow}>
+        <View>
+          {+obj?.status ? (
+            <Text style={styles.statusGood}>Подтверждён</Text>
+          ) : (
+            <Text style={styles.statusReload}>Ожидание</Text>
+          )}
+          <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
+        </View>
+        <View style={styles.arrow}></View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -82,15 +80,16 @@ const styles = StyleSheet.create({
   titleDate: {
     fontSize: 14,
     fontWeight: "500",
-    // color: "#2fce8e53",
-    // backgroundColor: "rgba(12, 169, 70, 0.1)",
     borderRadius: 5,
-    // padding: 5,
     lineHeight: 17,
   },
 
-  status: {
+  statusGood: {
     color: "rgba(12, 169, 70, 0.9)",
+  },
+
+  statusReload: {
+    color: "red",
   },
 
   role: {
@@ -105,9 +104,21 @@ const styles = StyleSheet.create({
     height: 18,
   },
 
+  mainDataArrow: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingRight: 15,
+    width: "38%",
+    // overflow: "hidden",
+    // maxWidth: "40%",
+  },
+
   totalPrice: {
     fontSize: 16,
     fontWeight: "400",
+    maxWidth: 110,
   },
 
   comments: {
@@ -120,15 +131,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-  },
-
-  mainDataArrow: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingRight: 15,
-    width: "38%",
   },
 
   arrow: {

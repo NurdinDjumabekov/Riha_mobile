@@ -15,7 +15,6 @@ export const PayMoneyScreen = () => {
   const [modalState, setModalState] = useState(false);
 
   const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
-  // const seller_guid = "e7458a29-6f7f-4364-a96d-ed878812f0cf";
 
   const { temporaryGuidPoint } = useSelector((state) => state.stateSlice);
   const { preloader, listSellersPoints } = useSelector(
@@ -45,7 +44,7 @@ export const PayMoneyScreen = () => {
   const widthMax = { minWidth: "100%", width: "100%" };
 
   return (
-    <> 
+    <>
       <SafeAreaView style={styles.container}>
         <View style={styles.selectBlock}>
           <Text style={styles.title}>Выберите торговую точку</Text>
@@ -71,12 +70,11 @@ export const PayMoneyScreen = () => {
         </View>
       </SafeAreaView>
       <ModalPayTA modalState={modalState} setModalState={setModalState} />
-    </> 
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-
   title: {
     padding: 8,
     fontSize: 18,
@@ -85,11 +83,11 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: "rgba(47, 71, 190, 0.591)",
     color: "#fff",
-    marginBottom: 5,
+    // marginBottom: 5,
   },
 
   everyPoint: {
-    backgroundColor: "rgba(162, 178, 238, 0.502)",
+    backgroundColor: "rgba(162, 178, 238, 0.102)",
     minWidth: "100%",
     padding: 8,
     paddingBottom: 13,

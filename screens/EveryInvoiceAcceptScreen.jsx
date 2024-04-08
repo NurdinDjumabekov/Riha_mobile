@@ -1,42 +1,38 @@
 import { useEffect } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductEveryInvoice } from "../store/reducers/requestSlice";
+import { getAcceptProdInvoice } from "../store/reducers/requestSlice";
+import { FlatList } from "react-native";
 
-export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
-  //// каждая загрузка(накладная) типо истории
-  const { obj, title } = route.params;
-
+export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
+  //// каждый возврат накладной типо истории
   const dispatch = useDispatch();
+  const { codeid, guid } = route.params;
 
-  const { listProductEveryInvoiceTA } = useSelector(
-    (state) => state.requestSlice
-  );
+  const { listAcceptInvoiceProd } = useSelector((state) => state.requestSlice);
 
   useEffect(() => {
-    dispatch(getProductEveryInvoice(obj.guid));
     navigation.setOptions({
-      title,
+      title: `Накладная №${codeid}`,
     });
+    dispatch(getAcceptProdInvoice(guid));
   }, []);
 
-  const totalSum = listProductEveryInvoiceTA?.reduce((total, item) => {
+  console.log(listAcceptInvoiceProd, "listAcceptInvoiceProd");
+
+  const totalSum = listAcceptInvoiceProd?.reduce((total, item) => {
     return +item.price * +item.count + total;
   }, 0);
 
   return (
     <>
-      {listProductEveryInvoiceTA?.length === 0 ? (
+      {listAcceptInvoiceProd?.length === 0 ? (
         <Text style={styles.noneData}>Данные отсутствуют</Text>
       ) : (
         <View style={styles.parentDataModal}>
           <FlatList
-            contentContainerStyle={{
-              minWidth: "100%",
-              width: "100%",
-              paddingTop: 8,
-            }}
-            data={listProductEveryInvoiceTA}
+            contentContainerStyle={styles.flatList}
+            data={listAcceptInvoiceProd}
             renderItem={({ item }) => (
               <View style={styles.everyProd}>
                 <Text style={styles.titleHistory}>{item.product_name}</Text>
@@ -63,6 +59,8 @@ const styles = StyleSheet.create({
     maxWidth: 230,
     fontSize: 12,
   },
+
+  flatList: { minWidth: "100%", width: "100%", paddingTop: 8 },
 
   everyProd: {
     // backgroundColor: "red",

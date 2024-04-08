@@ -54,28 +54,11 @@ export const ModalChoiceReturn = ({ navigation }) => {
       Alert.alert("Выберите админа!");
     } else {
       const { stateModal, ...data } = createReturnInvoice;
-    //   dispatch(createInvoiceReturnTA({ data, navigation, closeModal }));
-      closeModal();
-      navigation?.navigate("ReturnProd", {
-        invoice_guid: "****",
-      });
-      //// delete 
+      dispatch(createInvoiceReturnTA({ data, navigation, closeModal }));
     }
-    // navigation.navigate("");
   };
 
-  console.log(createReturnInvoice, "createReturnInvoice");
-
-  const list = [
-    {
-      admin_name: "admin1",
-      value: "68C264D9-7BBF-11E5-A74F-643150130793",
-    },
-    {
-      admin_name: "admin2",
-      value: "2B246E6D-7BC1-11E5-A74F-643150130793",
-    },
-  ];
+  // console.log(createReturnInvoice, "createReturnInvoice");
 
   const widthMax = { minWidth: "100%", width: "100%" };
 
@@ -96,25 +79,24 @@ export const ModalChoiceReturn = ({ navigation }) => {
           <View style={styles.selectBlock}>
             <FlatList
               contentContainerStyle={widthMax}
-              //   data={listAdmins}
-              data={list}
+              data={listAdmins}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[
                     styles.selectBlockInner,
-                    createReturnInvoice?.oper_guid === item?.value &&
+                    createReturnInvoice?.oper_guid === item?.guid &&
                       styles.activeSelect,
                   ]}
-                  onPress={() => changeSelect(item?.value)}
+                  onPress={() => changeSelect(item?.guid)}
                 >
                   <Text
                     style={[
                       styles.selectText,
-                      createReturnInvoice?.oper_guid === item?.value &&
+                      createReturnInvoice?.oper_guid === item?.guid &&
                         styles.activeSelectText,
                     ]}
                   >
-                    {item?.admin_name}
+                    {item?.fio}
                   </Text>
                 </TouchableOpacity>
               )}

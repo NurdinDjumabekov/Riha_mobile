@@ -39,7 +39,6 @@ const initialState = {
     //// для возврата списка товаров
     invoice_guid: "",
     products: [],
-    amount: "",
   },
 };
 

@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#fff",
   },
+
   actionBlock: {
     display: "flex",
     flexDirection: "row",

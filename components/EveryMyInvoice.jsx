@@ -4,16 +4,41 @@ import { useDispatch } from "react-redux";
 import { changePreloader } from "../store/reducers/requestSlice";
 
 export const EveryMyInvoice = ({ obj, navigation }) => {
+  //// status - 0(накладные только для просмотра),
+  //// 1(не принятые накладные),
+  //// 2(принятые накладные)
   //// список загрузок(накладных)
   const dispatch = useDispatch();
 
-  const lookInvoice = () => {
-    navigation.navigate("detailedInvoice", { date: obj.date, guid: obj.guid });
-    dispatch(clearAcceptInvoiceTA());
-    dispatch(changePreloader(true)); /// чтобы вначале не показывался пустой массив
+  const objType = {
+    0: { text: "На складе", color: "#222" },
+    1: { text: "Отгружено", color: "red" },
+    2: { text: "Принято", color: "green" },
   };
-  
-  // console.log(obj, "obj");
+
+  const statusInfo = objType[obj?.status];
+
+  const lookInvoice = () => {
+    if (+obj?.status === 1 || +obj?.status === 0) {
+      /// if накладная отгружена для ТА
+      navigation.navigate("detailedInvoice", {
+        date: obj?.date,
+        guid: obj?.guid,
+        status: obj?.status,
+      });
+      dispatch(clearAcceptInvoiceTA());
+      dispatch(changePreloader(true)); /// чтобы вначале не показывался пустой массив
+    } else if (+obj?.status === 2) {
+      /// if накладная уже принята
+      navigation.navigate("EveryInvoiceHistory", {
+        codeid: obj?.codeid,
+        guid: obj?.guid,
+      });
+    }
+  };
+
+  // console.log(obj);
+
   return (
     <>
       <TouchableOpacity style={styles.container} onPress={lookInvoice}>
@@ -21,7 +46,9 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
           <View style={styles.mainData}>
             <Text style={styles.titleNum}>{obj.codeid} </Text>
             <View>
-              <Text style={[styles.titleDate, styles.role]}>{obj?.operator}</Text>
+              <Text style={[styles.titleDate, styles.role]}>
+                {obj?.operator}
+              </Text>
               <Text style={styles.titleDate}>{obj.date}</Text>
             </View>
           </View>
@@ -37,7 +64,7 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
         </View>
         <View style={styles.mainDataArrow}>
           <View>
-            <Text style={styles.status}>Отгружено</Text>
+            <Text style={{ color: statusInfo?.color }}>{statusInfo?.text}</Text>
             <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
           </View>
           <View style={styles.arrow}></View>
@@ -51,11 +78,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgba(162, 178, 238, 0.102)",
     minWidth: "100%",
-    // marginBottom: 20,
     padding: 8,
     paddingTop: 15,
     paddingBottom: 15,
-    // borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: "rgba(47, 71, 190, 0.287)",
     display: "flex",
@@ -86,10 +111,7 @@ const styles = StyleSheet.create({
   titleDate: {
     fontSize: 14,
     fontWeight: "500",
-    // color: "#2fce8e53",
-    // backgroundColor: "rgba(12, 169, 70, 0.1)",
     borderRadius: 5,
-    // padding: 5,
     lineHeight: 17,
   },
 
@@ -108,11 +130,9 @@ const styles = StyleSheet.create({
   totalPrice: {
     fontSize: 16,
     fontWeight: "400",
-    // color: "blue",
   },
 
   comments: {
-    // backgroundColor: "red",
     maxWidth: 230,
   },
 
@@ -128,7 +148,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    // backgroundColor: "red",
     paddingRight: 15,
     width: "35%",
   },
@@ -136,7 +155,6 @@ const styles = StyleSheet.create({
   arrow: {
     borderTopWidth: 3,
     borderRightWidth: 3,
-    // borderColor: "rgba(12, 169, 70, 0.498)",
     borderColor: "rgba(162, 178, 238, 0.439)",
     height: 16,
     width: 16,

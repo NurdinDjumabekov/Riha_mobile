@@ -1,42 +1,35 @@
 import { useEffect } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductEveryInvoice } from "../store/reducers/requestSlice";
+import { getReturnHistory } from "../../store/reducers/requestSlice";
 
-export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
-  //// каждая загрузка(накладная) типо истории
+export const EveryListInvoiceReturn = ({ route, navigation }) => {
+  //// каждая накладная (список воозврата накладной) типо истории
+  const dispatch = useDispatch();
   const { obj, title } = route.params;
 
-  const dispatch = useDispatch();
-
-  const { listProductEveryInvoiceTA } = useSelector(
-    (state) => state.requestSlice
-  );
+  const { listProdReturn } = useSelector((state) => state.requestSlice);
 
   useEffect(() => {
-    dispatch(getProductEveryInvoice(obj.guid));
+    dispatch(getReturnHistory(obj?.guid));
     navigation.setOptions({
       title,
     });
   }, []);
 
-  const totalSum = listProductEveryInvoiceTA?.reduce((total, item) => {
+  const totalSum = listProdReturn?.reduce((total, item) => {
     return +item.price * +item.count + total;
   }, 0);
 
   return (
     <>
-      {listProductEveryInvoiceTA?.length === 0 ? (
+      {listProdReturn?.length === 0 ? (
         <Text style={styles.noneData}>Данные отсутствуют</Text>
       ) : (
-        <View style={styles.parentDataModal}>
+        <View style={styles.parentBlock}>
           <FlatList
-            contentContainerStyle={{
-              minWidth: "100%",
-              width: "100%",
-              paddingTop: 8,
-            }}
-            data={listProductEveryInvoiceTA}
+            contentContainerStyle={styles.flatListStyle}
+            data={listProdReturn}
             renderItem={({ item }) => (
               <View style={styles.everyProd}>
                 <Text style={styles.titleHistory}>{item.product_name}</Text>
@@ -59,13 +52,22 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  parentBlock: {
+    paddingBottom: 70,
+  },
+
+  flatListStyle: {
+    minWidth: "100%",
+    width: "100%",
+    paddingTop: 8,
+  },
+
   comments: {
     maxWidth: 230,
     fontSize: 12,
   },
 
   everyProd: {
-    // backgroundColor: "red",
     padding: 10,
     paddingRight: 10,
     borderTopWidth: 1,
@@ -81,7 +83,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    // backgroundColor:'red',
     width: "33%",
   },
 
@@ -98,9 +99,11 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     width: "70%",
   },
+
   koll: {
     color: "rgba(12, 169, 70, 0.486)",
   },
+
   summ: {
     color: "rgba(47, 71, 190, 0.887)",
   },

@@ -1,19 +1,25 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyLeftovers } from "../store/reducers/requestSlice";
+import {
+  getMyLeftovers,
+  returnListProduct,
+} from "../store/reducers/requestSlice";
 import { ScrollView } from "react-native";
 import { listTableForReturnProd } from "../helpers/Data";
 import { Dimensions } from "react-native";
-import { Row, Rows, Table } from "react-native-table-component";
+import { Row, Rows, Table, TableWrapper } from "react-native-table-component";
 import { CheckVes } from "../components/ReturnProducts/CheckVes";
 import { changeReturnProd } from "../store/reducers/stateSlice";
+import { ViewButton } from "../customsTags/ViewButton";
+import ConfirmationModal from "../components/ConfirmationModal";
 
-export const ReturnProdScreen = ({ route }) => {
-  const { invoice_guid } = route.params;
+export const ReturnProdScreen = ({ route, navigation }) => {
+  const { invoice_guid, codeid } = route.params;
   //// возрат товара
   const dispatch = useDispatch();
   const [listData, setListData] = useState([]);
+  const [modalSend, setModalSend] = useState(false);
 
   const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
 
@@ -25,19 +31,19 @@ export const ReturnProdScreen = ({ route }) => {
   }, []);
 
   useEffect(() => {
+    navigation.setOptions({
+      title: `Накладная для возврата`,
+    });
     if (listLeftoversForReturn) {
       const tableDataList = listLeftoversForReturn?.map((item) => {
         return [
           `${item?.codeid}. ${item?.product_name}`,
+          `${item?.price}`,
           `${item?.end_outcome}`,
           <CheckVes
             guidProduct={item?.product_guid}
             invoice_guid={invoice_guid}
           />,
-          // <CheckBoxTable
-          //   guidProduct={item?.guid}
-          //   guidInvoice={everyInvoice?.guid}
-          // />,
         ];
       });
       setListData(tableDataList);
@@ -49,7 +55,7 @@ export const ReturnProdScreen = ({ route }) => {
         products: listLeftoversForReturn?.map((i) => {
           return {
             guid: i?.product_guid,
-            is_checked: false,
+            price: i?.price,
             count: i?.end_outcome,
           };
         }),
@@ -57,19 +63,31 @@ export const ReturnProdScreen = ({ route }) => {
     ); //// сразу присваиваю guid накладной
   }, [listLeftoversForReturn]);
 
-  const createInvoice = () => {};
-  console.log(listLeftoversForReturn, "listLeftoversForReturn");
-  //   console.log(listLeftovers, "listLeftovers");
+  const closeModal = () => setModalSend(false);
+
+  const sendData = () => {
+    dispatch(returnListProduct({ data: returnProducts, navigation }));
+    closeModal();
+  };
+
+  const totalSum = listLeftoversForReturn?.reduce(
+    (total, item) => +total + +item?.price,
+    0
+  );
+
+  const totalCount = returnProducts?.products?.reduce(
+    (total, item) => +total + +item?.count,
+    0
+  );
 
   const windowWidth = Dimensions.get("window").width;
-  const arrWidth = [48, 19, 19, 14]; //  проценты %
-
+  // const arrWidth = [40, 13, 19, 17, 13]; //  проценты %
+  const arrWidth = [47, 13, 20, 20]; //  проценты %
   // Преобразуем проценты в абсолютные значения ширины
   const resultWidths = arrWidth.map(
     (percentage) => (percentage / 100) * windowWidth
   );
 
-  console.log(returnProducts, "returnProducts");
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -80,43 +98,49 @@ export const ReturnProdScreen = ({ route }) => {
             textStyle={styles.textTitle}
             widthArr={resultWidths}
           />
-          <Rows
-            data={listData}
-            textStyle={styles.text}
-            widthArr={resultWidths}
-            style={styles.rowStyle}
-          />
+          <TableWrapper>
+            <Rows
+              data={listData.map((item) => [
+                item[0], // Продукт
+                <Text style={{ ...styles.text, color: "green", marginLeft: 8 }}>
+                  {item[1]}
+                </Text>, // Цена
+                <Text style={{ ...styles.text, color: "green", marginLeft: 8 }}>
+                  {item[2]}
+                </Text>, // В наличии
+                item[3], // Возврат
+                item[4], // ....
+              ])}
+              textStyle={styles.text}
+              widthArr={resultWidths}
+              style={styles.rowStyle}
+            />
+          </TableWrapper>
         </Table>
-        {/* <View style={styles.divAction}>
-          <View style={styles.divActionInner}>
-            <View style={styles.blockTotal}>
-              <Text style={styles.totalItemCount}>Сумма: {totalSum} сом</Text>
-              <Text style={styles.totalItemCount}>
-                Кол-во: {totalItemCountt}
-              </Text>
-            </View>
+        <View style={styles.divAction}>
+          <View style={styles.blockTotal}>
+            <Text style={styles.totalItemCount}>
+              Сумма: {totalSum || 0} сом
+            </Text>
+            <Text style={styles.totalItemCount}>Кол-во: {totalCount || 0}</Text>
           </View>
-          <TouchableOpacity onPress={changeAllCheckbox}>
-            <View style={styles.standartBox}>
-              <View style={styles.standartBox__inner}>
-                <View style={styles.checkmark}></View>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View> */}
-        {/* {isTrue && (
-          <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
-            Принять накладную
+        </View>
+        {true && (
+          <ViewButton
+            styles={styles.sendBtn}
+            onclick={() => setModalSend(true)}
+          >
+            Сформировать накладную
           </ViewButton>
-        )} */}
+        )}
       </View>
-      {/* <ConfirmationModal
-        visible={modalVisibleOk}
-        message="Принять накладную ?"
-        onYes={changeModalApplication}
-        onNo={() => setModalVisibleOk(false)}
-        onClose={() => setModalVisibleOk(false)}
-      /> */}
+      <ConfirmationModal
+        visible={modalSend}
+        message="Сформировать накладную для возврата товара ?"
+        onYes={sendData}
+        onNo={closeModal}
+        onClose={closeModal}
+      />
     </ScrollView>
   );
 };
@@ -137,13 +161,7 @@ const styles = StyleSheet.create({
     margin: 4,
     marginBottom: 8,
     marginTop: 8,
-    backgroundColor: "red",
     fontSize: 13,
-  },
-  titleDate: {
-    fontSize: 20,
-    fontWeight: "500",
-    color: "#222",
   },
 
   rowStyle: {
@@ -159,6 +177,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     color: "#383838",
   },
+
   divAction: {
     display: "flex",
     flexDirection: "row",
@@ -174,12 +193,11 @@ const styles = StyleSheet.create({
   blockTotal: {
     paddingTop: 10,
   },
-  divActionInner: {},
 
   totalItemCount: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "500",
-    color: "rgba(47, 71, 190, 0.991)",
+    color: "#222",
   },
 
   /////// checkbox
@@ -210,11 +228,32 @@ const styles = StyleSheet.create({
   /////// checkbox
 
   sendBtn: {
-    backgroundColor: "#c2f8e2",
-    color: "#1ab782",
+    fontSize: 16,
+    color: "#fff",
     width: "95%",
+    paddingTop: 10,
+    borderRadius: 10,
+    fontWeight: 600,
+    backgroundColor: "rgba(97 ,100, 239,0.7)",
+    marginTop: 20,
+    marginBottom: 20,
     alignSelf: "center",
+  },
+  /////////////////////////////////////
+
+  delete: {
+    width: 25,
+    height: 25,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  crossLine: {
     position: "absolute",
-    bottom: -80,
+    width: "100%",
+    height: 2,
+    borderRadius: 5,
+    backgroundColor: "red",
+    transform: [{ rotate: "45deg" }],
   },
 });

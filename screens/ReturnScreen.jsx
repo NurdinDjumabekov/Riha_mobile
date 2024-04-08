@@ -16,7 +16,7 @@ export const ReturnScreen = ({ navigation }) => {
   const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
 
   const { createReturnInvoice } = useSelector((state) => state.stateSlice);
-  const { preloader, listSellersPoints, listHistoryReturn } = useSelector(
+  const { preloader, listHistoryReturn } = useSelector(
     (state) => state.requestSlice
   );
 
@@ -26,7 +26,7 @@ export const ReturnScreen = ({ navigation }) => {
 
   const getData = () => {
     dispatch(getHistoryReturn(agent_guid));
-    dispatch(getAllAdmins(agent_guid));
+    dispatch(getAllAdmins());
   };
 
   const createInvoice = () => {
@@ -38,59 +38,8 @@ export const ReturnScreen = ({ navigation }) => {
       })
     );
   };
-  // console.log(listSellersPoints, "listSellersPoints");
-  const list = [
-    {
-      agent_guid: "B3120F36-3FCD-4CA0-8346-484881974846",
-      seller_guid: "E7458A29-6F7F-4364-A96D-ED878812F0CF",
-      status: 2,
-      guid: "76A690DA-F00E-4071-A8A1-8661BA17937A",
-      total_price: 1080,
-      total_weight: 6,
-      comment: "Тестовая",
-      date: "04.04.2024 11:17",
-      seller: "Админ",
-      agent: "Джумабеков Нурдин",
-      point: "Торговая Точка",
-      point_guid: "E7458A29-6F7F-4364-A96D-ED878812F0CF",
-      codeid: 1,
-      seller_fio: "Админ",
-    },
-    {
-      agent_guid: "B3120F36-3FCD-4CA0-8346-484881974846",
-      seller_guid: "E7458A29-6F7F-4364-A96D-ED878812F0CF",
-      status: 2,
-      guid: "76A690DA-F00E-4071-A8A1-8661BA17937A",
-      total_price: 1080,
-      total_weight: 6,
-      comment: "Тестовая",
-      date: "04.04.2024 11:17",
-      seller: "Админ",
-      agent: "Джумабеков Нурдин",
-      point: "Торговая Точка",
-      point_guid: "E7458A29-6F7F-4364-A96D-ED878812F0CF",
-      codeid: 2,
-      seller_fio: "Админ",
-    },
-    {
-      agent_guid: "B3120F36-3FCD-4CA0-8346-484881974846",
-      seller_guid: "E7458A29-6F7F-4364-A96D-ED878812F0CF",
-      status: 2,
-      guid: "76A690DA-F00E-4071-A8A1-8661BA17937A",
-      total_price: 1080,
-      total_weight: 6,
-      comment: "Тестовая",
-      date: "04.04.2024 11:17",
-      seller: "Админ",
-      agent: "Джумабеков Нурдин",
-      point: "Торговая Точка",
-      point_guid: "E7458A29-6F7F-4364-A96D-ED878812F0CF",
-      codeid: 3,
-      seller_fio: "Админ",
-    },
-  ];
 
-  const empty = list?.length !== 0;
+  const empty = listHistoryReturn?.length !== 0;
   return (
     <>
       <View style={styles.container}>
@@ -103,8 +52,7 @@ export const ReturnScreen = ({ navigation }) => {
         <View style={styles.blockList}>
           <FlatList
             contentContainerStyle={styles.flatListStyle}
-            // data={listHistoryReturn}
-            data={list}
+            data={listHistoryReturn}
             renderItem={({ item }) => (
               <EveryInvoiceReturn obj={item} navigation={navigation} />
             )}

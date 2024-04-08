@@ -35,7 +35,7 @@ export const CheckVes = ({ guidProduct, invoice_guid }) => {
         value={changeCount?.[0]?.count?.toString()}
         onChangeText={checkInput}
         keyboardType="numeric"
-        maxLength={8}
+        maxLength={6}
       />
     </View>
   );
@@ -44,18 +44,17 @@ export const CheckVes = ({ guidProduct, invoice_guid }) => {
 const styles = StyleSheet.create({
   standartBox: {
     position: "relative",
-    width: 60,
-    height: 30,
+    width: 55,
+    height: 25,
     borderWidth: 1,
     borderColor: "rgb(206 217 230)",
     borderRadius: 5,
-    margin: 5,
     justifyContent: "center",
     paddingHorizontal: 5,
   },
 
   input: {
-    flex: 1,
-    fontSize: 16,
+    fontSize: 14,
+    color: "red",
   },
 });

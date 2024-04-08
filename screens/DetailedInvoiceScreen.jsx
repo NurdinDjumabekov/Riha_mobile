@@ -30,7 +30,7 @@ const Div = styled.View`
 `;
 
 export const DetailedInvoiceScreen = ({ route, navigation }) => {
-  const { date, guid } = route.params;
+  const { date, guid, status } = route.params;
   const [listData, setListData] = useState([]);
   const [modalVisibleOk, setModalVisibleOk] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -146,7 +146,9 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
         <View style={styles.divAction}>
           <View style={styles.divActionInner}>
             <View style={styles.blockTotal}>
-              <Text style={styles.totalItemCount}>Сумма: {totalSum} сом</Text>
+              <Text style={styles.totalItemCount}>
+                Сумма: {totalSum?.toFixed(2)} сом
+              </Text>
               <Text style={styles.totalItemCount}>
                 Кол-во: {totalItemCountt}
               </Text>
@@ -160,10 +162,14 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
             </View>
           </TouchableOpacity>
         </View>
-        {isTrue && (
-          <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
-            Принять накладную
-          </ViewButton>
+        {+status !== 0 && (
+          <>
+            {isTrue && (
+              <ViewButton styles={styles.sendBtn} onclick={clickOkay}>
+                Принять накладную
+              </ViewButton>
+            )}
+          </>
         )}
       </View>
       <ConfirmationModal
