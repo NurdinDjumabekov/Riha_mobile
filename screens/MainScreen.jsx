@@ -3,20 +3,27 @@ import { ViewContainer } from "../customsTags/ViewContainer";
 import { dataCategory } from "../helpers/Data";
 import { EveryCategory } from "../components/EveryCategory";
 import { useDispatch, useSelector } from "react-redux";
-import { changePreloader } from "../store/reducers/requestSlice";
+import { changePreloader, getBalance } from "../store/reducers/requestSlice";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native";
+import { useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const MainScreen = ({ navigation }) => {
   const { token } = useSelector((state) => state.saveDataSlice);
-  const { preloader } = useSelector((state) => state.requestSlice);
+  const { preloader, balance } = useSelector((state) => state.requestSlice);
   const dispatch = useDispatch();
 
-  const chnagePreloader = () => {
-    dispatch(changePreloader(true));
-    setTimeout(() => {
-      dispatch(changePreloader(false));
-    }, 1000);
+  const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
+
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, [])
+  );
+
+  const getData = () => {
+    dispatch(getBalance(agent_guid));
   };
 
   return (
@@ -30,17 +37,12 @@ export const MainScreen = ({ navigation }) => {
                   <Text style={styles.balanceText}>Баланс</Text>
                   <View style={styles.arrow}></View>
                 </View>
-                <Text style={styles.balanceNum}>-10000 с</Text>
+                <Text style={styles.balanceNum}>{balance} сом</Text>
               </View>
               <Text style={styles.balanceHistory}>История</Text>
             </View>
             <FlatList
-              contentContainerStyle={{
-                minWidth: "100%",
-                alignItems: "center",
-                gap: 20,
-                paddingBottom: 10,
-              }}
+              contentContainerStyle={styles.flatList}
               data={dataCategory}
               renderItem={({ item }) => (
                 <EveryCategory obj={item} navigation={navigation} />
@@ -48,10 +50,7 @@ export const MainScreen = ({ navigation }) => {
               // keyExtractor={(item) => item.codeid}
               numColumns={2}
               refreshControl={
-                <RefreshControl
-                  refreshing={preloader}
-                  onRefresh={() => chnagePreloader()}
-                />
+                <RefreshControl refreshing={preloader} onRefresh={getData} />
               }
             />
           </View>
@@ -73,6 +72,14 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     backgroundColor: "#ebeef2",
   },
+
+  flatList: {
+    minWidth: "100%",
+    alignItems: "center",
+    gap: 20,
+    paddingBottom: 10,
+  },
+
   balance: {
     width: "97%",
     alignSelf: "center",

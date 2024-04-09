@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { SafeAreaView, FlatList, RefreshControl } from "react-native";
-import styled from "styled-components/native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getMyInvoice,
@@ -11,14 +10,6 @@ import { TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
-
-const ParentDiv = styled.View`
-  min-width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-`;
 
 export const MyApplicationScreen = ({ navigation, route }) => {
   /// список накладных
@@ -48,7 +39,7 @@ export const MyApplicationScreen = ({ navigation, route }) => {
         <Text style={styles.textBtn}>Список принятых накладных</Text>
         <View style={styles.arrowInner}></View>
       </TouchableOpacity>
-      <ParentDiv>
+      <View style={styles.parentBlock}>
         <FlatList
           contentContainerStyle={widthMax}
           data={listMyInvoice}
@@ -60,12 +51,21 @@ export const MyApplicationScreen = ({ navigation, route }) => {
             <RefreshControl refreshing={preloader} onRefresh={getData} />
           }
         />
-      </ParentDiv>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  parentBlock: {
+    minWidth: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    paddingBottom: 110,
+  },
+
   arrow: {
     display: "flex",
     flexDirection: "row",

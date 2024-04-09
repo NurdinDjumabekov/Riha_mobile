@@ -37,18 +37,11 @@ export const EveryProduct = ({ obj, index, type }) => {
   const isCheck = temporaryData?.guid === obj?.guid;
   return (
     <>
-      {type ? ( //// для списка продкетов , которые отправятся к ТТ
+      {type ? ( //// для списка продуктов , которые отправятся к ТТ
         <TouchableOpacity style={styles.blockProducts} onLongPress={deleteProd}>
           <View style={styles.flexBlock}>
             <Text style={styles.mainTitle}>{index + 1}. </Text>
-            <Text
-              style={[
-                styles.mainTitle,
-                {
-                  width: "90%",
-                },
-              ]}
-            >
+            <Text style={[styles.mainTitle, styles.width90]}>
               {obj?.product_name}
             </Text>
           </View>
@@ -88,9 +81,7 @@ export const EveryProduct = ({ obj, index, type }) => {
                   style={[
                     styles.title,
                     isCheck && styles.activeTitle,
-                    {
-                      width: "85%",
-                    },
+                    styles.width85,
                   ]}
                 >
                   {obj?.product_name}
@@ -285,5 +276,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     color: "rgba(12, 169, 70, 0.9)",
+  },
+
+  width90: {
+    width: "90%",
+  },
+
+  width85: {
+    width: "85%",
   },
 });

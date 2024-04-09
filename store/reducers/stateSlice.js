@@ -26,6 +26,7 @@ const initialState = {
     amount: "",
     seller_guid: "",
     agent_guid: "",
+    debit: 0,
   },
   createReturnInvoice: {
     /// для создания накладной возврата товара ТА
@@ -110,6 +111,7 @@ const stateSlice = createSlice({
         amount: "",
         seller_guid: "",
         agent_guid: "",
+        debit: 0,
       };
     },
     changeReturnInvoice: (state, action) => {

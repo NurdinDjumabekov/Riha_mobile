@@ -26,7 +26,6 @@ export const EveryInvoiceTA = ({ obj, navigation }) => {
             <Text style={styles.titleNum}>{obj.codeid} </Text>
             <View>
               <Text style={[styles.titleDate, styles.role]}>
-                {/* Жанара (Точка1) */}
                 {obj?.seller} {obj?.point ? `(${obj.point})` : ""}
               </Text>
               <Text style={styles.titleDate}>{obj.date}</Text>

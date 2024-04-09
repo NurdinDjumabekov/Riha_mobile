@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { EveryProduct } from "../components/EveryProduct";
 import { ViewButton } from "../customsTags/ViewButton";
@@ -15,19 +8,14 @@ import {
   addProdInvoiceTT,
   getListExpenses,
 } from "../store/reducers/requestSlice";
-import { ListExpense } from "../components/ListExpense";
 import { changeAmountExpenses } from "../store/reducers/stateSlice";
 
 export const EveryInvoiceListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { codeid, guid, seller_guid } = route.params;
   const [modal, setModal] = useState(false);
-  const { listProductForTT, amountExpenses } = useSelector(
-    (state) => state.stateSlice
-  );
+  const { listProductForTT } = useSelector((state) => state.stateSlice);
   const { listExpenses } = useSelector((state) => state.requestSlice);
-
-  const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
 
   useEffect(() => {
     navigation.setOptions({
@@ -55,18 +43,9 @@ export const EveryInvoiceListScreen = ({ navigation, route }) => {
           price: i.price,
         };
       }),
-      seller_guid,
-      amount: amountExpenses || 0,
-      agent_guid,
     };
     dispatch(addProdInvoiceTT({ data, navigation }));
     setModal(false);
-  };
-
-  const onChange = (text) => {
-    if (/^\d*\.?\d*$/.test(text) || text === "") {
-      dispatch(changeAmountExpenses(text));
-    }
   };
 
   const totalSum = listProductForTT?.reduce((total, item) => {
@@ -75,10 +54,8 @@ export const EveryInvoiceListScreen = ({ navigation, route }) => {
 
   const widthMax = { minWidth: "100%", width: "100%" };
   const noneData = listProductForTT?.length === 0;
-  const checkEmpty =
-    listProductForTT?.length !== 0 || listExpenses?.length !== 0;
+  const checkEmpty = listProductForTT?.length !== 0;
 
-  const checkList = listExpenses?.length !== 0;
   return (
     <>
       <View style={styles.container}>
@@ -90,7 +67,6 @@ export const EveryInvoiceListScreen = ({ navigation, route }) => {
             <FlatList
               contentContainerStyle={widthMax}
               data={listProductForTT}
-              // data={[...listProductForTT,...listProductForTT,...listProductForTT,...listProductForTT]}
               renderItem={({ item, index }) => (
                 <EveryProduct obj={item} index={index} type="simpleList" />
               )}
@@ -99,34 +75,11 @@ export const EveryInvoiceListScreen = ({ navigation, route }) => {
             <Text style={styles.resultSum}>Итого: {totalSum} сом</Text>
           </SafeAreaView>
         )}
-        {checkList && (
-          <View style={{ maxHeight: 290 }}>
-            <ListExpense getData={getData} />
-          </View>
+        {checkEmpty && (
+          <ViewButton styles={styles.sendBtn} onclick={() => setModal(true)}>
+            Подтвердить отправку
+          </ViewButton>
         )}
-        <View style={[styles.sendBlock, checkList && styles.empty]}>
-          {checkList && (
-            <View>
-              <Text style={styles.sumExpenses}>Сумма расходов</Text>
-              <TextInput
-                style={styles.input}
-                value={amountExpenses?.toString()}
-                onChangeText={onChange}
-                keyboardType="numeric"
-                maxLength={7}
-                placeholder="Сумма"
-              />
-            </View>
-          )}
-          {checkEmpty && (
-            <ViewButton
-              styles={[styles.sendBtn, !checkList && styles.moreSendBtn]}
-              onclick={() => setModal(true)}
-            >
-              Подтвердить
-            </ViewButton>
-          )}
-        </View>
       </View>
       {/* /// для подтверждения отправки */}
       <ConfirmationModal
@@ -206,19 +159,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     alignSelf: "center",
     fontSize: 17,
-    minWidth: "65%",
+    minWidth: "95%",
     // paddingHorizontal: 20,
-    marginTop: 0,
+    marginTop: 20,
     marginRight: 0,
     paddingBottom: 9,
     paddingTop: 9,
     borderRadius: 7,
-  },
-
-  moreSendBtn: {
-    minWidth: "100%",
-    paddingBottom: 13,
-    paddingTop: 13,
   },
 
   resultSum: {

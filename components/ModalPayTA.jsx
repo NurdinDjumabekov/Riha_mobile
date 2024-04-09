@@ -22,7 +22,7 @@ export const ModalPayTA = ({ modalState, setModalState }) => {
   };
 
   const changeNum = (text) => {
-    if (/^\d*\.?\d*$/.test(text)) {
+    if (/^-?\d*\.?\d*$/.test(text)) {
       dispatch(
         changeTempGuidPoint({
           ...temporaryGuidPoint,
@@ -43,14 +43,18 @@ export const ModalPayTA = ({ modalState, setModalState }) => {
 
   const sendMoney = () => {
     ///// принимаю деньги от ТТ
-    if (temporaryGuidPoint?.amount == 0 || "") {
+    if (!temporaryGuidPoint?.amount) {
       Alert.alert("Введите сумму");
     } else {
-      dispatch(acceptMoney({ data: temporaryGuidPoint, closeModal }));
+      if (temporaryGuidPoint?.debit < temporaryGuidPoint?.amount) {
+        Alert.alert("Введенная вами сумма больше зарабатка торговой точки!");
+      } else {
+        dispatch(acceptMoney({ data: temporaryGuidPoint, closeModal }));
+        setModalState(false);
+      }
     }
   };
 
-  //   console.log(listSellersPoints, "listSellersPoints");
   // console.log(temporaryGuidPoint, "temporaryGuidPoint");
 
   return (
@@ -68,7 +72,7 @@ export const ModalPayTA = ({ modalState, setModalState }) => {
         <View style={styles.modalInner} onPress={() => setModalState(true)}>
           <TextInput
             style={styles.inputNum}
-            value={temporaryGuidPoint.amount}
+            value={temporaryGuidPoint?.amount?.toString()}
             onChangeText={changeNum}
             placeholder="Сумма"
             keyboardType="numeric"

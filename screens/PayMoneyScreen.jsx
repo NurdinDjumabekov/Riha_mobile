@@ -29,19 +29,22 @@ export const PayMoneyScreen = () => {
     dispatch(getAllSellersPoint(agent_guid));
   };
 
-  const choiceSelect = (seller_guid) => {
+  const choiceSelect = (obj) => {
+    const { value, debit } = obj;
     dispatch(
       changeTempGuidPoint({
         ...temporaryGuidPoint,
-        seller_guid,
+        seller_guid: value,
         agent_guid,
+        amount: debit,
       })
     ); //// ложу guid точки
     setModalState(true);
   };
 
-  // console.log(listSellersPoints, "listSellersPoints");
   const widthMax = { minWidth: "100%", width: "100%" };
+
+  // console.log(listSellersPoints);
 
   return (
     <>
@@ -54,7 +57,7 @@ export const PayMoneyScreen = () => {
             renderItem={({ item, index }) => (
               <TouchableOpacity
                 style={styles.everyPoint}
-                onPress={() => choiceSelect(item?.value)}
+                onPress={() => choiceSelect(item)}
               >
                 <Text style={styles.titleNum}>
                   {index + 1}. {item.label}
@@ -83,7 +86,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: "rgba(47, 71, 190, 0.591)",
     color: "#fff",
-    // marginBottom: 5,
   },
 
   everyPoint: {

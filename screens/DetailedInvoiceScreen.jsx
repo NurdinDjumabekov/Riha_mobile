@@ -75,7 +75,7 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
         return [
           `${item?.codeid}. ${item?.product_name}`,
           `${item?.product_price}`,
-          `${item?.count}`,
+          `${item?.count_usushka}`,
           <InputDifference
             guidProduct={item?.guid}
             guidInvoice={everyInvoice?.guid}
@@ -103,10 +103,10 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
     0
   );
 
-  const totalSum = everyInvoice?.list?.reduce(
-    (total, item) => +total + +item?.total,
-    0
-  );
+  const totalSum = acceptConfirmInvoice.products.reduce((total, product) => {
+    const productAmount = product?.change * product?.product_price;
+    return total + productAmount;
+  }, 0);
 
   const isTrue =
     acceptConfirmInvoice?.products?.length === everyInvoice?.list?.length &&
@@ -118,7 +118,7 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
       return changeValue !== 0 && changeValue !== "";
     });
 
-  // console.log(everyInvoice.list, "everyInvoice");
+  console.log(everyInvoice.list, "everyInvoice");
   // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
 
   return (
@@ -147,10 +147,17 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
           <View style={styles.divActionInner}>
             <View style={styles.blockTotal}>
               <Text style={styles.totalItemCount}>
-                Сумма: {totalSum?.toFixed(2)} сом
+                Сумма:{" "}
+                {totalSum % 1 === 0
+                  ? totalSum?.toFixed(0)
+                  : totalSum?.toFixed(1)}{" "}
+                сом
               </Text>
               <Text style={styles.totalItemCount}>
-                Кол-во: {totalItemCountt}
+                Кол-во:{" "}
+                {totalItemCountt % 1 === 0
+                  ? totalItemCountt?.toFixed(0)
+                  : totalItemCountt?.toFixed(1)}
               </Text>
             </View>
           </View>

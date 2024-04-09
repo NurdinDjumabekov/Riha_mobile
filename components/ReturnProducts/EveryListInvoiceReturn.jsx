@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getReturnHistory } from "../../store/reducers/requestSlice";
+import { RenderResult } from "../RenderResult";
 
 export const EveryListInvoiceReturn = ({ route, navigation }) => {
   //// каждая накладная (список воозврата накладной) типо истории
@@ -30,17 +31,8 @@ export const EveryListInvoiceReturn = ({ route, navigation }) => {
           <FlatList
             contentContainerStyle={styles.flatListStyle}
             data={listProdReturn}
-            renderItem={({ item }) => (
-              <View style={styles.everyProd}>
-                <Text style={styles.titleHistory}>{item.product_name}</Text>
-                <View style={styles.everyProdInner}>
-                  <Text style={styles.koll}>Кол-во (вес): {item.count}</Text>
-                  <Text style={styles.priceHistory}>{item.price} сом</Text>
-                  <Text style={styles.summ}>
-                    Сумма: {+item.price * +item.count}сом
-                  </Text>
-                </View>
-              </View>
+            renderItem={({ item, index }) => (
+              <RenderResult item={item} index={index} />
             )}
             keyExtractor={(item) => item.codeid}
           />
@@ -60,52 +52,6 @@ const styles = StyleSheet.create({
     minWidth: "100%",
     width: "100%",
     paddingTop: 8,
-  },
-
-  comments: {
-    maxWidth: 230,
-    fontSize: 12,
-  },
-
-  everyProd: {
-    padding: 10,
-    paddingRight: 10,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: "rgba(162, 178, 238, 0.439)",
-    backgroundColor: "rgba(162, 178, 238, 0.102)",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-
-  everyProdInner: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    width: "33%",
-  },
-
-  titleHistory: {
-    color: "#222",
-    fontSize: 13,
-    fontWeight: "500",
-    width: "65%",
-  },
-
-  priceHistory: {
-    color: "#222",
-    fontSize: 13,
-    fontWeight: "500",
-    width: "70%",
-  },
-
-  koll: {
-    color: "rgba(12, 169, 70, 0.486)",
-  },
-
-  summ: {
-    color: "rgba(47, 71, 190, 0.887)",
   },
 
   result: {

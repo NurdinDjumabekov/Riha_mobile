@@ -61,7 +61,7 @@ export const listTableLeftoverst = [
 export const listTableForAcceptInvoice = [
   " Продукт",
   "Цена",
-  "Вес (кол-во)",
+  "Вес с усушкой",
   "Вес принято",
   "  ....",
 ];

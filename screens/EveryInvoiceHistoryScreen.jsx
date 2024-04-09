@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductEveryInvoice } from "../store/reducers/requestSlice";
+import { RenderResult } from "../components/RenderResult";
 
 export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
   //// каждая загрузка(накладная) типо истории
@@ -29,25 +30,12 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
       {listProductEveryInvoiceTA?.length === 0 ? (
         <Text style={styles.noneData}>Данные отсутствуют</Text>
       ) : (
-        <View style={styles.parentDataModal}>
+        <View>
           <FlatList
-            contentContainerStyle={{
-              minWidth: "100%",
-              width: "100%",
-              paddingTop: 8,
-            }}
+            contentContainerStyle={styles.flatList}
             data={listProductEveryInvoiceTA}
-            renderItem={({ item }) => (
-              <View style={styles.everyProd}>
-                <Text style={styles.titleHistory}>{item.product_name}</Text>
-                <View style={styles.everyProdInner}>
-                  <Text style={styles.koll}>Кол-во (вес): {item.count}</Text>
-                  <Text style={styles.priceHistory}>{item.price} сом</Text>
-                  <Text style={styles.summ}>
-                    Сумма: {+item.price * +item.count}сом
-                  </Text>
-                </View>
-              </View>
+            renderItem={({ item, index }) => (
+              <RenderResult item={item} index={index} />
             )}
             keyExtractor={(item) => item.codeid}
           />
@@ -59,50 +47,10 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  comments: {
-    maxWidth: 230,
-    fontSize: 12,
-  },
-
-  everyProd: {
-    // backgroundColor: "red",
-    padding: 10,
-    paddingRight: 10,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: "rgba(162, 178, 238, 0.439)",
-    backgroundColor: "rgba(162, 178, 238, 0.102)",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-
-  everyProdInner: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    // backgroundColor:'red',
-    width: "33%",
-  },
-
-  titleHistory: {
-    color: "#222",
-    fontSize: 13,
-    fontWeight: "500",
-    width: "65%",
-  },
-
-  priceHistory: {
-    color: "#222",
-    fontSize: 13,
-    fontWeight: "500",
-    width: "70%",
-  },
-  koll: {
-    color: "rgba(12, 169, 70, 0.486)",
-  },
-  summ: {
-    color: "rgba(47, 71, 190, 0.887)",
+  flatList: {
+    minWidth: "100%",
+    width: "100%",
+    paddingTop: 8,
   },
 
   result: {

@@ -96,10 +96,8 @@ export const EveryInvoiceScreen = ({ navigation, route }) => {
       keyboardDidHideListener.remove();
     };
   }, []);
-  // console.log(listProductTA, "listProductTA");
-  // console.log(openKeyBoard, "openKeyBoard");
 
-  const checkLength = listProductTA?.length <= 4;
+  const checkLength = listProductTA?.length >= 3;
 
   const widthMax = { minWidth: "100%", width: "100%" };
   return (
@@ -241,6 +239,6 @@ const styles = StyleSheet.create({
     height: "50%",
   },
   paddingB50: {
-    // paddingBottom: 95,
+    paddingBottom: 95,
   },
 });
