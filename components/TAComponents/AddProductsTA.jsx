@@ -4,16 +4,26 @@ import { ViewButton } from "../../customsTags/ViewButton";
 import { changeDataInputsInv } from "../../store/reducers/stateSlice";
 import {
   changePreloader,
-  checkProductLeftovers,
+  checkAddProductLeftovers,
+  getCategoryTA,
+  getProductTA,
 } from "../../store/reducers/requestSlice";
+import { useState } from "react";
 
-export const AddProductsTA = ({ productGuid }) => {
+export const AddProductsTA = ({ productGuid, guidInvoice }) => {
   //// для добавления продуктов в список
   const dispatch = useDispatch();
+
+  const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
 
   const { dataInputsInv, temporaryData } = useSelector(
     (state) => state.stateSlice
   );
+
+  const getData = async () => {
+    await dispatch(getCategoryTA(agent_guid));
+    await dispatch(getProductTA({ guid: "0", agent_guid })); /// 0 - все продукты
+  }; //// для вызова данных для продажи
 
   const changePrice = (text) => {
     if (/^\d*\.?\d*$/.test(text)) {
@@ -23,22 +33,26 @@ export const AddProductsTA = ({ productGuid }) => {
 
   const changeText = (text) => {
     if (/^\d*\.?\d*$/.test(text)) {
-      dispatch(changeDataInputsInv({ ...dataInputsInv, ves: text }));
+      dispatch(changeDataInputsInv({ ...dataInputsInv, count: text }));
     }
   };
 
   const addInInvoice = () => {
     if (
       dataInputsInv.price === "" ||
-      dataInputsInv.ves === "" ||
+      dataInputsInv.count === "" ||
       dataInputsInv.price == 0 ||
-      dataInputsInv.ves == 0
+      dataInputsInv.count == 0
     ) {
       Alert.alert("Введите цену и вес!");
     } else {
-      const data = { ...temporaryData, ...dataInputsInv, productGuid };
-      dispatch(checkProductLeftovers(data));
-      // console.log(data,"data");
+      const data = {
+        ...temporaryData,
+        ...dataInputsInv,
+        productGuid,
+        guidInvoice,
+      };
+      dispatch(checkAddProductLeftovers({ data, getData }));
       dispatch(changePreloader(true));
     }
   };
@@ -56,7 +70,7 @@ export const AddProductsTA = ({ productGuid }) => {
       />
       <TextInput
         style={styles.input}
-        value={dataInputsInv.ves}
+        value={dataInputsInv.count}
         onChangeText={changeText}
         keyboardType="numeric"
         placeholder="Вес"

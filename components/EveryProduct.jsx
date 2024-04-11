@@ -1,21 +1,15 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Vibration,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeDataInputsInv,
   changeTemporaryData,
-  removeListProductForTT,
 } from "../store/reducers/stateSlice";
 import { AddProductsTA } from "./TAComponents/AddProductsTA";
 import { useState } from "react";
 import ConfirmationModal from "./ConfirmationModal";
+import { deleteProInInvoice } from "../store/reducers/requestSlice";
 
-export const EveryProduct = ({ obj, index, type }) => {
+export const EveryProduct = ({ obj, index, type, guidInvoice }) => {
   //// список продуктов для ТА
   /// (type)simpleList - обычный просмотр
   const dispatch = useDispatch();
@@ -27,29 +21,39 @@ export const EveryProduct = ({ obj, index, type }) => {
     dispatch(changeDataInputsInv({ price: obj?.product_price, ves: "" }));
   };
 
-  const deleteProd = () => {
-    Vibration.vibrate([50, 100, 200]);
+  const openModalDelete = () => {
+    // Vibration.vibrate([50, 100, 200]);
     setModalDel(true);
   };
 
-  // console.log(obj, "obj");
+  const deleteProdInInvoice = () => {
+    // dispatch(removeListProductForTT(obj));
+    dispatch(deleteProInInvoice({ product_guid: obj?.guid, obj }));
+  };
 
   const isCheck = temporaryData?.guid === obj?.guid;
+  console.log(obj, "obj");
   return (
     <>
       {type ? ( //// для списка продуктов , которые отправятся к ТТ
-        <TouchableOpacity style={styles.blockProducts} onLongPress={deleteProd}>
+        <View style={styles.blockProducts}>
           <View style={styles.flexBlock}>
-            <Text style={styles.mainTitle}>{index + 1}. </Text>
-            <Text style={[styles.mainTitle, styles.width90]}>
-              {obj?.product_name}
-            </Text>
+            <View style={styles.flexBlock}>
+              <Text style={styles.mainTitle}>{index + 1}. </Text>
+              <Text style={[styles.mainTitle, styles.width90]}>
+                {obj?.product_name}
+              </Text>
+            </View>
+            <TouchableOpacity style={styles.krest} onPress={openModalDelete}>
+              <View style={[styles.line, styles.deg]} />
+              <View style={[styles.line, styles.degMinus]} />
+            </TouchableOpacity>
           </View>
           <View style={styles.flexBlockSpace}>
             <View>
               <View style={styles.flexBlock}>
                 <Text style={styles.vesText}>Вес (кол-во): </Text>
-                <Text style={styles.vesText}>{obj?.ves}</Text>
+                <Text style={styles.vesText}>{obj?.count}</Text>
               </View>
               <View style={styles.flexBlock}>
                 <Text style={styles.priceText}>Цена: </Text>
@@ -58,10 +62,15 @@ export const EveryProduct = ({ obj, index, type }) => {
             </View>
             <View style={styles.flexBlock}>
               <Text style={styles.sumText}>Сумма: </Text>
-              <Text style={styles.sumText}>{+obj?.ves * +obj?.price} сом</Text>
+              <Text style={styles.sumText}>
+                {(+obj?.count * +obj?.price).toFixed(
+                  Number.isInteger(+obj?.count * +obj?.price) ? 0 : 1
+                )}{" "}
+                сом
+              </Text>
             </View>
           </View>
-        </TouchableOpacity>
+        </View>
       ) : (
         <TouchableOpacity
           onPress={addInTemporary}
@@ -94,7 +103,7 @@ export const EveryProduct = ({ obj, index, type }) => {
             {!isCheck && <View style={styles.arrow}></View>}
           </View>
           {Object.keys(temporaryData).length !== 0 && isCheck && (
-            <AddProductsTA productGuid={obj.guid} />
+            <AddProductsTA productGuid={obj.guid} guidInvoice={guidInvoice} />
           )}
         </TouchableOpacity>
       )}
@@ -102,7 +111,7 @@ export const EveryProduct = ({ obj, index, type }) => {
       <ConfirmationModal
         visible={modalDel}
         message="Удалить ?"
-        onYes={() => dispatch(removeListProductForTT(obj))}
+        onYes={deleteProdInInvoice}
         onNo={() => setModalDel(false)}
         onClose={() => setModalDel(false)}
       />
@@ -285,4 +294,21 @@ const styles = StyleSheet.create({
   width85: {
     width: "85%",
   },
+
+  //////////////////// krestik
+  krest: {
+    width: 25,
+    height: 25,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  line: {
+    position: "absolute",
+    width: "100%",
+    height: 2,
+    backgroundColor: "red",
+  },
+
+  deg: { transform: [{ rotate: "45deg" }] },
+  degMinus: { transform: [{ rotate: "-45deg" }] },
 });

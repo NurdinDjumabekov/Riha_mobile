@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getReturnHistory } from "../../store/reducers/requestSlice";
 import { RenderResult } from "../RenderResult";
+import { formatCount } from "../../helpers/formatCount";
 
 export const EveryListInvoiceReturn = ({ route, navigation }) => {
   //// каждая накладная (список воозврата накладной) типо истории
@@ -36,7 +37,7 @@ export const EveryListInvoiceReturn = ({ route, navigation }) => {
             )}
             keyExtractor={(item) => item.codeid}
           />
-          <Text style={styles.result}>Итого: {totalSum} сом </Text>
+          <Text style={styles.result}>Итого: {formatCount(totalSum)} сом </Text>
         </View>
       )}
     </>

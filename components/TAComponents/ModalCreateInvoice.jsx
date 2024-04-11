@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   changeEveryInvoiceTA,
+  changeListProductForTT,
   changeTemporaryData,
   clearDataInputsInv,
   clearEveryInvoiceTA,
@@ -27,8 +28,6 @@ export const ModalCreateInvoice = ({
   const { listSellersPoints } = useSelector((state) => state.requestSlice);
   const { createEveryInvoiceTA } = useSelector((state) => state.stateSlice);
   const dispatch = useDispatch();
-
-  const agent_guid = "b3120f36-3fcd-4ca0-8346-484881974846";
 
   const changeSelect = (guid) => {
     dispatch(
@@ -61,6 +60,7 @@ export const ModalCreateInvoice = ({
       dispatch(clearEveryInvoiceTA());
       dispatch(clearDataInputsInv());
       dispatch(changeTemporaryData({}));
+      dispatch(changeListProductForTT([]));
       setModalState(false);
     }
   };

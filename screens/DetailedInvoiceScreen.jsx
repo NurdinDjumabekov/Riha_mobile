@@ -20,6 +20,7 @@ import { ViewButton } from "../customsTags/ViewButton";
 import { InputDifference } from "../components/InputDifference";
 import { changeAcceptInvoiceTA } from "../store/reducers/stateSlice";
 import { listTableForAcceptInvoice } from "../helpers/Data";
+import { formatCount } from "../helpers/formatCount";
 
 const Div = styled.View`
   display: flex;
@@ -118,7 +119,7 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
       return changeValue !== 0 && changeValue !== "";
     });
 
-  console.log(everyInvoice.list, "everyInvoice");
+  // console.log(everyInvoice.list, "everyInvoice");
   // console.log(acceptConfirmInvoice, "acceptConfirmInvoice");
 
   return (
@@ -147,17 +148,10 @@ export const DetailedInvoiceScreen = ({ route, navigation }) => {
           <View style={styles.divActionInner}>
             <View style={styles.blockTotal}>
               <Text style={styles.totalItemCount}>
-                Сумма:{" "}
-                {totalSum % 1 === 0
-                  ? totalSum?.toFixed(0)
-                  : totalSum?.toFixed(1)}{" "}
-                сом
+                Сумма: {formatCount(totalSum)}
               </Text>
               <Text style={styles.totalItemCount}>
-                Кол-во:{" "}
-                {totalItemCountt % 1 === 0
-                  ? totalItemCountt?.toFixed(0)
-                  : totalItemCountt?.toFixed(1)}
+                Кол-во: {formatCount(totalItemCountt)}
               </Text>
             </View>
           </View>

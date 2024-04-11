@@ -1,55 +1,68 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { getProductEveryInvoice } from "../../store/reducers/requestSlice";
+import { changeListProductForTT } from "../../store/reducers/stateSlice";
 
 export const EveryInvoiceTA = ({ obj, navigation }) => {
   //// каждая загрузка(накладная) типо истории
   const dispatch = useDispatch();
 
   const lookInvoice = () => {
-    dispatch(getProductEveryInvoice(obj.guid));
-    navigation?.navigate("everyInvoiceHistoryScreen", {
-      obj,
-      title: `Накладная №${obj.codeid}`,
-    });
+    dispatch(changeListProductForTT([])); /// очищаю список товаров для отправки ТТ
+
+    if (+obj?.status === 0) {
+      ////// перекидываю на созданную накладную, для добавления туда товаров
+      navigation.navigate("everyInvoice", {
+        codeid: obj.codeid,
+        guid: obj?.guid, /// guid накладной
+        seller_guid: obj?.seller_guid, /// seller_guid точки(магазина)
+      });
+      dispatch(getProductEveryInvoice(obj.guid));
+    } else {
+      ////// просто перекидываю на созданную накладную, для просмотра
+      dispatch(getProductEveryInvoice(obj.guid));
+      navigation?.navigate("everyInvoiceHistoryScreen", {
+        obj,
+        title: `Накладная №${obj?.codeid}`,
+      });
+    }
   };
 
-  // console.log(obj, "asdasd");
-  //   console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
-  //   console.log(listProductEveryInvoiceTA, "listProductEveryInvoiceTA");
+  const objType = {
+    0: { text: "Ожидание", color: "red" },
+    1: { text: "Отгружено", color: "green" },
+    2: { text: "Принято ", color: "green" },
+  };
 
+  const statusInfo = objType[obj?.status];
+
+  // console.log(obj, "obj");
   return (
-    <>
-      <TouchableOpacity style={styles.container} onPress={lookInvoice}>
-        <View style={styles.innerBlock}>
-          <View style={styles.mainData}>
-            <Text style={styles.titleNum}>{obj.codeid} </Text>
-            <View>
-              <Text style={[styles.titleDate, styles.role]}>
-                {obj?.seller} {obj?.point ? `(${obj.point})` : ""}
-              </Text>
-              <Text style={styles.titleDate}>{obj.date}</Text>
-            </View>
-          </View>
-          {obj.comment?.length !== 0 && (
-            <Text
-              style={styles.comments}
-              numberOfLines={4}
-              ellipsizeMode="tail"
-            >
-              {obj.comment}
-            </Text>
-          )}
-        </View>
-        <View style={styles.mainDataArrow}>
+    <TouchableOpacity style={styles.container} onPress={lookInvoice}>
+      <View style={styles.innerBlock}>
+        <View style={styles.mainData}>
+          <Text style={styles.titleNum}>{obj.codeid} </Text>
           <View>
-            <Text style={styles.status}>Отгружено</Text>
-            <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
+            <Text style={[styles.titleDate, styles.role]}>
+              {obj?.seller} {obj?.point ? `(${obj.point})` : ""}
+            </Text>
+            <Text style={styles.titleDate}>{obj.date}</Text>
           </View>
-          <View style={styles.arrow}></View>
         </View>
-      </TouchableOpacity>
-    </>
+        {obj.comment?.length !== 0 && (
+          <Text style={styles.comments} numberOfLines={4} ellipsizeMode="tail">
+            {obj.comment}
+          </Text>
+        )}
+      </View>
+      <View style={styles.mainDataArrow}>
+        <View>
+          <Text style={{ color: statusInfo?.color }}>{statusInfo?.text}</Text>
+          <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
+        </View>
+        <View style={styles.arrow}></View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -97,17 +110,13 @@ const styles = StyleSheet.create({
     lineHeight: 17,
   },
 
-  status: {
-    color: "rgba(12, 169, 70, 0.9)",
-  },
-
   role: {
     fontSize: 14,
     fontWeight: "500",
     borderRadius: 5,
     lineHeight: 17,
     color: "rgba(47, 71, 190, 0.672)",
-    width: "85%",
+    width: "95%",
     // backgroundColor: "red",
     overflow: "hidden",
     height: 18,

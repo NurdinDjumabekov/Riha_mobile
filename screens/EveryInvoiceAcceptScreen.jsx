@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAcceptProdInvoice } from "../store/reducers/requestSlice";
 import { FlatList } from "react-native";
 import { RenderResult } from "../components/RenderResult";
+import { formatCount } from "../helpers/formatCount";
 
 export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
   //// каждый возврат накладной типо истории
@@ -19,7 +20,7 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
     dispatch(getAcceptProdInvoice(guid));
   }, []);
 
-  console.log(listAcceptInvoiceProd, "listAcceptInvoiceProd");
+  // console.log(listAcceptInvoiceProd, "listAcceptInvoiceProd");
 
   const totalSum = listAcceptInvoiceProd?.reduce((total, item) => {
     return +item.price * +item.count_usushka + total;
@@ -39,7 +40,7 @@ export const EveryInvoiceAcceptScreen = ({ route, navigation }) => {
             )}
             keyExtractor={(item) => item.codeid}
           />
-          <Text style={styles.result}>Итого: {totalSum} сом </Text>
+          <Text style={styles.result}>Итого: {formatCount(totalSum)} сом </Text>
         </View>
       )}
     </>

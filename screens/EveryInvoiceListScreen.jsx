@@ -5,10 +5,11 @@ import { EveryProduct } from "../components/EveryProduct";
 import { ViewButton } from "../customsTags/ViewButton";
 import ConfirmationModal from "../components/ConfirmationModal";
 import {
-  addProdInvoiceTT,
+  sendProdInvoiceTT,
   getListExpenses,
 } from "../store/reducers/requestSlice";
 import { changeAmountExpenses } from "../store/reducers/stateSlice";
+import { formatCount } from "../helpers/formatCount";
 
 export const EveryInvoiceListScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -34,27 +35,19 @@ export const EveryInvoiceListScreen = ({ navigation, route }) => {
   };
 
   const sendData = () => {
-    const data = {
-      invoice_guid: guid,
-      products: listProductForTT?.map((i) => {
-        return {
-          guid: i.guid,
-          count: i.ves,
-          price: i.price,
-        };
-      }),
-    };
-    dispatch(addProdInvoiceTT({ data, navigation }));
+    dispatch(sendProdInvoiceTT({ guid, navigation }));
     setModal(false);
   };
 
   const totalSum = listProductForTT?.reduce((total, item) => {
-    return +item.price * +item.ves + total;
+    return +item?.price * +item?.count + total;
   }, 0);
 
   const widthMax = { minWidth: "100%", width: "100%" };
   const noneData = listProductForTT?.length === 0;
   const checkEmpty = listProductForTT?.length !== 0;
+
+  // console.log(listProductForTT, "listProductForTT");
 
   return (
     <>
@@ -62,7 +55,7 @@ export const EveryInvoiceListScreen = ({ navigation, route }) => {
         {noneData ? (
           <></>
         ) : (
-          <SafeAreaView style={{ maxHeight: "50%" }}>
+          <SafeAreaView style={{ maxHeight: "80%" }}>
             <Text style={styles.titleExpenses}>Список товаров</Text>
             <FlatList
               contentContainerStyle={widthMax}
@@ -72,7 +65,10 @@ export const EveryInvoiceListScreen = ({ navigation, route }) => {
               )}
               keyExtractor={(item, ind) => `${item.guid}${ind}`}
             />
-            <Text style={styles.resultSum}>Итого: {totalSum} сом</Text>
+
+            <Text style={styles.resultSum}>
+              Итого: {formatCount(totalSum)} сом
+            </Text>
           </SafeAreaView>
         )}
         {checkEmpty && (
@@ -163,8 +159,8 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 20,
     marginTop: 20,
     marginRight: 0,
-    paddingBottom: 9,
-    paddingTop: 9,
+    paddingBottom: 13,
+    paddingTop: 13,
     borderRadius: 7,
   },
 

@@ -37,40 +37,30 @@ export const EveryMyInvoice = ({ obj, navigation }) => {
     }
   };
 
-  // console.log(obj);
-
   return (
-    <>
-      <TouchableOpacity style={styles.container} onPress={lookInvoice}>
-        <View style={styles.innerBlock}>
-          <View style={styles.mainData}>
-            <Text style={styles.titleNum}>{obj.codeid} </Text>
-            <View>
-              <Text style={[styles.titleDate, styles.role]}>
-                {obj?.operator}
-              </Text>
-              <Text style={styles.titleDate}>{obj.date}</Text>
-            </View>
-          </View>
-          {obj.comment?.length !== 0 && (
-            <Text
-              style={styles.comments}
-              numberOfLines={4}
-              ellipsizeMode="tail"
-            >
-              {obj.comment}
-            </Text>
-          )}
-        </View>
-        <View style={styles.mainDataArrow}>
+    <TouchableOpacity style={styles.container} onPress={lookInvoice}>
+      <View style={styles.innerBlock}>
+        <View style={styles.mainData}>
+          <Text style={styles.titleNum}>{obj.codeid} </Text>
           <View>
-            <Text style={{ color: statusInfo?.color }}>{statusInfo?.text}</Text>
-            <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
+            <Text style={[styles.titleDate, styles.role]}>{obj?.operator}</Text>
+            <Text style={styles.titleDate}>{obj.date}</Text>
           </View>
-          <View style={styles.arrow}></View>
         </View>
-      </TouchableOpacity>
-    </>
+        {obj.comment?.length !== 0 && (
+          <Text style={styles.comments} numberOfLines={4} ellipsizeMode="tail">
+            {obj.comment}
+          </Text>
+        )}
+      </View>
+      <View style={styles.mainDataArrow}>
+        <View>
+          <Text style={{ color: statusInfo?.color }}>{statusInfo?.text}</Text>
+          <Text style={styles.totalPrice}>{obj?.total_price} сом</Text>
+        </View>
+        <View style={styles.arrow}></View>
+      </View>
+    </TouchableOpacity>
   );
 };
 

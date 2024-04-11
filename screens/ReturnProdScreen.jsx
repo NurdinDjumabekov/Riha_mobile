@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getMyLeftovers,
@@ -13,6 +13,7 @@ import { CheckVes } from "../components/ReturnProducts/CheckVes";
 import { changeReturnProd } from "../store/reducers/stateSlice";
 import { ViewButton } from "../customsTags/ViewButton";
 import ConfirmationModal from "../components/ConfirmationModal";
+import { formatCount } from "../helpers/formatCount";
 
 export const ReturnProdScreen = ({ route, navigation }) => {
   const { invoice_guid, codeid } = route.params;
@@ -70,8 +71,8 @@ export const ReturnProdScreen = ({ route, navigation }) => {
     closeModal();
   };
 
-  const totalSum = listLeftoversForReturn?.reduce(
-    (total, item) => +total + +item?.price,
+  const totalSum = returnProducts?.products?.reduce(
+    (total, item) => total + +item?.price * +item?.count,
     0
   );
 
@@ -88,6 +89,7 @@ export const ReturnProdScreen = ({ route, navigation }) => {
     (percentage) => (percentage / 100) * windowWidth
   );
 
+  console.log(returnProducts);
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -120,9 +122,11 @@ export const ReturnProdScreen = ({ route, navigation }) => {
         <View style={styles.divAction}>
           <View style={styles.blockTotal}>
             <Text style={styles.totalItemCount}>
-              Сумма: {totalSum || 0} сом
+              Сумма: {formatCount(totalSum) || 0} сом
             </Text>
-            <Text style={styles.totalItemCount}>Кол-во: {totalCount || 0}</Text>
+            <Text style={styles.totalItemCount}>
+              Кол-во: {formatCount(totalCount) || 0}
+            </Text>
           </View>
         </View>
         {true && (

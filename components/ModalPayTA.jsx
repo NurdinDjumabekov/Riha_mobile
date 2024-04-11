@@ -46,12 +46,12 @@ export const ModalPayTA = ({ modalState, setModalState }) => {
     if (!temporaryGuidPoint?.amount) {
       Alert.alert("Введите сумму");
     } else {
-      if (temporaryGuidPoint?.debit < temporaryGuidPoint?.amount) {
-        Alert.alert("Введенная вами сумма больше зарабатка торговой точки!");
-      } else {
-        dispatch(acceptMoney({ data: temporaryGuidPoint, closeModal }));
-        setModalState(false);
-      }
+      dispatch(acceptMoney({ data: temporaryGuidPoint, closeModal }));
+      setModalState(false);
+      // if (temporaryGuidPoint?.debit < temporaryGuidPoint?.amount) {
+      //   Alert.alert("Введенная вами сумма больше зарабатка торговой точки!");
+      // } else {
+      // }
     }
   };
 

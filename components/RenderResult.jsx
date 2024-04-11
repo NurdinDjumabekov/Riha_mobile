@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 
-  width95: { minWidth: "90%" },
+  width95: { maxWidth: "97%" },
 
   koll: {
     color: "rgba(47, 71, 190, 0.887)",

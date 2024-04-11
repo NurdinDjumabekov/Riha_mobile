@@ -17,8 +17,8 @@ const initialState = {
   }, // для создания каждой накладной ТА
 
   temporaryData: {}, ///// временные данные(после добавления сюда, они добавляются в список(listProductForTT))
-  dataInputsInv: { price: "", ves: "" },
-  listProductForTT: [], /// список твоаров для ТТ
+  dataInputsInv: { price: "", count: "" },
+  listProductForTT: [], /// список товаров для ТТ
   amountExpenses: "", /// state для input суммы расходов ТТ
   stateForCategory: {}, // состояние для хранения временной категории(подсветка категории)
   temporaryGuidPoint: {
@@ -94,7 +94,7 @@ const stateSlice = createSlice({
       state.dataInputsInv = action.payload;
     },
     clearDataInputsInv: (state, action) => {
-      state.dataInputsInv = { price: "", ves: "" };
+      state.dataInputsInv = { price: "", count: "" };
     },
     changeStateForCategory: (state, action) => {
       state.stateForCategory = action.payload;

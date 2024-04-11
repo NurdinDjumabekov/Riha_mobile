@@ -26,6 +26,7 @@ const Stack = createNativeStackNavigator();
 
 export const Navigation = () => {
   const white = { backgroundColor: "#fff" };
+
   return (
     <Provider store={store}>
       <NavigationContainer>

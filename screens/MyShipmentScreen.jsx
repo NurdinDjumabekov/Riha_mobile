@@ -11,11 +11,12 @@ import {
   getAllSellersPoint,
   getInvoiceEveryTA,
 } from "../store/reducers/requestSlice";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ViewButton } from "../customsTags/ViewButton";
 import { changeEveryInvoiceTA } from "../store/reducers/stateSlice";
 import { EveryInvoiceTA } from "../components/TAComponents/EveryInvoiceTA";
 import { ModalCreateInvoice } from "../components/TAComponents/ModalCreateInvoice";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const MyShipmentScreen = ({ navigation }) => {
   const [modalState, setModalState] = useState(false);
@@ -30,20 +31,34 @@ export const MyShipmentScreen = ({ navigation }) => {
 
   const agent_guid = "b3120f36-3fcd-4ca0-8346-484881974846";
 
-  useEffect(() => {
-    getData();
-    dispatch(
-      changeEveryInvoiceTA({
-        ...createEveryInvoiceTA,
-        seller_guid: listSellersPoints?.[0]?.value,
-      })
-    );
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  //   dispatch(
+  //     changeEveryInvoiceTA({
+  //       ...createEveryInvoiceTA,
+  //       seller_guid: listSellersPoints?.[0]?.value,
+  //     })
+  //   );
+  // }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+      dispatch(
+        changeEveryInvoiceTA({
+          ...createEveryInvoiceTA,
+          seller_guid: listSellersPoints?.[0]?.value,
+        })
+      );
+    }, [])
+  );
 
   const getData = () => {
     dispatch(getAllSellersPoint(agent_guid));
     dispatch(getInvoiceEveryTA(agent_guid));
   };
+
+  // console.log(listInvoiceEveryTA, "listInvoiceEveryTA");
 
   return (
     <>
@@ -69,10 +84,7 @@ export const MyShipmentScreen = ({ navigation }) => {
                 )}
                 keyExtractor={(item) => item.codeid}
                 refreshControl={
-                  <RefreshControl
-                    refreshing={preloader}
-                    onRefresh={() => getData()}
-                  />
+                  <RefreshControl refreshing={preloader} onRefresh={getData} />
                 }
               />
             </View>

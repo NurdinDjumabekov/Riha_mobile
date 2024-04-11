@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductEveryInvoice } from "../store/reducers/requestSlice";
 import { RenderResult } from "../components/RenderResult";
+import { formatCount } from "../helpers/formatCount";
 
 export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
   //// каждая загрузка(накладная) типо истории
@@ -15,10 +16,8 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
   );
 
   useEffect(() => {
-    dispatch(getProductEveryInvoice(obj.guid));
-    navigation.setOptions({
-      title,
-    });
+    dispatch(getProductEveryInvoice(obj.guid)); //// guid накладной
+    navigation.setOptions({ title });
   }, []);
 
   const totalSum = listProductEveryInvoiceTA?.reduce((total, item) => {
@@ -39,7 +38,7 @@ export const EveryInvoiceHistoryScreen = ({ route, navigation }) => {
             )}
             keyExtractor={(item) => item.codeid}
           />
-          <Text style={styles.result}>Итого: {totalSum} сом </Text>
+          <Text style={styles.result}>Итого: {formatCount(totalSum)} сом </Text>
         </View>
       )}
     </>

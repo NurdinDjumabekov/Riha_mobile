@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   RefreshControl,
@@ -11,18 +11,18 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addProdInvoiceTT,
+  sendProdInvoiceTT,
   getCategoryTA,
   getProductTA,
 } from "../store/reducers/requestSlice";
 import { EveryProduct } from "../components/EveryProduct";
 import {
-  changeListProductForTT,
   changeStateForCategory,
   changeTemporaryData,
 } from "../store/reducers/stateSlice";
 import ConfirmationModal from "../components/ConfirmationModal";
 import { EveryCategoryInner } from "../components/TAComponents/EveryCategoryInner";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const EveryInvoiceScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -36,23 +36,27 @@ export const EveryInvoiceScreen = ({ navigation, route }) => {
 
   const agent_guid = "B3120F36-3FCD-4CA0-8346-484881974846";
 
-  useEffect(() => {
-    getData();
-    navigation.setOptions({
-      title: `Накладная №${codeid}`,
-    });
-    dispatch(changeStateForCategory("0"));
-  }, [guid]);
+  // useEffect(() => {
+  //   getData();
+  //   navigation.setOptions({
+  //     title: `Накладная №${codeid}`,
+  //   });
+  //   dispatch(changeStateForCategory("0"));
+  // }, [guid]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+      navigation.setOptions({
+        title: `Накладная №${codeid}`,
+      });
+      dispatch(changeStateForCategory("0"));
+    }, [])
+  );
 
   const getData = async () => {
     await dispatch(getCategoryTA(agent_guid));
-    await dispatch(
-      getProductTA({
-        guid: "0",
-        agent_guid,
-      })
-    ); /// 0 - все продукты
-    dispatch(changeListProductForTT([]));
+    await dispatch(getProductTA({ guid: "0", agent_guid })); /// 0 - все продукты
   };
 
   const sendData = () => {
@@ -66,7 +70,7 @@ export const EveryInvoiceScreen = ({ navigation, route }) => {
         };
       }),
     };
-    dispatch(addProdInvoiceTT({ data, navigation }));
+    dispatch(sendProdInvoiceTT({ data, navigation }));
     setModal(false);
   };
 
@@ -116,9 +120,9 @@ export const EveryInvoiceScreen = ({ navigation, route }) => {
                 data={listCategoryTA}
                 renderItem={({ item }) => <EveryCategoryInner obj={item} />}
                 keyExtractor={(item, ind) => `${item.guid}${ind}`}
-                refreshControl={
-                  <RefreshControl refreshing={preloader} onRefresh={getData} />
-                }
+                // refreshControl={
+                //   <RefreshControl refreshing={preloader} onRefresh={getData} />
+                // }
               />
             </View>
           </View>
@@ -133,7 +137,7 @@ export const EveryInvoiceScreen = ({ navigation, route }) => {
               contentContainerStyle={widthMax}
               data={listProductTA}
               renderItem={({ item, index }) => (
-                <EveryProduct obj={item} index={index} />
+                <EveryProduct obj={item} index={index} guidInvoice={guid} />
               )}
               keyExtractor={(item, ind) => `${item.guid}${ind}`}
               refreshControl={
