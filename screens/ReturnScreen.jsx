@@ -40,6 +40,7 @@ export const ReturnScreen = ({ navigation }) => {
   };
 
   const empty = listHistoryReturn?.length !== 0;
+
   return (
     <>
       <View style={styles.container}>

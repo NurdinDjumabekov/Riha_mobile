@@ -242,7 +242,7 @@ export const createInvoiceTA = createAsyncThunk(
 /// getAllSellersPoint
 export const getAllSellersPoint = createAsyncThunk(
   "getAllSellersPoint",
-  /// для получения списка точек (магазинов)
+  /// для получения списка ревизоров
   async function (guid, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
