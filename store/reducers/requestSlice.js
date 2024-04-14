@@ -14,27 +14,6 @@ import {
 import { changeToken } from "./saveDataSlice";
 import { Alert } from "react-native";
 
-const initialState = {
-  preloader: false,
-  chech: "",
-  balance: 0,
-  listMyInvoice: [], /// список накладных , но не принятых ТА
-  listAcceptInvoice: [], /// список накладных , принятых ТА (история)
-  listAcceptInvoiceProd: [], /// список накладных , принятых ТА (история)
-  everyInvoice: {},
-  listSellersPoints: [],
-  listCategoryTA: [], //  список категорий ТА
-  listProductTA: [], //  список продуктов ТА (cписок прод-тов отсортированные селектами)
-  listLeftovers: [], // список остатков(переделанный мною)
-  listLeftoversForReturn: [], // список остатков(переделанный мною)
-  listInvoiceEveryTA: [], /// список накладных каждого ТА(типо истории)
-  listProductEveryInvoiceTA: [], /// список товаров каждой накладной ТА(типо истории)
-  listExpenses: [], /// список затрат(трат) у ТТ
-  listHistoryReturn: [], //// ист0рия возврата
-  listAdmins: [], //// список админов
-  listProdReturn: [], //// список возвращенных товаров админу от ТА
-};
-
 /// logInAccount
 export const logInAccount = createAsyncThunk(
   "logInAccount",
@@ -513,7 +492,7 @@ export const getHistoryReturn = createAsyncThunk(
   async function (agent_guid, { dispatch, rejectWithValue }) {
     try {
       const response = await axios({
-        method: "GEt",
+        method: "GET",
         url: `${API}/ta/get_invoice_return?agent_guid=${agent_guid}`,
       });
       if (response.status >= 200 && response.status < 300) {
@@ -561,12 +540,9 @@ export const createInvoiceReturnTA = createAsyncThunk(
         data,
       });
       if (response.status >= 200 && response.status < 300) {
-        const { guid, codeid } = response?.data;
+        const { guid } = response?.data;
         closeModal();
-        navigation?.navigate("ReturnProd", {
-          invoice_guid: guid,
-          codeid,
-        });
+        navigation?.navigate("ReturnProd", { invoice_guid: guid });
         return response?.data;
       } else {
         throw Error(`Error: ${response.status}`);
@@ -620,6 +596,29 @@ export const getReturnHistory = createAsyncThunk(
     }
   }
 );
+
+const initialState = {
+  preloader: false,
+  chech: "",
+  balance: 0,
+  listMyInvoice: [], /// список накладных , но не принятых ТА
+  listAcceptInvoice: [], /// список накладных , принятых ТА (история)
+  listAcceptInvoiceProd: [], /// список накладных , принятых ТА (история)
+  everyInvoice: {},
+  listSellersPoints: [],
+  listCategoryTA: [], //  список категорий ТА
+  listProductTA: [], //  список продуктов ТА (cписок прод-тов отсортированные селектами)
+  listLeftovers: [], // список остатков(переделанный мною)
+  listInvoiceEveryTA: [], /// список накладных каждого ТА(типо истории)
+  listProductEveryInvoiceTA: [], /// список товаров каждой накладной ТА(типо истории)
+  listExpenses: [], /// список затрат(трат) у ТТ
+
+  ///return
+  listHistoryReturn: [], //// ист0рия возврата
+  listLeftoversForReturn: [], // список остатков(переделанный мною)
+  listAdmins: [], //// список админов
+  listProdReturn: [], //// список возвращенных товаров админу от ТА
+};
 
 const requestSlice = createSlice({
   name: "requestSlice",

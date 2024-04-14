@@ -16,7 +16,7 @@ import ConfirmationModal from "../components/ConfirmationModal";
 import { formatCount } from "../helpers/formatCount";
 
 export const ReturnProdScreen = ({ route, navigation }) => {
-  const { invoice_guid, codeid } = route.params;
+  const { invoice_guid } = route.params;
   //// возрат товара
   const dispatch = useDispatch();
   const [listData, setListData] = useState([]);
